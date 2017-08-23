@@ -23,79 +23,77 @@
 #ifndef __BUTTON_C
 #define __BUTTON_C
 
-#include "StatusBar.h"
-#include "PictureStorage.h"
-#include "framebuffer.h"
-#include "Memory.h"
+#include "Button.h"
 
 bool static vButtonDraw(xButton *pxW){
   xButtonProps *xP;
   
   if(!pxW)
-    return FALSE;
+    return false;
    
   if(pxW->eType != WidgetButton)
-    return FALSE;
+    return false;
   
   if(pxW->bValid)
-    return FALSE;
+    return false;
   
-  xP = pxW->pvProp;
+  xP = (xButtonProps *)pxW->pvProp;
   
   if(!pxW->bPressed){
     if(pxW->pusBgPicture)
-      bFramebufferPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
+      pxWidgetGetLCD()->bFramebufferPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
   }
   else if(xP->bEmulatePressure){
     
     if(pxW->pusBgPicture)
-      bFramebufferPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
+     pxWidgetGetLCD()->bFramebufferPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
     
-    vFramebufferVLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usY1 - 2, 0);
-    vFramebufferHLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usX1 - 2, 0);
+    pxWidgetGetLCD()->vFramebufferVLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usY1 - 2, WIDGET_COLOR_BLACK);
+    pxWidgetGetLCD()->vFramebufferHLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usX1 - 2, WIDGET_COLOR_BLACK);
 
-    vFramebufferVLine(pxW->usX1 - 2, pxW->usY0 + 2, pxW->usY1 - 2, 65535);
-    vFramebufferHLine(pxW->usX0 + 2, pxW->usY1 - 2, pxW->usX1 - 2, 65535);
+    pxWidgetGetLCD()->vFramebufferVLine(pxW->usX1 - 2, pxW->usY0 + 2, pxW->usY1 - 2, WIDGET_COLOR_WHITE);
+    pxWidgetGetLCD()->vFramebufferHLine(pxW->usX0 + 2, pxW->usY1 - 2, pxW->usX1 - 2, WIDGET_COLOR_WHITE);
+    
   }
   
-  return TRUE;
+  return true;
 }
 
 bool static bButtonCheckTSRoutine(xButton *pxW, xTouchEvent *pxTouchScreenEv){
   xButtonProps *xP;
   
   if(!pxW)
-    return FALSE;
+    return false;
   
-  xP = pxW->pvProp;
+  xP = (xButtonProps *) pxW->pvProp;
 
   if(xP->bEmulatePressure)
     vWidgetInvalidate(pxW);
   
-  return (pxTouchScreenEv->eventTouchScreen == popTs)?FALSE:TRUE;
+  return (pxTouchScreenEv->eventTouchScreen == popTs)?false:true;
 }
 
-xButton * pxButtonCreate(u16 usX, u16 usY, unsigned short const* pusPic, xWidget *pxWidParent){
+xButton * pxButtonCreate(uint16_t usX, uint16_t usY, unsigned short const* pusPic, xWidget *pxWidParent){
   xButton *pxW;
   xButtonProps *xP;
   
-  pxW = pvMemoryMalloc(sizeof(xWidget), MEMORY_EXT);
+  pxW = new xWidget;
   
-  if(bWidgetInit(pxW, usX, usY, 1, 1, pxWidParent, TRUE)){
+  if(bWidgetInit(pxW, usX, usY, 1, 1, pxWidParent, true)){
     
     bWidgetSetBgPicture(pxW, pusPic);
     
-    xP = pvMemoryMalloc(sizeof(xButtonProps), MEMORY_EXT);
+    xP = new xButtonProps;
     
     if(!xP)
       return NULL;
     
     xP->pusPicDisabled = NULL;
-    xP->bEmulatePressure = TRUE;
+    xP->bEmulatePressure = true;
     
     pxW->pvProp = xP;
     
-    pxW->bClickable = TRUE;
+    pxW->bClickable = true;
     
     pxW->eType = WidgetButton;
       
@@ -105,7 +103,7 @@ xButton * pxButtonCreate(u16 usX, u16 usY, unsigned short const* pusPic, xWidget
     return pxW;
   }
   else{
-    vMemoryFree(pxW);
+    delete [] pxW;
     return NULL;
   }
 }
@@ -122,15 +120,15 @@ bool bButtonSetPushPic(xButton *pxW, unsigned short const* pusPic){
   //press picture must be the same size as foreground pic
   
   if(usPictureGetH(pusPic) != usWidgetGetH(pxW))
-    return FALSE;
+    return false;
   
   if(usPictureGetW(pusPic) != usWidgetGetW(pxW))
-    return FALSE;
+    return false;
   
   if(pxW->bPressed)
     vWidgetInvalidate(pxW);*/
   
-  return TRUE;
+  return true;
 }
 
 #endif	//__BUTTON_C

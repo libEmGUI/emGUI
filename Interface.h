@@ -23,52 +23,60 @@
 #ifndef __INTERFACE_H
 #define __INTERFACE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
- 
+
 #include "Widget.h"
-#include "Widgets/Window.h"
-#include "Widgets/StatusBar.h"
-#include "SSD2119.h"
-#include "sysopts.h"
+#include "Window.h"
+#include <stdint.h>
+#include "StatusBar.h"
+//#include "sysopts.h"
   
-  typedef xWidget xInterface;
-  
-  xInterface * pxInterfaceCreate(bool (*pxOnCreateHandler)(xWidget *));
-  void vInterfaceDraw();
-  xInterface *pxInterfaceGet();
-  u16 inline usInterfaceGetW(){
-    return LCD_SizeX;
-  }
-  u16 inline usInterfaceGetH(){
-    return LCD_SizeY;
-  }
-  u16 inline usInterfaceGetWindowH(){
-    return LCD_SizeY - LCD_STATUS_BAR_HEIGHT;
-  }
-  u16 inline usInterfaceGetWindowW(){
-    return LCD_SizeX;
-  }
-  u16 inline usInterfaceGetWindowX(){
-    return 0;
-  }
-  u16 inline usInterfaceGetWindowY(){
-    return LCD_STATUS_BAR_HEIGHT;
-  }
-  void vInterfaceBeep();
-  void vInterfaceInvalidate();
-  void bInterfaceCheckTouchScreenEvent();
-  void vInterfaceDebug(bool bDebug);
-  bool bInterfaceGetDebug();
-  void vInterfaceOpenWindow(eWindow eWnd);
-  void vInterfaceCloseActiveWindow();
-  void vInterfaceCloseWindow(eWindow eWnd);
-  void vInterfaceUpdateWindow();
-  xWindow * pxInterfaceIsWindowActive(eWindow eWnd);
-  
-#ifdef __cplusplus
-}
+
+#ifndef LCD_SizeX
+#define LCD_SizeX 240
 #endif
+
+#ifndef LCD_SizeY
+#define LCD_SizeY 240
+#endif
+
+#ifndef LCD_STATUS_BAR_HEIGHT
+#define LCD_STATUS_BAR_HEIGHT 26
+#endif
+
+typedef xWidget xInterface;
+
+xInterface * pxInterfaceCreate(bool (*pxOnCreateHandler)(xWidget *));
+void vInterfaceDraw();
+xInterface *pxInterfaceGet();
+uint16_t inline usInterfaceGetW(){
+  return LCD_SizeX;
+}
+uint16_t inline usInterfaceGetH(){
+  return LCD_SizeY;
+}
+uint16_t inline usInterfaceGetWindowH(){
+  return LCD_SizeY - LCD_STATUS_BAR_HEIGHT;
+}
+uint16_t inline usInterfaceGetWindowW(){
+  return LCD_SizeX;
+}
+uint16_t inline usInterfaceGetWindowX(){
+  return 0;
+}
+uint16_t inline usInterfaceGetWindowY(){
+  return LCD_STATUS_BAR_HEIGHT;
+}
+void vInterfaceBeep();
+void vInterfaceInvalidate();
+void bInterfaceCheckTouchScreenEvent();
+void vInterfaceDebug(bool bDebug);
+bool bInterfaceGetDebug();
+void vInterfaceOpenWindow(eWindow eWnd);
+void vInterfaceCloseActiveWindow();
+void vInterfaceCloseWindow(eWindow eWnd);
+void vInterfaceUpdateWindow();
+xWindow * pxInterfaceIsWindowActive(eWindow eWnd);
+
+
 
 #endif	//__INTERFACE_H

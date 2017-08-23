@@ -25,25 +25,23 @@
 
 /*
  *
- *      Проставляет \n по тексту в зависимости от длины строки !!! меняет строку на входе!!!
- *   void vAdaptTextToMultiLine(char *pcText, u16 usLabelWidth, xFont xLabelFont);
- *          pcText - указатель нас троку для вывода
- *          usLabelWidth - ширина Label
- *          xLabelFont - шрифт
+ *      РџСЂРѕСЃС‚Р°РІР»СЏРµС‚ \n РїРѕ С‚РµРєСЃС‚Сѓ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РґР»РёРЅС‹ СЃС‚СЂРѕРєРё !!! РјРµРЅСЏРµС‚ СЃС‚СЂРѕРєСѓ РЅР° РІС…РѕРґРµ!!!
+ *   void vAdaptTextToMultiLine(char *pcText, uint16_t usLabelWidth, xFont xLabelFont);
+ *          pcText - СѓРєР°Р·Р°С‚РµР»СЊ РЅР°СЃ С‚СЂРѕРєСѓ РґР»СЏ РІС‹РІРѕРґР°
+ *          usLabelWidth - С€РёСЂРёРЅР° Label
+ *          xLabelFont - С€СЂРёС„С‚
  *
- *      Делает из Label MultiLine Label и выводит в неё текст !!! строку на входе не меняет!!!
+ *      Р”РµР»Р°РµС‚ РёР· Label MultiLine Label Рё РІС‹РІРѕРґРёС‚ РІ РЅРµС‘ С‚РµРєСЃС‚ !!! СЃС‚СЂРѕРєСѓ РЅР° РІС…РѕРґРµ РЅРµ РјРµРЅСЏРµС‚!!!
  *   void vSetMultilineText(xWidget *pxW, char *pcText);
- *          pxW - Label-назначение
+ *          pxW - Label-РЅР°Р·РЅР°С‡РµРЅРёРµ
  *          pcText -
  */
 
 #ifndef __LABEL_H
 #define __LABEL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+#include <stdint.h>
+#include <stdbool.h>
 #include "Widget.h"
 #include "Font.h"
   
@@ -67,7 +65,7 @@ extern "C" {
     char *pcStr;
     int iMaxLength;
     xFont xFnt;
-    u16 usColor;
+    uint16_t usColor;
     bool bIsMultiLine;
     bool bHaveCursor;
     char *pcPrvPage;
@@ -76,10 +74,10 @@ extern "C" {
     void(*onEditHandler)(void);
   } xLabelProps;
   
-  xLabel *    pxLabelCreate(u16 usX, u16 usY, u16 usW, u16 usH, char * cStr, xFont xFnt, int iMaxLength, xWidget *pxWidParent);
+  xLabel *    pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, int iMaxLength, xWidget *pxWidParent);
   char *      pcLabelSetText(xWidget *pxW, const char * pcStr);
-  void        pcLabelSetTextAdaptWidth(xLabel *pxL, char * pcStr); // замена текста и адаптированние ширины Label под длину нового текста, работает только под 16 размер
-  void        vLabelSetTextColor(xWidget *pxW, u16 usColor);
+  void        pcLabelSetTextAdaptWidth(xLabel *pxL, char * pcStr); // Р·Р°РјРµРЅР° С‚РµРєСЃС‚Р° Рё Р°РґР°РїС‚РёСЂРѕРІР°РЅРЅРёРµ С€РёСЂРёРЅС‹ Label РїРѕРґ РґР»РёРЅСѓ РЅРѕРІРѕРіРѕ С‚РµРєСЃС‚Р°, СЂР°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ РїРѕРґ 16 СЂР°Р·РјРµСЂ
+  void        vLabelSetTextColor(xWidget *pxW, uint16_t usColor);
   void        vLabelSetTextAlign(xWidget *pxW, eLabelTextAlign eAlign);
   void        vLabelSetVerticalAlign(xWidget *pxW, eLabelVerticalAlign eAlign);
   void        vLabelSetTextExt(xWidget *pxW, char * pStr, int iMaxLength);
@@ -95,8 +93,5 @@ extern "C" {
   void        vLabelSetOnEditHandler(xWidget *pxW, void (*callback)(void));
   void        vLabelSetHaveCursor(xWidget *pxW, bool bLabelHaveCursor);
   void        vLabelClear(xWidget *pxW, bool bSetInvalidate);
-#ifdef __cplusplus
-}
-#endif
 
 #endif	//__LABEL_H

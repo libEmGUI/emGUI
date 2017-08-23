@@ -24,10 +24,7 @@
 #define WINDOW_H_
 
 #include "Widget.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
 
   typedef xWidget xWindow;
 
@@ -67,8 +64,6 @@ extern "C" {
   xWindow * pxWindowGetBack(xWidget *pxW);
   void vWindowSetFullScreen(xWidget *pxW, bool bFS);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* WINDOW_H_ */

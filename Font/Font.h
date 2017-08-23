@@ -1,25 +1,28 @@
 #ifndef __FONT_H
 #define __FONT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-  
-#include "stm32f10x.h"
-  
+#include <stdint.h>
+#include "Font8.h"
 typedef unsigned char const * const * xFont;
   
-u16 usFontGetStrW(const char * pcStr, xFont pubFont);
+uint16_t usFontGetStrW(const char * pcStr, xFont pubFont);
 
 inline char ucFontGetCharW(char cChar, xFont pubFont){
-  return *(unsigned char *) pubFont[cChar];
+  return *(unsigned char *) pubFont[(unsigned int)cChar];
 }
 
-u16 usFontGetH(xFont pubFont);
-u16 usFontGetStrH(const char * pcStr, xFont pubFont);
+inline uint16_t usFontGetH(xFont pubFont){
+  //uint16_t usHeight = 0;
 
-#ifdef __cplusplus
+  //TODO: implement multistring height.
+	/*while (*pcStr) {
+		usWidth += *(unsigned char *) pubFont[*pcStr];
+		pcStr++;
+	}
+	return usWidth;*/
+  
+  return *(unsigned char *) pubFont[0];
 }
-#endif
+uint16_t usFontGetStrH(const char * pcStr, xFont pubFont);
 
 #endif	//__FONT_H

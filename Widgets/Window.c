@@ -22,10 +22,11 @@
 
 #include "Window.h"
 #include "Interface.h"
+#include <malloc.h>
 #include "StatusBar.h"
-#include "Memory.h"
 #include <string.h>
-#include "utils.h"
+//#include "utils.h"
+
 
 #define WINDOW_HEADER_LENGTH 25
 
@@ -33,14 +34,14 @@ xWindow * pxWindowCreate(eWindow eWnd){
   xWindowProps *xP;
   xWindow *pxW;
 
-  pxW = pvMemoryMalloc(sizeof(xWidget), MEMORY_EXT);
+  pxW = new xWidget;
 
-  if(bWidgetInit(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), pxInterfaceGet(), TRUE)){
+  if(bWidgetInit(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), pxInterfaceGet(), true)){
 
-    vWidgetSetBgColor(pxW, 65535, FALSE); //белый фон
-    vWidgetSetVisible(pxW, FALSE);
+    vWidgetSetBgColor(pxW, 65535, false); //Р±РµР»С‹Р№ С„РѕРЅ
+    vWidgetSetVisible(pxW, false);
 
-    xP        = pvMemoryMalloc(sizeof(xWindowProps), MEMORY_EXT);
+    xP        = new xWindowProps;
 
     if(!xP)
       return NULL;
@@ -50,9 +51,9 @@ xWindow * pxWindowCreate(eWindow eWnd){
     xP->pxOnClose = NULL;
     xP->pxOnOpenRequest = NULL;
     xP->pxOnOpen = NULL;
-    xP->bFullScreen = FALSE;
+    xP->bFullScreen = false;
     xP->eId = eWnd;
-    xP->strHeader = pvMemoryMalloc(WINDOW_HEADER_LENGTH + 1, MEMORY_EXT);
+    xP->strHeader = (char*)malloc(WINDOW_HEADER_LENGTH + 1);
     xP->strHeader[0] = '\0';
     pxW->pvProp = xP;
     pxW->eType = WidgetWindow;
@@ -60,7 +61,7 @@ xWindow * pxWindowCreate(eWindow eWnd){
     return pxW;
   }
   else{
-    vMemoryFree(pxW);
+    delete [] pxW;
     return NULL;
   }
 }
@@ -68,7 +69,7 @@ xWindow * pxWindowCreate(eWindow eWnd){
 void vWindowSetHeader(xWidget * pxW, char const* strH){
   xWindowProps *xP;
   int iLen = MIN(strlen(strH), WINDOW_HEADER_LENGTH);
- if(!(xP = pxWidgetGetProps(pxW, WidgetWindow)))
+ if(!(xP = (xWindowProps*) pxWidgetGetProps(pxW, WidgetWindow)))
    return;
   memcpy(xP->strHeader, strH, iLen + 1);
   xP->strHeader[iLen] = '\0';
@@ -77,49 +78,49 @@ void vWindowSetHeader(xWidget * pxW, char const* strH){
 
 void vWindowSetOnCloseRequestHandler(xWidget * pxW, bool (*pxCallback)(xWidget *)){
   xWindowProps *xP;
-  if(!(xP = pxWidgetGetProps(pxW, WidgetWindow)))
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(pxW, WidgetWindow)))
     return;
   xP->pxOnCloseRequest = pxCallback;
 }
 
 void vWindowSetOnCloseHandler(xWidget * pxW, bool (*pxCallback)(xWidget *)){
   xWindowProps *xP;
-  if(!(xP = pxWidgetGetProps(pxW, WidgetWindow)))
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(pxW, WidgetWindow)))
     return;
   xP->pxOnClose = pxCallback;
 }
 
 void vWindowSetOnOpenHandler(xWidget * pxW, bool (*pxCallback)(xWidget *)){
   xWindowProps *xP;
-  if(!(xP = pxWidgetGetProps(pxW, WidgetWindow)))
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(pxW, WidgetWindow)))
     return;
   xP->pxOnOpen = pxCallback;
 }
 
 void vWindowSetOnOpenRequestHandler(xWidget * pxW, bool (*pxCallback)(xWidget *)){
   xWindowProps *xP;
-  if(!(xP = pxWidgetGetProps(pxW, WidgetWindow)))
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(pxW, WidgetWindow)))
     return;
   xP->pxOnOpenRequest = pxCallback;
 }
 
 xWindow * pxWindowGetBack(xWidget *pxW){
   xWindowProps *xP;
-  if(!(xP = pxWidgetGetProps(pxW, WidgetWindow)))
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(pxW, WidgetWindow)))
     return NULL;
   return xP->xBackWindow;
 }
 
 void vWindowSetFullScreen(xWidget *pxW, bool bFS){
   xWindowProps *xP;
-  if(!(xP = pxWidgetGetProps(pxW, WidgetWindow)))
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(pxW, WidgetWindow)))
     return;
 
   if(bFS){
-    if(bWidgetSetCoords(pxW, 0, 0, LCD_SizeX, LCD_SizeY, TRUE))
+    if(bWidgetSetCoords(pxW, 0, 0, LCD_SizeX, LCD_SizeY, true))
       xP->bFullScreen = bFS;
   }else{
-    if(bWidgetSetCoords(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), TRUE))
+    if(bWidgetSetCoords(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), true))
       xP->bFullScreen = bFS;
   }
   vInterfaceUpdateWindow();

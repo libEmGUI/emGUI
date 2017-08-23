@@ -23,12 +23,10 @@
 #ifndef __BUTTON_H
 #define __BUTTON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-  
+
 #include "Widget.h"
-  
+#include <stdint.h> 
+
   typedef xWidget xButton;
   
   typedef struct xButtonProps_struct {
@@ -36,14 +34,12 @@ extern "C" {
     unsigned short const* pusPicDisabled;
   } xButtonProps;
   
-  xButton * pxButtonCreate(u16 usX, u16 usY, unsigned short const* pusPic, xWidget *pxWidParent);
+  xButton * pxButtonCreate(uint16_t usX, uint16_t usY, unsigned short const* pusPic, xWidget *pxWidParent);
   bool bButtonSetPushPic(xButton *pxW, unsigned short const* pusPic);
   void inline bButtonSetOnClickHandler(xWidget *pxW, bool (*pxCallback)(xWidget *)){
     vWidgetSetOnClickHandler(pxW, pxCallback);
   }
   
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif	//__BUTTON_H

@@ -20,54 +20,58 @@
 	Created on: 14.11.2012
 */
 
-#ifndef __WIDGET_C
-#define __WIDGET_C
-
-#include "widget.h"
+#include "Widget.h"
+#include <Arduino.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "Interface.h"
-#include "PictureStorage.h"
-#include "framebuffer.h"
-#include "Memory.h"
 
-xWidget * pxWidgetAlloc(){
-  return pvMemoryMalloc(sizeof(xWidget), MEMORY_EXT);
+static LCD_Glue * _LCD;
+
+void vWidgetSetLCD(LCD_Glue * LCD){
+  _LCD = LCD;
 }
 
-xWidget * pxWidgetCreate(u16 usX0, u16 usY0, u16 usX1, u16 usY1, xWidget *pxWidParent, bool bUseWH){
+LCD_Glue * pxWidgetGetLCD(){
+  return _LCD;
+}
+
+xWidget * pxWidgetAlloc(){
+  return new xWidget;
+}
+
+xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH){
   xWidget *pxW;
-  pxW = pvMemoryMalloc(sizeof(xWidget), MEMORY_EXT);
+  pxW = new xWidget;
   
-  if(!pxW)
+  if(!pxW) 
     return NULL;
   
   if(bWidgetInit(pxW, usX0, usY0, usX1, usY1, pxWidParent, bUseWH))
     return pxW;
   else{
-    vMemoryFree(pxW);
+    delete(pxW);
     return NULL;
   }
 }
 
-bool bWidgetInit(xWidget *pxW, u16 usX0, u16 usY0, u16 usX1, u16 usY1, xWidget *pxWidParent, bool bUseWH){
+bool bWidgetInit(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH){
   if(!pxW)
-    return FALSE;
+    return false;
   
   pxW->eType = Widget;
   
   pxW->pxParent = pxWidParent;
   
-  pxW->bValid = FALSE;
-  pxW->bInvalidate = TRUE;
-  pxW->bInvalidateParent = FALSE;
-  pxW->bClickable = FALSE;
-  pxW->bVisible = TRUE;
-  pxW->bEnabled = TRUE;
-  pxW->bPressed = FALSE;
-  pxW->bPushEventCaught = FALSE;
+  pxW->bValid = false;
+  pxW->bInvalidate = true;
+  pxW->bInvalidateParent = false;
+  pxW->bClickable = false;
+  pxW->bVisible = true;
+  pxW->bEnabled = true;
+  pxW->bPressed = false;
+  pxW->bPushEventCaught = false;
   
-  pxW->bTransparent = TRUE;
+  pxW->bTransparent = true;
   pxW->usBgColor = 0;
   pxW->pusBgPicture = NULL;
   
@@ -79,23 +83,23 @@ bool bWidgetInit(xWidget *pxW, u16 usX0, u16 usY0, u16 usX1, u16 usY1, xWidget *
   
   pxW->pvProp = NULL;
   
-  pxW->pxChild = NULL; //Âèäæåòû - äåòè
+  pxW->pxChild = NULL; 
   
-  pxW->pxNextSibling = NULL; //Ñïèñîê ñîñåäåé (ïðÿìûõ ïîòîìêîâ îäíîãî ðîäèòåëÿ)
+  pxW->pxNextSibling = NULL; 
   
   //TODO: check LCD sizes
   if(!bWidgetSetCoords(pxW, usX0, usY0, usX1, usY1, bUseWH))
-    return FALSE;
+    return false;
   
   if(pxWidParent != NULL) {
     bWidgetAdd(pxWidParent, pxW);
   }
   
-  return TRUE;
+  return true;
 }
 
 void vWidgetInvalidate(xWidget *pxW){
-  pxW->bInvalidate = TRUE;
+  pxW->bInvalidate = true;
 }
 
 static void prvInvalidateChilds(xWidget *pxW){
@@ -115,62 +119,63 @@ static void prvInvalidateChilds(xWidget *pxW){
 }*/
 
 bool bWidgetDraw(xWidget *pxW){
+  
   if(!pxW)
-    return FALSE;
+    return false;
   
   if(pxW->bValid)
-    return FALSE;
+    return false;
   
   if(pxW->pusBgPicture){
-    bFramebufferPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
-    return TRUE;
+    pxWidgetGetLCD()->bFramebufferPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
+    return true;
   } 
   
   if(!pxW->bTransparent){
-    vFramebufferRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, pxW->usBgColor, TRUE);
-    return TRUE;
+    pxWidgetGetLCD()->vFramebufferRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, pxW->usBgColor, true);
+    return true;
   }
   
-  return FALSE;
+  return false;
 }
 
 void vWidgetDraw(xWidget *pxW){
   if(!pxW)
     return;
   
-  bool bRedrawed = FALSE;
+  bool bRedrawed = false;
   
   //We don't need to redraw widget and children tree if it is not visible
   if(!pxW->bVisible)
     return;
   
-  if(pxW->bInvalidateParent)
+  if(pxW->bInvalidateParent && pxW->pxParent)
     return;
-  
-  //Ïðîâåðêà áëèæàéøèõ äåòåé íà ïðåäìåò óñòàíîâëåííîãî ôëàãà bWidgetInvalidateParent
+
+  //ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð±Ð»Ð¸Ð¶Ð°Ð¹ÑˆÐ¸Ñ… Ð´ÐµÑ‚ÐµÐ¹ Ð½Ð° Ð¿Ñ€ÐµÐ´Ð¼ÐµÑ‚ ÑƒÑÑ‚Ð°Ð½Ð¾Ð²Ð»ÐµÐ½Ð½Ð¾Ð³Ð¾ Ñ„Ð»Ð°Ð³Ð° bWidgetInvalidateParent
   if(pxW->pxChild){
     xWidget *pxWidChild = pxW->pxChild;
     while(pxWidChild){
       if(pxWidChild->bInvalidateParent){
-        pxWidChild->bInvalidateParent = FALSE;
-        pxW->bInvalidate = TRUE;
+        pxWidChild->bInvalidateParent = false;
+        pxW->bInvalidate = true;
       }
       pxWidChild = pxWidChild->pxNextSibling;
     }
   }
   
-  //àíàëèç ôëàãà èíâàëèäàöèè
+  //Ð°Ð½Ð°Ð»Ð¸Ð· Ñ„Ð»Ð°Ð³Ð° Ð¸Ð½Ð²Ð°Ð»Ð¸Ð´Ð°Ñ†Ð¸Ð¸
   if(pxW->bInvalidate){
     prvInvalidateChilds(pxW);
-    pxW->bValid = FALSE;
-    pxW->bInvalidate = FALSE;
+    pxW->bValid = false;
+    pxW->bInvalidate = false;
   }
   
   if(pxW->pxDrawHandler)
     bRedrawed = pxW->pxDrawHandler(pxW);
   else
     bRedrawed = bWidgetDraw(pxW);
-  
+
   if(pxW->pxChild){
     xWidget *pxWidChild = pxW->pxChild;
     while(pxWidChild){
@@ -179,17 +184,18 @@ void vWidgetDraw(xWidget *pxW){
     }
   }
   
-  //Âàëèäèðóåì âèäæåò
-  pxW->bValid = TRUE;
+  //Ð’Ð°Ð»Ð¸Ð´Ð¸Ñ€ÑƒÐµÐ¼ Ð²Ð¸Ð´Ð¶ÐµÑ‚
+  pxW->bValid = true;
 
-  if(bInterfaceGetDebug() && bRedrawed)
-    vFramebufferRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, rand(), FALSE);
+  if(bInterfaceGetDebug() && bRedrawed){
+    pxWidgetGetLCD()->vFramebufferRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, rand(), false);
+  }
   
 }
 
 bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild){
   if(!pxWidChild || !pxWidParent)
-    return FALSE;
+    return false;
   xWidget *pxW, *pxWidLast;
   
   //TODO: check for duplicates via pointer address
@@ -205,30 +211,30 @@ bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild){
     pxWidLast->pxNextSibling = pxWidChild;
   }
   
-  return TRUE;
+  return true;
 }
 
 bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv){
   if(!pxW)
-    return FALSE;
+    return false;
   //By default catching an event doesn't invalidate the widget.
   //Enherited widgets should invalidate itself from pxCheckTSRoutine
   //bPressed state is controlled via return value of pxCheckTSRoutine
   
   if(!pxW->bVisible)
-    return FALSE;
+    return false;
   
   if(!pxW->bEnabled)
-    return FALSE;
+    return false;
   
   //handle popTs events when they occur out of the Widget area
-  if(   pxTouchScreenEv->eventTouchScreen == popTs
+  if(pxTouchScreenEv->eventTouchScreen == popTs
      && pxW->bPushEventCaught ){
     if(pxW->pxCheckTSRoutine)
      pxW->bPressed = pxW->pxCheckTSRoutine(pxW, pxTouchScreenEv);
     else
-      pxW->bPressed = FALSE;
-    pxW->bPushEventCaught = FALSE;
+      pxW->bPressed = false;
+    pxW->bPushEventCaught = false;
     //Fire OnClick event
     if(pxW->pxOnClick && !pxW->bPressed)
       pxW->pxOnClick(pxW);
@@ -243,13 +249,13 @@ bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv){
     xWidget *pxWidChild = pxW->pxChild;
     while(pxWidChild){
       if(bWidgetCheckTouchScreenEvent(pxWidChild, pxTouchScreenEv))
-        return TRUE;
+        return true;
       pxWidChild = pxWidChild->pxNextSibling;
     }
   }
   
   if(!pxW->bClickable)
-    return FALSE;
+    return false;
   
   //TODO: check by radius?
   if(   pxW->usX0 <= pxTouchScreenEv->xTouchScreen 
@@ -260,13 +266,13 @@ bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv){
     if(pxW->pxCheckTSRoutine)
       pxW->bPressed = pxW->pxCheckTSRoutine(pxW, pxTouchScreenEv);
     else
-      pxW->bPressed = TRUE;
+      pxW->bPressed = true;
     
-    pxW->bPushEventCaught = TRUE;
-    return TRUE;
+    pxW->bPushEventCaught = true;
+    return true;
   }
   
-  return FALSE;
+  return false;
 }
 
 void vWidgesSetClickable(xWidget *pxW, bool bClickable){
@@ -275,11 +281,11 @@ void vWidgesSetClickable(xWidget *pxW, bool bClickable){
   pxW->bClickable = bClickable;
 }
 
-void vWidgetSetBgColor(xWidget *pxW, u16 usBgColor, bool bTransparent){
+void vWidgetSetBgColor(xWidget *pxW, uint16_t usBgColor, bool bTransparent){
   if(!pxW)
     return;
   pxW->usBgColor = usBgColor;
-  pxW->bTransparent = FALSE;
+  pxW->bTransparent = false;
   
   //TODO: handle transparency color???
   vWidgetInvalidate(pxW);
@@ -291,27 +297,28 @@ void vWidgetSetTransparency(xWidget *pxW, bool bTransparent){
   pxW->bTransparent = bTransparent;
   vWidgetInvalidate(pxW);
   if(bTransparent)
-    pxW->bInvalidateParent = TRUE;
+    pxW->bInvalidateParent = true;
 };
+
 
 bool bWidgetSetBgPicture(xWidget *pxW, unsigned short const* pusBgPicture){
   if(!pxW)
-    return FALSE;
-  bool bInvalidateParent = FALSE;
+    return false;
+  bool bInvalidateParent = false;
   
   if(usPictureGetW(pusBgPicture) < usWidgetGetW(pxW) || usPictureGetH(pusBgPicture) < usWidgetGetH(pxW))
-    bInvalidateParent = TRUE;
+    bInvalidateParent = true;
   
   if(!bWidgetResize(pxW, usPictureGetW(pusBgPicture), usPictureGetH(pusBgPicture)))
-    return FALSE;
+    return false;
   //do not invalidate if picture is not changed
   if(pxW->pusBgPicture != pusBgPicture){
     pxW->pusBgPicture = pusBgPicture;
     vWidgetInvalidate(pxW);
   }
   if(!pusBgPicture || bInvalidateParent)
-    pxW->bInvalidateParent = TRUE;
-  return TRUE;
+    pxW->bInvalidateParent = true;
+  return true;
 };
 
 void vWidgetSetVisible(xWidget *pxW, bool bVisible){
@@ -331,7 +338,7 @@ void vWidgetSetVisible(xWidget *pxW, bool bVisible){
   pxW->bVisible = bVisible;
   
   if(!bVisible)
-    pxW->bInvalidateParent = TRUE;
+    pxW->bInvalidateParent = true;
   else
     vWidgetInvalidate(pxW);
   
@@ -345,22 +352,23 @@ void vWidgetSetClickable(xWidget *pxW, bool bClickable){
   pxW->bClickable = bClickable;
 }
 
-bool bWidgetSetCoords(xWidget *pxW, u16 usX0, u16 usY0, u16 usX1, u16 usY1, bool bUseWH){
+bool bWidgetSetCoords(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, bool bUseWH){
   if(!pxW)
-    return FALSE;
+    return false;
   //TODO: Check sizes before set!
   
   if(bUseWH){
     usX1 = usX0 + usX1 - 1;
     usY1 = usY0 + usY1 - 1;
   }
+  
   if(pxW->pxParent != NULL) {
     usX0 += pxW->pxParent->usX0;
     usY0 += pxW->pxParent->usY0;
     usX1 += pxW->pxParent->usX0;
     usY1 += pxW->pxParent->usY0;
   }
-  
+
   if(pxW->usX0 != usX0 || pxW->usX1 != usX1
      ||pxW->usY0 != usY0 || pxW->usY1 != usY1){
   
@@ -369,13 +377,13 @@ bool bWidgetSetCoords(xWidget *pxW, u16 usX0, u16 usY0, u16 usX1, u16 usY1, bool
     pxW->usX1 = usX1;
     pxW->usY1 = usY1;
     
-    pxW->bInvalidateParent = TRUE;
+    pxW->bInvalidateParent = true;
   }
   
-  return TRUE;
+  return true;
 }
 
-void prvMoveDXDY(xWidget *pxW, s16 sDX, s16 sDY){
+void prvMoveDXDY(xWidget *pxW, int16_t sDX, int16_t sDY){
   pxW->usX0 += sDX;
   pxW->usY0 += sDY;
 
@@ -391,9 +399,9 @@ void prvMoveDXDY(xWidget *pxW, s16 sDX, s16 sDY){
   }
 }
 
-bool bWidgetMoveTo(xWidget *pxW, u16 usX0, u16 usY0){
+bool bWidgetMoveTo(xWidget *pxW, uint16_t usX0, uint16_t usY0){
   if(!pxW)
-    return FALSE;
+    return false;
 
   short dX, dY;
 
@@ -409,18 +417,18 @@ bool bWidgetMoveTo(xWidget *pxW, u16 usX0, u16 usY0){
   dY = usY0 - pxW->usY0;
   
   if(dX == 0 && dY == 0)
-    return FALSE;
+    return false;
 
   prvMoveDXDY(pxW, dX, dY);
   
-  pxW->bInvalidateParent = TRUE;
-  return TRUE;
+  pxW->bInvalidateParent = true;
+  return true;
 }
 
 void vWidgetSetOnClickHandler(xWidget *pxW, bool (*pxCallback)(xWidget *)){
   if(!pxW)
     return;
-  vWidgetSetClickable(pxW, TRUE);
+  vWidgetSetClickable(pxW, true);
   pxW->pxOnClick = pxCallback;
 }
 void vWidgetSetOnHideHandler(xWidget *pxW, bool (*pxCallback)(xWidget *)){
@@ -440,4 +448,6 @@ void vWidgetSetDrawHandler(xWidget *pxW, bool (*pxCallback)(xWidget *)){
   pxW->pxDrawHandler = pxCallback;
 }
 
-#endif  //__WIDGET_C
+bool bInterfaceGetDebug(){
+  return DEBUG_EMGUI;
+}

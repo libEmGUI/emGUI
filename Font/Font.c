@@ -2,9 +2,10 @@
 #define __FONT_C
 
 #include "Font.h"
+//#error sdfsdf
 
-u16 usFontGetStrW(const char * pcStr, xFont pubFont){
-  u16 usWidth = 0;
+uint16_t usFontGetStrW(char const * pcStr, xFont pubFont){
+  uint16_t usWidth = 0;
 
 	while (*pcStr) {
 		usWidth += ucFontGetCharW(*pcStr, pubFont);
@@ -13,25 +14,12 @@ u16 usFontGetStrW(const char * pcStr, xFont pubFont){
 	return usWidth;
 }
 
-u16 usFontGetStrH(const char * pcStr, xFont pubFont){
-  //u16 usHeight = 0;
+uint16_t usFontGetStrH(const char * pcStr, xFont pubFont){
+  //uint16_t usHeight = 0;
 
   //TODO: implement multistring height.
 	/*while (*pcStr) {
 		usWidth += ucFontGetCharW(*pcStr);
-		pcStr++;
-	}
-	return usWidth;*/
-  
-  return *(unsigned char *) pubFont[0];
-}
-
-u16 usFontGetH(xFont pubFont){
-  //u16 usHeight = 0;
-
-  //TODO: implement multistring height.
-	/*while (*pcStr) {
-		usWidth += *(unsigned char *) pubFont[*pcStr];
 		pcStr++;
 	}
 	return usWidth;*/

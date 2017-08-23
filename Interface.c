@@ -25,10 +25,8 @@
 
 #include "Interface.h"
 #include <stdio.h>
-#include "GUI/Color.h"
-#include "Buzzer.h"
 #include "Debug.h"
-#include "System.h"
+
 
 #define DEBUG_MODULE_THIS MODULE_GUI_TASK
 
@@ -39,20 +37,15 @@ xWindow * xActiveWindow = NULL;
 
 xInterface * pxInterfaceCreate(bool (*pxOnCreateHandler)(xWidget *)){
   
-  //gui_SetLanguage(Russian);
-  //gui_SetLanguage(English);
-  
-  xInterfaceInstance = pxWidgetCreate(0, 0, LCD_SizeX, LCD_SizeY, NULL, TRUE);
-  
+  xInterfaceInstance = pxWidgetCreate(0, 0, LCD_SizeX, LCD_SizeY, NULL, true);
+  bStatusBarCreate(0xffffff);
   if(pxOnCreateHandler)
     pxOnCreateHandler(xInterfaceInstance);
-  
+    
   return xInterfaceInstance;
 }
 
 void vInterfaceDraw(){
-  //у интерфейса нет родителя, поэтому флаг должен быть сброшен всегда
-  xInterfaceInstance->bInvalidateParent = FALSE;
   vWidgetDraw(xInterfaceInstance);
 }
 
@@ -63,58 +56,32 @@ xInterface *pxInterfaceGet(){
 void vInterfaceInvalidate(){
   vWidgetInvalidate(xInterfaceInstance);
 }
-
-void vInterfaceBeep(){
-  vBuzzerBeepNoLock(1000, 10);
-}
-
-void bInterfaceCheckTouchScreenEvent(){
-  xTouchEvent xTouchRxedEvent;
-  
-  while (iTouchScreenGetEvent(&xTouchRxedEvent) == pdTRUE){
-    if(!bSystemIsPowerFull())
-      continue;
-    vSystemResetTimers();
-    MDEBUG("Touch Ev: %d; X: %d; Y: %d; xRaw: %d; yRaw: %d",
-        xTouchRxedEvent.eventTouchScreen,
-        xTouchRxedEvent.xTouchScreen,
-        xTouchRxedEvent.yTouchScreen,
-        xTouchRxedEvent.xRaw,
-        xTouchRxedEvent.yRaw);
-    //send only toggled events to widgets
-    if(eTouchState != xTouchRxedEvent.eventTouchScreen){
-      eTouchState = xTouchRxedEvent.eventTouchScreen;
-      if(bWidgetCheckTouchScreenEvent(xInterfaceInstance, &xTouchRxedEvent))
-        vInterfaceBeep();
-    }
-  }
-}
-
+/*
 void vInterfaceDebug(bool bDebug){
   vDebugSetModuleLogLevel(MODULE_GUI_TASK, LOG_DEBUG);
   vInterfaceInvalidate();
 }
 
 bool bInterfaceGetDebug(){
-  return (iDebugGetModuleLogLevel(MODULE_GUI_TASK) >= LOG_DEBUG)?TRUE:FALSE;
-}
+  return (iDebugGetModuleLogLevel(MODULE_GUI_TASK) >= LOG_DEBUG)?true:false;
+}*/
 
 xWindow * pxInterfaceIsWindowOpened(eWindow eWnd, xWindow ** pxNext){
   xWindowProps *xP;
   xWindow *xW = xActiveWindow;
-  char cLimit = 100; //защита от зацикливания
+  char cLimit = 100; //Р·Р°С‰РёС‚Р° РѕС‚ Р·Р°С†РёРєР»РёРІР°РЅРёСЏ
 
   *pxNext = NULL;
 
   do {
-    if(!(xP = pxWidgetGetProps(xW, WidgetWindow)))
+    if(!(xP = (xWindowProps*)pxWidgetGetProps(xW, WidgetWindow)))
       return NULL;
     if ( xP->eId == eWnd)
         return xW;
     *pxNext = xW;
   }while((xW = pxWindowGetBack(xW)) && cLimit--);
 
-  //TODO: проверять cLimit
+  //TODO: РїСЂРѕРІРµСЂСЏС‚СЊ cLimit
 
   return NULL;
 }
@@ -122,7 +89,7 @@ xWindow * pxInterfaceIsWindowOpened(eWindow eWnd, xWindow ** pxNext){
 xWindow * pxInterfaceIsWindowActive(eWindow eWnd){
   xWindowProps *xP;
 
-  if(!(xP = pxWidgetGetProps(xActiveWindow, WidgetWindow)))
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(xActiveWindow, WidgetWindow)))
     return NULL;
 
   if(xP->eId == eWnd)
@@ -133,41 +100,43 @@ xWindow * pxInterfaceIsWindowActive(eWindow eWnd){
 
 void inline prvDelWndFromStack(xWindow *pxN, xWindow *pxNext){
 
-  xWidget * pxPrev; //пред. окно в стеке
+  xWidget * pxPrev; //РїСЂРµРґ. РѕРєРЅРѕ РІ СЃС‚РµРєРµ
   xWindowProps *xP;
 
-  if(!(xP = pxWidgetGetProps(pxN, WidgetWindow)))
-    return; //ошибка! TODO: обработчик
+  if(!(xP = (xWindowProps*)pxWidgetGetProps(pxN, WidgetWindow)))
+    return; //РѕС€РёР±РєР°! TODO: РѕР±СЂР°Р±РѕС‚С‡РёРє
 
   pxPrev = xP->xBackWindow;
 
-  if(!(xP = pxWidgetGetProps(pxNext, WidgetWindow)))
-    return; //ошибка! TODO: обработчик
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(pxNext, WidgetWindow)))
+    return; //РѕС€РёР±РєР°! TODO: РѕР±СЂР°Р±РѕС‚С‡РёРє
 
   xP->xBackWindow = pxPrev;
 }
 
 void vInterfaceOpenWindow(eWindow eWnd){
-  xWidget * pxN,    //текущее окно в стеке
-          * pxNext = NULL; //следующее окно в стеке
+  xWidget * pxN,    //С‚РµРєСѓС‰РµРµ РѕРєРЅРѕ РІ СЃС‚РµРєРµ
+          * pxNext = NULL; //СЃР»РµРґСѓСЋС‰РµРµ РѕРєРЅРѕ РІ СЃС‚РµРєРµ
   xWindowProps *xP;
 
-  //Если окно уже активно, то нечего его открывать
-  //TODO: нужно ли генерировать события в этом случае??? openRequest???
+  //Р•СЃР»Рё РѕРєРЅРѕ СѓР¶Рµ Р°РєС‚РёРІРЅРѕ, С‚Рѕ РЅРµС‡РµРіРѕ РµРіРѕ РѕС‚РєСЂС‹РІР°С‚СЊ
+  //TODO: РЅСѓР¶РЅРѕ Р»Рё РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ СЃРѕР±С‹С‚РёСЏ РІ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ??? openRequest???
+
+
   if(pxInterfaceIsWindowActive(eWnd)){
     vInterfaceUpdateWindow();
     return;
   }
 
-  //если окно неактивно, то pxNext != NULL
+  //РµСЃР»Рё РѕРєРЅРѕ РЅРµР°РєС‚РёРІРЅРѕ, С‚Рѕ pxNext != NULL
   if((pxN = pxInterfaceIsWindowOpened(eWnd, &pxNext))){
-    //поднять окошко из стека
+    //РїРѕРґРЅСЏС‚СЊ РѕРєРѕС€РєРѕ РёР· СЃС‚РµРєР°
 
     prvDelWndFromStack(pxN, pxNext);
 
-    //Кладем окно в вершину стека (делаем его Active)
-    if(!(xP = pxWidgetGetProps(pxN, WidgetWindow)))
-      return; //ошибка! TODO: обработчик
+    //РљР»Р°РґРµРј РѕРєРЅРѕ РІ РІРµСЂС€РёРЅСѓ СЃС‚РµРєР° (РґРµР»Р°РµРј РµРіРѕ Active)
+    if(!(xP = (xWindowProps*) pxWidgetGetProps(pxN, WidgetWindow)))
+      return; //РѕС€РёР±РєР°! TODO: РѕР±СЂР°Р±РѕС‚С‡РёРє
 
     xP->xBackWindow = xActiveWindow;
 
@@ -179,23 +148,23 @@ void vInterfaceOpenWindow(eWindow eWnd){
     return;
   }
 
-  //окно закрыто - добавляем его в стек
-  //поиск всех окон в интерфейсе
-  //указатель на первый объект-потомок интерфейса
+  //РѕРєРЅРѕ Р·Р°РєСЂС‹С‚Рѕ - РґРѕР±Р°РІР»СЏРµРј РµРіРѕ РІ СЃС‚РµРє
+  //РїРѕРёСЃРє РІСЃРµС… РѕРєРѕРЅ РІ РёРЅС‚РµСЂС„РµР№СЃРµ
+  //СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РїРµСЂРІС‹Р№ РѕР±СЉРµРєС‚-РїРѕС‚РѕРјРѕРє РёРЅС‚РµСЂС„РµР№СЃР°
   pxN = xInterfaceInstance->pxChild;
   while( pxN ){
 
-    if(!(xP = pxWidgetGetProps(pxN, WidgetWindow))){
+    if(!(xP = (xWindowProps*) pxWidgetGetProps(pxN, WidgetWindow))){
       pxN = pxWidgetGetNext(pxN);
       continue;
     }
 
     if(xP->eId == eWnd){
-      //проверка что мы открываем окно, которое не явл. активным
+      //РїСЂРѕРІРµСЂРєР° С‡С‚Рѕ РјС‹ РѕС‚РєСЂС‹РІР°РµРј РѕРєРЅРѕ, РєРѕС‚РѕСЂРѕРµ РЅРµ СЏРІР». Р°РєС‚РёРІРЅС‹Рј
       if(pxN != xActiveWindow){
         if(xP->pxOnOpenRequest)
           if(! xP->pxOnOpenRequest(pxN))
-            //отменяем открытие, если обработчик вернул FALSE
+            //РѕС‚РјРµРЅСЏРµРј РѕС‚РєСЂС‹С‚РёРµ, РµСЃР»Рё РѕР±СЂР°Р±РѕС‚С‡РёРє РІРµСЂРЅСѓР» false
             break;
 
         xP->xBackWindow = xActiveWindow;
@@ -204,13 +173,13 @@ void vInterfaceOpenWindow(eWindow eWnd){
         xActiveWindow = pxN;
         if(xP->pxOnOpen)
           xP->pxOnOpen(pxN);
-        //Проверка не открылся ли диалог или окно в обработчике onOpen
+        //РџСЂРѕРІРµСЂРєР° РЅРµ РѕС‚РєСЂС‹Р»СЃСЏ Р»Рё РґРёР°Р»РѕРі РёР»Рё РѕРєРЅРѕ РІ РѕР±СЂР°Р±РѕС‚С‡РёРєРµ onOpen
         if(xActiveWindow == pxN){
           vWidgetShow(xActiveWindow);
           vInterfaceUpdateWindow();
         }
       }
-      break; //только одно окно может быть видимо.
+      break; //С‚РѕР»СЊРєРѕ РѕРґРЅРѕ РѕРєРЅРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІРёРґРёРјРѕ.
     }
     pxN = pxWidgetGetNext(pxN);
   }
@@ -219,15 +188,15 @@ void vInterfaceOpenWindow(eWindow eWnd){
 void vInterfaceCloseActiveWindow(){
   xWindowProps *xP;
   
-  //ненормальная ситуация
-  //TODO: открыть окно по умолчанию
+  //РЅРµРЅРѕСЂРјР°Р»СЊРЅР°СЏ СЃРёС‚СѓР°С†РёСЏ
+  //TODO: РѕС‚РєСЂС‹С‚СЊ РѕРєРЅРѕ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
   if(!xActiveWindow)
     return;
 
-  if(!(xP = pxWidgetGetProps(xActiveWindow, WidgetWindow)))
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(xActiveWindow, WidgetWindow)))
     return;
   
-  //проверяем возможно ли закрыть окно в данный момент
+  //РїСЂРѕРІРµСЂСЏРµРј РІРѕР·РјРѕР¶РЅРѕ Р»Рё Р·Р°РєСЂС‹С‚СЊ РѕРєРЅРѕ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚
   if(xP->pxOnCloseRequest)
     if(!xP->pxOnCloseRequest(xActiveWindow))
       return;
@@ -245,7 +214,7 @@ void vInterfaceCloseActiveWindow(){
   }
   /*
   else
-    NVIC_SystemReset(); //ТОDO: диалог - подтверждение, low power state*/
+    NVIC_SystemReset(); //РўРћDO: РґРёР°Р»РѕРі - РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ, low power state*/
 }
 
 void vInterfaceCloseWindow(eWindow eWnd){
@@ -259,20 +228,20 @@ void vInterfaceCloseWindow(eWindow eWnd){
   }
 
   if((pxN = pxInterfaceIsWindowOpened(eWnd, &pxNext))){
-    if(!(xP = pxWidgetGetProps(pxN, WidgetWindow)))
+    if(!(xP = (xWindowProps*) pxWidgetGetProps(pxN, WidgetWindow)))
       return;
 
-    //проверяем возможно ли закрыть окно в данный момент
+    //РїСЂРѕРІРµСЂСЏРµРј РІРѕР·РјРѕР¶РЅРѕ Р»Рё Р·Р°РєСЂС‹С‚СЊ РѕРєРЅРѕ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚
     if(xP->pxOnCloseRequest)
       if(!xP->pxOnCloseRequest(pxN)){
-        //Если невозможно, то окно должно стать активным для устранения причины
+        //Р•СЃР»Рё РЅРµРІРѕР·РјРѕР¶РЅРѕ, С‚Рѕ РѕРєРЅРѕ РґРѕР»Р¶РЅРѕ СЃС‚Р°С‚СЊ Р°РєС‚РёРІРЅС‹Рј РґР»СЏ СѓСЃС‚СЂР°РЅРµРЅРёСЏ РїСЂРёС‡РёРЅС‹
         vInterfaceOpenWindow(eWnd);
         return;
       }
 
     prvDelWndFromStack(pxN, pxNext);
 
-    //проверяем возможно ли закрыть окно в данный момент
+    //РїСЂРѕРІРµСЂСЏРµРј РІРѕР·РјРѕР¶РЅРѕ Р»Рё Р·Р°РєСЂС‹С‚СЊ РѕРєРЅРѕ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚
     if(xP->pxOnClose)
       if(!xP->pxOnClose(pxN))
         return;
@@ -282,15 +251,15 @@ void vInterfaceCloseWindow(eWindow eWnd){
 void vInterfaceUpdateWindow(){
 #ifndef BOOTLOADER
   xWindowProps *xP;
-  if(!(xP = pxWidgetGetProps(xActiveWindow, WidgetWindow)))
+  if(!(xP = (xWindowProps*) pxWidgetGetProps(xActiveWindow, WidgetWindow)))
     return;
 
   if(xP->bFullScreen){
-    vWidgetHide(pxStatusBarGet());
+   ;// vWidgetHide(pxStatusBarGet());
   }else{
-    vWidgetShow(pxStatusBarGet());
+    ;//vWidgetShow(pxStatusBarGet());
   }
-  vStatusBarSetWindowHeader(xP->strHeader);
+  //vStatusBarSetWindowHeader(xP->strHeader);
 #endif
 }
 
