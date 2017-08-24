@@ -2,7 +2,10 @@
 #define __FONT_H
 
 #include <stdint.h>
-#include "Font8.h"
+
+extern unsigned char const* const FONT_ASCII_8_X[];
+//extern unsigned char const* const FONT_ASCII_16_X[];
+
 typedef unsigned char const * const * xFont;
   
 uint16_t usFontGetStrW(const char * pcStr, xFont pubFont);

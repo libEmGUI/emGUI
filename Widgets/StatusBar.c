@@ -11,21 +11,8 @@
  #include <stdint.h>
  
  #include "StatusBar.h"
-
-
- 
- //TODO: Delete if not needed
- /*
- #include "Gui.h"
- #include "Charger.h"
- #include "framebuffer.h"
- #include "Settings.h"
- #include "ecg12Lds.h"
- #include "Gsm.h"
- #include "Fonts.h"
- #include "RTC.h"
- */
- /** @weakgroup prop-widget-statusbar
+ #include "cross.c" 
+  /** @weakgroup prop-widget-statusbar
   *  @{
   */
  
@@ -48,19 +35,10 @@
    } xStatusBarProps;
  
  static xWidget             *xStatusBarInstance; ///< дескриптор виджета
- 
  static xButton             *xCloseButton;       ///< дескриптор крестика
- //static xPictureStack       *xBattMonitor;       ///< дескриптор батарейки
- //static xGSMStatusIndicator *xCSQ;               ///< дескриптор качества связи
- static xButton             *xInfo;              ///< дескриптор информации о приборе
- //static xPictureStack       *xFilter;            ///< дескриптор фильтра
- //static xLabel              *xClock;             ///< дескриптор часов
  static xLabel              *xWndHeader;         ///< дескриптор заголовка окна
  
- 
-
- 
- /**
+  /**
    * @brief обработчик щелчка на кнопке крестика
    *
    * @returns true - событие обработано

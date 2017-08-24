@@ -39,14 +39,13 @@
 #define WIDGET_COLOR_BLACK 0
 #endif
 
-class LCD_Glue {
-public:
-  virtual void vFramebufferRectangle(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, uint16_t usColor, bool bFill) = 0;
-  virtual void vFramebufferPutChar(uint16_t usX, uint16_t usY, char ASCI, xFont pubFont, uint16_t usColor, uint16_t usBackground, bool bFillBg) = 0;
-  virtual void vFramebufferHLine(uint16_t usX0, uint16_t usY0, uint16_t usY1, uint16_t usColor) = 0;
-  virtual void vFramebufferVLine(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usColor) = 0;
-  virtual void bFramebufferPicture(int16_t sX0, int16_t sY0, unsigned short const* pusPicture) = 0;
-};
+typedef struct {
+  void (*vFramebufferRectangle)(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, uint16_t usColor, bool bFill);
+  void (*vFramebufferPutChar)(uint16_t usX, uint16_t usY, char ASCI, xFont pubFont, uint16_t usColor, uint16_t usBackground, bool bFillBg);
+  void (*vFramebufferHLine)(uint16_t usX0, uint16_t usY0, uint16_t usY1, uint16_t usColor);
+  void (*vFramebufferVLine)(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usColor);
+  void (*bFramebufferPicture)(int16_t sX0, int16_t sY0, unsigned short const* pusPicture);
+}LCD_Glue;
 
   void vWidgetSetLCD(LCD_Glue * LCD);
   LCD_Glue * pxWidgetGetLCD();

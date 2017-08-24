@@ -28,8 +28,6 @@
 #include "Window.h"
 #include <stdint.h>
 #include "StatusBar.h"
-//#include "sysopts.h"
-  
 
 #ifndef LCD_SizeX
 #define LCD_SizeX 240
@@ -66,7 +64,6 @@ uint16_t inline usInterfaceGetWindowX(){
 uint16_t inline usInterfaceGetWindowY(){
   return LCD_STATUS_BAR_HEIGHT;
 }
-void vInterfaceBeep();
 void vInterfaceInvalidate();
 void bInterfaceCheckTouchScreenEvent();
 void vInterfaceDebug(bool bDebug);

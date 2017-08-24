@@ -34,14 +34,14 @@ xWindow * pxWindowCreate(eWindow eWnd){
   xWindowProps *xP;
   xWindow *pxW;
 
-  pxW = new xWidget;
+  pxW = malloc(sizeof(xWidget));
 
   if(bWidgetInit(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), pxInterfaceGet(), true)){
 
     vWidgetSetBgColor(pxW, 65535, false); //белый фон
     vWidgetSetVisible(pxW, false);
 
-    xP        = new xWindowProps;
+    xP        = malloc(sizeof(xWindowProps));
 
     if(!xP)
       return NULL;
@@ -61,7 +61,7 @@ xWindow * pxWindowCreate(eWindow eWnd){
     return pxW;
   }
   else{
-    delete [] pxW;
+    free(pxW);
     return NULL;
   }
 }

@@ -23,7 +23,6 @@
 #include "Interface.h"
 #include "Button.h"
 #include "Label.h"
-#include "cross.c"
 #include "Font.h"
 
 

@@ -21,7 +21,6 @@
 */
 
 #include "Widget.h"
-#include <Arduino.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -35,13 +34,9 @@ LCD_Glue * pxWidgetGetLCD(){
   return _LCD;
 }
 
-xWidget * pxWidgetAlloc(){
-  return new xWidget;
-}
-
 xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH){
   xWidget *pxW;
-  pxW = new xWidget;
+  pxW = malloc(sizeof(xWidget));
   
   if(!pxW) 
     return NULL;
@@ -49,7 +44,7 @@ xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t u
   if(bWidgetInit(pxW, usX0, usY0, usX1, usY1, pxWidParent, bUseWH))
     return pxW;
   else{
-    delete(pxW);
+    free(pxW);
     return NULL;
   }
 }
@@ -196,7 +191,7 @@ void vWidgetDraw(xWidget *pxW){
 bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild){
   if(!pxWidChild || !pxWidParent)
     return false;
-  xWidget *pxW, *pxWidLast;
+  xWidget *pxW, *pxWidLast = NULL;
   
   //TODO: check for duplicates via pointer address
   //TODO: check for duplicates in children to prevent recursion
@@ -208,7 +203,8 @@ bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild){
       pxWidLast = pxW;
       pxW = pxW->pxNextSibling;
     }
-    pxWidLast->pxNextSibling = pxWidChild;
+	if(pxWidLast)
+		pxWidLast->pxNextSibling = pxWidChild;
   }
   
   return true;

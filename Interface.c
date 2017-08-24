@@ -20,15 +20,8 @@
 	Created on: 14.11.2012
 */
 
-#ifndef __INTERFACE_C
-#define __INTERFACE_C
-
 #include "Interface.h"
 #include <stdio.h>
-#include "Debug.h"
-
-
-#define DEBUG_MODULE_THIS MODULE_GUI_TASK
 
 xInterface *xInterfaceInstance;
 xTouchEventType eTouchState = popTs;
@@ -249,7 +242,7 @@ void vInterfaceCloseWindow(eWindow eWnd){
 }
 
 void vInterfaceUpdateWindow(){
-#ifndef BOOTLOADER
+
   xWindowProps *xP;
   if(!(xP = (xWindowProps*) pxWidgetGetProps(xActiveWindow, WidgetWindow)))
     return;
@@ -260,7 +253,5 @@ void vInterfaceUpdateWindow(){
     ;//vWidgetShow(pxStatusBarGet());
   }
   //vStatusBarSetWindowHeader(xP->strHeader);
-#endif
-}
 
-#endif	//__INTERFACE_C
+}

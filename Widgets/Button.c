@@ -24,6 +24,7 @@
 #define __BUTTON_C
 
 #include "Button.h"
+#include <malloc.h>
 
 bool static vButtonDraw(xButton *pxW){
   xButtonProps *xP;
@@ -77,13 +78,13 @@ xButton * pxButtonCreate(uint16_t usX, uint16_t usY, unsigned short const* pusPi
   xButton *pxW;
   xButtonProps *xP;
   
-  pxW = new xWidget;
+  pxW = malloc(sizeof(xWidget));
   
   if(bWidgetInit(pxW, usX, usY, 1, 1, pxWidParent, true)){
     
     bWidgetSetBgPicture(pxW, pusPic);
     
-    xP = new xButtonProps;
+    xP = malloc(sizeof(xButtonProps));
     
     if(!xP)
       return NULL;
@@ -103,7 +104,7 @@ xButton * pxButtonCreate(uint16_t usX, uint16_t usY, unsigned short const* pusPi
     return pxW;
   }
   else{
-    delete [] pxW;
+    free(pxW);
     return NULL;
   }
 }
@@ -112,7 +113,7 @@ bool bButtonSetPushPic(xButton *pxW, unsigned short const* pusPic){
   //xButtonProps *xP;
  
   if(!pxW)
-    return NULL;
+    return false;
   
   //xP = pxW->pvProp;
    

@@ -25,6 +25,7 @@
 #include "Label.h"
 #include <string.h>
 #include <stdio.h>
+#include <malloc.h>
 #ifndef min
 #define min(a,b) ((a < b) ? a :b)
 #endif
@@ -209,7 +210,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
   xLabel *pxW;
   xLabelProps *xP;
     
-  pxW = new xWidget;
+  pxW = malloc(sizeof(xWidget));
   
   if(!xFnt || !cStr)
     return NULL;
@@ -221,7 +222,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
     
     vWidgetSetBgColor(pxW, WIDGET_COLOR_WHITE, false);
     
-    xP        = new xLabelProps;
+    xP        = malloc(sizeof(xLabelProps));
     if(!xP)
       return NULL;
 
@@ -230,7 +231,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
     //Выделяем память для внутр. хранилища
     if(iMaxLength){
       //+ 1 //for '\0' char in the end
-      xP->pcStr = new char[sizeof(*(xP->pcStr))*iMaxLength + 1];
+      xP->pcStr = malloc(iMaxLength + 1);
     }
     else
       xP->pcStr = (char *) cStr; ///WARNING!
@@ -271,7 +272,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
     return pxW;
   }
   else{
-    delete pxW;
+    free(pxW);
     return NULL;
   }
 }
