@@ -23,16 +23,7 @@
 #include "Widget.h"
 #include <stdlib.h>
 #include <stdio.h>
-
-static LCD_Glue * _LCD;
-
-void vWidgetSetLCD(LCD_Glue * LCD) {
-	_LCD = LCD;
-}
-
-LCD_Glue * pxWidgetGetLCD() {
-	return _LCD;
-}
+#include "Draw/Draw.h"
 
 xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH) {
 	xWidget *pxW;

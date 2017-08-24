@@ -29,6 +29,10 @@
 #include <stdint.h>
 #include "StatusBar.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 #ifndef LCD_SizeX
 #define LCD_SizeX 240
 #endif
@@ -41,39 +45,41 @@
 #define LCD_STATUS_BAR_HEIGHT 26
 #endif
 
-typedef xWidget xInterface;
+	typedef xWidget xInterface;
 
-xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *));
-void vInterfaceDraw();
-xInterface *pxInterfaceGet();
-uint16_t inline usInterfaceGetW() {
-	return LCD_SizeX;
-}
-uint16_t inline usInterfaceGetH() {
-	return LCD_SizeY;
-}
-uint16_t inline usInterfaceGetWindowH() {
-	return LCD_SizeY - LCD_STATUS_BAR_HEIGHT;
-}
-uint16_t inline usInterfaceGetWindowW() {
-	return LCD_SizeX;
-}
-uint16_t inline usInterfaceGetWindowX() {
-	return 0;
-}
-uint16_t inline usInterfaceGetWindowY() {
-	return LCD_STATUS_BAR_HEIGHT;
-}
-void vInterfaceInvalidate();
-void bInterfaceCheckTouchScreenEvent();
-void vInterfaceDebug(bool bDebug);
-bool bInterfaceGetDebug();
-void vInterfaceOpenWindow(eWindow eWnd);
-void vInterfaceCloseActiveWindow();
-void vInterfaceCloseWindow(eWindow eWnd);
-void vInterfaceUpdateWindow();
-xWindow * pxInterfaceIsWindowActive(eWindow eWnd);
+	xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *));
+	void vInterfaceDraw();
+	xInterface *pxInterfaceGet();
+	uint16_t inline usInterfaceGetW() {
+		return LCD_SizeX;
+	}
+	uint16_t inline usInterfaceGetH() {
+		return LCD_SizeY;
+	}
+	uint16_t inline usInterfaceGetWindowH() {
+		return LCD_SizeY - LCD_STATUS_BAR_HEIGHT;
+	}
+	uint16_t inline usInterfaceGetWindowW() {
+		return LCD_SizeX;
+	}
+	uint16_t inline usInterfaceGetWindowX() {
+		return 0;
+	}
+	uint16_t inline usInterfaceGetWindowY() {
+		return LCD_STATUS_BAR_HEIGHT;
+	}
+	void vInterfaceInvalidate();
+	void bInterfaceCheckTouchScreenEvent();
+	void vInterfaceDebug(bool bDebug);
+	bool bInterfaceGetDebug();
+	void vInterfaceOpenWindow(eWindow eWnd);
+	void vInterfaceCloseActiveWindow();
+	void vInterfaceCloseWindow(eWindow eWnd);
+	void vInterfaceUpdateWindow();
+	xWindow * pxInterfaceIsWindowActive(eWindow eWnd);
 
-
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif	//__INTERFACE_H

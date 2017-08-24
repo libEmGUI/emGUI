@@ -30,6 +30,7 @@
 #include <stddef.h>
 
 #include "Fonts/Font.h"
+#include "Draw/Draw.h"
 
 #ifndef WIDGET_COLOR_WHITE
 #define WIDGET_COLOR_WHITE 0xFFFF
@@ -42,17 +43,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
-
-	typedef struct {
-		void(*vFramebufferRectangle)(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, uint16_t usColor, bool bFill);
-		void(*vFramebufferPutChar)(uint16_t usX, uint16_t usY, char ASCI, xFont pubFont, uint16_t usColor, uint16_t usBackground, bool bFillBg);
-		void(*vFramebufferHLine)(uint16_t usX0, uint16_t usY0, uint16_t usY1, uint16_t usColor);
-		void(*vFramebufferVLine)(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usColor);
-		void(*bFramebufferPicture)(int16_t sX0, int16_t sY0, unsigned short const* pusPicture);
-	}LCD_Glue;
-
-	void vWidgetSetLCD(LCD_Glue * LCD);
-	LCD_Glue * pxWidgetGetLCD();
 
 	typedef enum {
 		Widget,
@@ -125,8 +115,6 @@ extern "C" {
 
 	};
 
-	xWidget * pxWidgetAlloc();
-
 	xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH);
 
 	inline xWidget *pxWidgetGetChild(xWidget *pxW) {
@@ -153,10 +141,9 @@ extern "C" {
 	void vWidgesSetClickable(xWidget *pxW, bool bClickable);
 	void vWidgetSetBgColor(xWidget *pxW, uint16_t usBgColor, bool bTransparent);
 	void vWidgetSetTransparency(xWidget *pxW, bool bTransparent);
-	bool bWidgetSetBgPicture(xWidget *pxW, uint16_t const* pusBgPicture);
+	bool bWidgetSetBgPicture(xWidget *pxW, unsigned short const* pusBgPicture);
 	void vWidgetSetVisible(xWidget *pxW, bool bVisible);
 	void vWidgetSetClickable(xWidget *pxW, bool bClickable);
-	void vWidgetSetEnabled(xWidget *pxW, bool bEnabled);
 	bool bWidgetSetCoords(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, bool bUseWH);
 
 	//Commands

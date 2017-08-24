@@ -20,9 +20,6 @@
 	Created on: 15.11.2012
 */
 
-#ifndef __BUTTON_C
-#define __BUTTON_C
-
 #include "Widgets/Button.h"
 #include <malloc.h>
 
@@ -131,5 +128,3 @@ bool bButtonSetPushPic(xButton *pxW, unsigned short const* pusPic) {
 
 	return true;
 }
-
-#endif	//__BUTTON_C
