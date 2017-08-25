@@ -208,10 +208,11 @@ void vInterfaceCloseActiveWindow() {
 		if (xP->pxOnClose)
 			xP->pxOnClose(xActiveWindow);
 		vInterfaceUpdateWindow();
-	}
-	/*
-	else
-	  NVIC_SystemReset(); //ТОDO: диалог - подтверждение, low power state*/
+	} /*else { //TODO: Should we issue OnClose when there's last window on display?
+		if (xP->pxOnClose)
+			xP->pxOnClose(xActiveWindow);
+	}*/
+	
 }
 
 void vInterfaceCloseWindow(eWindow eWnd) {
