@@ -211,7 +211,7 @@ extern "C" {
 	}
 
 	inline bool bWidgetIs(xWidget * pxW, eWidgetType eType) {
-		return (pxW->eType == eType && pxW) ? true : false;
+		return (pxW && pxW->eType == eType) ? true : false;
 	}
 
 	inline void * pxWidgetGetProps(xWidget * pxW, eWidgetType eType) {
