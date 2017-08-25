@@ -59,6 +59,10 @@ bool bInterfaceGetDebug(){
   return (iDebugGetModuleLogLevel(MODULE_GUI_TASK) >= LOG_DEBUG)?true:false;
 }*/
 
+bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv) {
+	return bWidgetCheckTouchScreenEvent(xInterfaceInstance, pxTouchScreenEv);
+}
+
 xWindow * pxInterfaceIsWindowOpened(eWindow eWnd, xWindow ** pxNext) {
 	xWindowProps *xP;
 	xWindow *xW = xActiveWindow;
@@ -248,11 +252,11 @@ void vInterfaceUpdateWindow() {
 		return;
 
 	if (xP->bFullScreen) {
-		;// vWidgetHide(pxStatusBarGet());
+		vWidgetHide(pxStatusBarGet());
 	}
 	else {
-		;//vWidgetShow(pxStatusBarGet());
+		vWidgetShow(pxStatusBarGet());
 	}
-	//vStatusBarSetWindowHeader(xP->strHeader);
+	vStatusBarSetWindowHeader(xP->strHeader);
 
 }

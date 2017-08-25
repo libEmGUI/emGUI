@@ -69,7 +69,7 @@ extern "C" {
 		return LCD_STATUS_BAR_HEIGHT;
 	}
 	void vInterfaceInvalidate();
-	void bInterfaceCheckTouchScreenEvent();
+	bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv);
 	void vInterfaceDebug(bool bDebug);
 	bool bInterfaceGetDebug();
 	void vInterfaceOpenWindow(eWindow eWnd);
