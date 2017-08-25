@@ -27,7 +27,7 @@
 #endif
 
 #ifndef ColorMenuHeaderText
-#define ColorMenuHeaderText 0xffffff
+#define ColorMenuHeaderText 0 //black
 #endif
 
 typedef struct xStatusBarProps_struct {
@@ -67,7 +67,7 @@ bool bStatusBarCreate(uint16_t usColor) {
 	usW = usFontGetStrW("Default Title", FONT_ASCII_8_X) + 10;
 	usX = usStatusBarGetW() / 2 - usW / 2;
 
-	xWndHeader = pxLabelCreate(usX, usY, usW, 60, "Default Title", (xFont)FONT_ASCII_8_X, 100, xStatusBarInstance);
+	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default Title", (xFont)FONT_ASCII_8_X, 100, xStatusBarInstance);
 	vWidgetSetBgColor(xWndHeader, usColor, false);
 	vLabelSetTextColor(xWndHeader, ColorMenuHeaderText);
 	vLabelSetTextAlign(xWndHeader, LABEL_ALIGN_CENTER);
