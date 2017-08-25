@@ -23,7 +23,10 @@
 #ifndef __WIDGET_H
 #define __WIDGET_H
 
-#define DEBUG_EMGUI 1
+#ifndef DEBUG_EMGUI
+#define DEBUG_EMGUI 0
+#endif // !DEBUG_EMGUI
+
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -64,11 +67,9 @@ extern "C" {
 	}xPoint;
 
 	typedef struct xTouchEvent_t {
+		xTouchEventType eventTouchScreen;
 		uint16_t xTouchScreen;
 		uint16_t yTouchScreen;
-		uint16_t xRaw;
-		uint16_t yRaw;
-		xTouchEventType eventTouchScreen;
 		uint32_t touchScreenEventTime;
 	} xTouchEvent;
 
@@ -143,7 +144,6 @@ extern "C" {
 	void vWidgetSetTransparency(xWidget *pxW, bool bTransparent);
 	bool bWidgetSetBgPicture(xWidget *pxW, unsigned short const* pusBgPicture);
 	void vWidgetSetVisible(xWidget *pxW, bool bVisible);
-	void vWidgetSetClickable(xWidget *pxW, bool bClickable);
 	bool bWidgetSetCoords(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, bool bUseWH);
 
 	//Commands
