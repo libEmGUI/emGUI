@@ -22,10 +22,6 @@
 #define SRATUS_BAR_CROSS_PIC cross
 #endif 
 
-#ifndef FONT_ASCII_16_X
-#define FONT_ASCII_16_X FONT_ASCII_8_X
-#endif
-
 #ifndef ColorMenuHeaderText
 #define ColorMenuHeaderText 0 //black
 #endif
@@ -64,10 +60,10 @@ bool bStatusBarCreate(uint16_t usColor) {
 	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);
 
 	usY = (usStatusBarGetH() - usFontGetH(FONT_ASCII_16_X)) / 2;
-	usW = usFontGetStrW("Default Title", FONT_ASCII_8_X) + 10;
+	usW = usFontGetStrW("Default Title", FONT_ASCII_16_X) + 10;
 	usX = usStatusBarGetW() / 2 - usW / 2;
 
-	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default Title", (xFont)FONT_ASCII_8_X, 100, xStatusBarInstance);
+	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default Title", (xFont)FONT_ASCII_16_X, 100, xStatusBarInstance);
 	vWidgetSetBgColor(xWndHeader, usColor, false);
 	vLabelSetTextColor(xWndHeader, ColorMenuHeaderText);
 	vLabelSetTextAlign(xWndHeader, LABEL_ALIGN_CENTER);
