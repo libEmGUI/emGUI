@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 #include "Widgets/StatusBar.h"
-#include "Images/cross.c" 
+#include "Images/Cross.c" 
  /** @weakgroup prop-widget-statusbar
  *  @{
  */
