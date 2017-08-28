@@ -1,11 +1,11 @@
 #include "Draw/Draw.h"
 
-static LCD_Glue * _LCD;
+static xDraw_t * _HDL;
 
-void vWidgetSetLCD(LCD_Glue * LCD) {
-	_LCD = LCD;
+void vDrawSetHandler(xDraw_t * hdl) {
+	_HDL = hdl;
 }
 
-LCD_Glue * pxWidgetGetLCD() {
-	return _LCD;
+xDraw_t * pxDrawHDL() {
+	return _HDL;
 }

@@ -89,7 +89,7 @@ static void prvPrintLine(char *pcLine, uint16_t uCharCount, uint16_t uXFrom, uin
 
 	while (*pcCharacter && uCharCount) {
 		if (*pcCharacter != '\n')
-			pxWidgetGetLCD()->vFramebufferPutChar(uXFrom, uY, *pcCharacter, pubFont, usColor, usBackground, false);
+			pxDrawHDL()->vPutChar(uXFrom, uY, *pcCharacter, pubFont, usColor, usBackground, false);
 		uXFrom += ucFontGetCharW(*pcCharacter, pubFont);
 		++pcCharacter;
 		--uCharCount;

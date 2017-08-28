@@ -113,12 +113,12 @@ bool bWidgetDraw(xWidget *pxW) {
 		return false;
 
 	if (pxW->pusBgPicture) {
-		pxWidgetGetLCD()->bFramebufferPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
+		pxDrawHDL()->bPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
 		return true;
 	}
 
 	if (!pxW->bTransparent) {
-		pxWidgetGetLCD()->vFramebufferRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, pxW->usBgColor, true);
+		pxDrawHDL()->vRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, pxW->usBgColor, true);
 		return true;
 	}
 
@@ -174,7 +174,7 @@ void vWidgetDraw(xWidget *pxW) {
 	pxW->bValid = true;
 
 	if (bInterfaceGetDebug() && bRedrawed) {
-		pxWidgetGetLCD()->vFramebufferRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, rand(), false);
+		pxDrawHDL()->vRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, rand(), false);
 	}
 
 }
