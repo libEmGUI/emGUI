@@ -23,12 +23,27 @@
 #ifndef MODALDIALOG_H_
 #define MODALDIALOG_H_
 
+#include "include.h"
+#include "Widgets/Label.h"
+#include "Widgets/Button.h"
+#include "Widgets/StatusBar.h"
+#include "Widgets/Window.h"
+#include "Widgets/MenuButton.h"
+#include "Fonts/Font.h"
+
+//#include "GuiInterface.h"
+//#include "GsmInterface.h"
+//#include "Memory.h"
+#include <string.h>
+//#include "Widgets/ProgressBar.h"
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum {
-#include "ModalDialog.def"
   MODAL_AUTO,
 }eModalDialog;
 

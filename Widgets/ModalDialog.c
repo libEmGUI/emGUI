@@ -25,20 +25,7 @@
 extern "C" {
 #endif
   
-#include "include.h"
-#include "PictureStorage.h"
-#include "Widgets/Label.h"
-#include "Widgets/Button.h"
-#include "Widgets/StatusBar.h"
-#include "Widgets/Window.h"
-#include "Widgets/MenuButton.h"
-#include "GuiInterface.h"
-#include "GsmInterface.h"
-#include "Memory.h"
-#include <string.h>
-#include "Widgets/ProgressBar.h"
-#include "Fonts.h"
-  
+
 #include "ModalDialog.h"
 
 #define MODAL_DIALOG_MAX_BUTTONS    3
@@ -50,11 +37,11 @@ static xWindow *xThisWnd;
 
 static xLabel         *xMessageHeader;
 static xLabel         *xMessage;
-static xProgressBar   *xPBar;
+//static xProgressBar   *xPBar;
 static xMenuButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS]; // y(ok)/n/c ћаксимум в диалоге видно 4 кнопки.
 
 //автонумераци€ дл€ автоматических диалогов
-u16 usDlgID = MODAL_AUTO + 1;
+uint16_t usDlgID = MODAL_AUTO + 1;
 
 typedef struct xModalDialog_t xModalDialog;
 
@@ -65,7 +52,7 @@ struct xModalDialog_t {
 
   //bool bActive
   char sDialogConfig[MODAL_DIALOG_MAX_BUTTONS + 1];
-  u16  usDlgID;
+  uint16_t  usDlgID;
   char const* sHdr;
   char const* sMsg;
   signed char cProgress;
@@ -100,33 +87,33 @@ static void prvResetDlgWnd(){
 
   pcLabelSetText(xMessageHeader, "");
   pcLabelSetText(xMessage, "");
-  vWidgetHide(xPBar);
+  //vWidgetHide(xPBar);
 }
 
 bool static prvOnOpenHandler(xWidget *pxW){
   prvDlgShowActive();
-  return TRUE;
+  return true;
 }
 
 bool static prvOnOpenRequestHandler(xWidget *pxW){
   if(xMDActive)
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 bool static prvOnCloseHandler(xWidget *pxW){
-  return TRUE;
+  return true;
 }
 
 bool static prvOnCloseRequestHandler(xWidget *pxW){
   if(xMDActive)
-    vModalDialogClose(xMDActive->usDlgID, TRUE);
+    vModalDialogClose(xMDActive->usDlgID, true);
 
   if(xMDActive)
-    return FALSE;
+    return false;
   else
-    return TRUE;
+    return true;
 }
 
 bool static prvButtonHandler(xWidget *pxW){
@@ -135,31 +122,31 @@ bool static prvButtonHandler(xWidget *pxW){
   //эту переменную. 
   int usDlgId = xMDActive->usDlgID;
   if(!xMDActive)
-    return FALSE;
+    return false;
   for(int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++){
     if(xButtons[c] == pxW && xMDActive->pxClickHandlers[c]){
       xMDActive->pxClickHandlers[c]();
       break;
     }
   }
-  vModalDialogClose(usDlgId, FALSE);
-  return TRUE;
+  vModalDialogClose(usDlgId, false);
+  return true;
 }
 
 xWidget * pxModalDialogWindowCreate(){
 
   // X0, Y0 - координаты расположени€ виджетов
-  u16 usX, usY;
+  uint16_t usX, usY;
 
   xThisWnd = pxWindowCreate(WINDOW_MODAL);
-  vWidgetSetBgColor(xThisWnd, ColorEcgBackground, FALSE);
+  vWidgetSetBgColor(xThisWnd, ColorEcgBackground, false);
   vWindowSetOnOpenHandler(xThisWnd, prvOnOpenHandler);
   vWindowSetOnOpenRequestHandler(xThisWnd, prvOnOpenRequestHandler);
   vWindowSetOnCloseHandler(xThisWnd, prvOnCloseHandler);
   vWindowSetOnCloseRequestHandler(xThisWnd, prvOnCloseRequestHandler);
 
   xMessageHeader = pxLabelCreate(0, 0, usWidgetGetW(xThisWnd), usStatusBarGetH(), "ModalDialogHeader", FONT_ASCII_16_X, 0, xThisWnd);
-  vWidgetSetBgColor(xMessageHeader, ColorMessageHeaderBackground, FALSE);
+  vWidgetSetBgColor(xMessageHeader, ColorMessageHeaderBackground, false);
   vLabelSetTextAlign(xMessageHeader, LABEL_ALIGN_CENTER);
   vLabelSetVerticalAlign(xMessageHeader, LABEL_ALIGN_MIDDLE);
   vLabelSetTextColor(xMessageHeader, ColorMessageHeaderText);
@@ -167,14 +154,14 @@ xWidget * pxModalDialogWindowCreate(){
   usY = (usInterfaceGetWindowH() * 4 )/10 - usStatusBarGetH();
 
   xMessage = pxLabelCreate(0, usWidgetGetH(xMessageHeader), usWidgetGetW(xThisWnd), usY, "ModalDialogText", FONT_ASCII_16_X, MODAL_DIALOG_MAX_MSG_LENGTH, xThisWnd);
-  bLabelSetMultiline(xMessage, TRUE);
+  bLabelSetMultiline(xMessage, true);
   vLabelSetTextAlign(xMessage, LABEL_ALIGN_CENTER);
   vLabelSetVerticalAlign(xMessage, LABEL_ALIGN_MIDDLE);
 
-  usY = usWidgetGetY1(xMessage, FALSE);
+  usY = usWidgetGetY1(xMessage, false);
 
-  xPBar = pxProgressBarCreate(PB_BORDER, usY, usWidgetGetW(xThisWnd) - PB_BORDER * 2, 30, xThisWnd);
-  vProgressBarSetProcExec(xPBar, 55);
+  //xPBar = pxProgressBarCreate(PB_BORDER, usY, usWidgetGetW(xThisWnd) - PB_BORDER * 2, 30, xThisWnd);
+  //vProgressBarSetProcExec(xPBar, 55);
 
   usY = (usInterfaceGetWindowH()/2 + LCD_TsBtn_SIZE/3);
   usX = 0;
@@ -221,10 +208,10 @@ xModalDialogPictureSet prvGetPicSet(char cType){
 
 static inline void prvShowPB(xModalDialog * xDlg){
   if(xDlg->cProgress >= 0){
-    vWidgetShow(xPBar);
-    vProgressBarSetProcExec(xPBar, xDlg->cProgress);
+    //vWidgetShow(xPBar);
+    //vProgressBarSetProcExec(xPBar, xDlg->cProgress);
   }else{
-    vWidgetHide(xPBar);
+    //vWidgetHide(xPBar);
   }
 }
 
@@ -244,13 +231,13 @@ static void prvDlgShowActive(){
 
   xMenuButton * xBtn;
 
-  u16 betweenBtnsX,
+  uint16_t betweenBtnsX,
         usX, usY;
 
   prvResetDlgWnd();
 
   betweenBtnsX = (usInterfaceGetW() - cBtnCnt * usWidgetGetW(xButtons[0])) / (cBtnCnt + 1);
-  usY = usWidgetGetY0(xButtons[0], FALSE);
+  usY = usWidgetGetY0(xButtons[0], false);
   usX = betweenBtnsX;
   
   pcLabelSetText(xMessageHeader, xDlg->sHdr);
@@ -323,7 +310,7 @@ void prvDlgRefresh(xModalDialog * xDlg, char const* sBtns, char const* sHdr, cha
   xDlg->sHdr = sHdr;
   xDlg->sMsg = sMsg;
   xDlg->cProgress = -1;
-  xDlg->bCanClose = TRUE;
+  xDlg->bCanClose = true;
   memcpy(xDlg->sDialogConfig, sBtns, MODAL_DIALOG_MAX_BUTTONS + 1);
   xDlg->sDialogConfig[MODAL_DIALOG_MAX_BUTTONS] = '\0';
 
@@ -364,7 +351,7 @@ int iModalDialogOpen(int iDlgId, char const * sBtns, char const * sHdr, char con
     xDlg->sHdr = sHdr;
     xDlg->sMsg = sMsg;
     xDlg->cProgress = -1;
-    xDlg->bCanClose = TRUE;
+    xDlg->bCanClose = true;
     xDlg->pxDefaultHandler = NULL;
     
     for(int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++)
