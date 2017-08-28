@@ -8,7 +8,7 @@ extern "C" {
 #endif // __cplusplus
 
 	extern unsigned char const* const FONT_ASCII_8_X[];
-	//extern unsigned char const* const FONT_ASCII_16_X[];
+	extern unsigned char const* const FONT_ASCII_16_X[];
 
 	typedef unsigned char const * const * xFont;
 
