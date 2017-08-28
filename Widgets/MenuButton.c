@@ -6,11 +6,9 @@
 *
 */
 
-#include "Memory.h"
 #include "MenuButton.h"
-#include "PictureStorage.h"
-#include "Label.h"
-#include "Fonts.h"
+#include "Images/Label_bg.c" 
+
 
 /** @weakgroup prop-widget-menu-button
 *  @{
@@ -39,28 +37,26 @@ static bool prvButtonClick(xWidget *pxW) {
 	return true;
 }
 
-xMenuButton * pxMenuButtonCreate(u16 usX, u16 usY, xPicture xPicFG, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent) {
+xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, unsigned short const*  pusPic, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent) {
 	xMenuButton *pxW;
 	xMenuButtonProps *xP;
 
-	xPicture xPicText;
+	unsigned short const* pusPicText;
 
 	// memory for MenuButton
 
-	pxW = (xMenuButton*)pvMemoryMalloc(sizeof(xWidget), MEMORY_EXT);
-
+	pxW = (xMenuButton*)malloc(sizeof(xWidget));
 	//инициализация виджета
 
-	u16 usW, usH;
+	uint16_t usW, usH;
 
-	xPicText = pxPictureGet(Pic_b2_bg);
-	usW = usPictureGetW(xPicFG); // ширина
-	usH = usPictureGetH(xPicFG) + usPictureGetH(xPicText);
+	pusPicText = (label_bg);
+	usW = usPictureGetW(pusPic); // ширина
+	usH = usPictureGetH(pusPic) + usPictureGetH(pusPicText);
 
 	if (bWidgetInit(pxW, usX, usY, usW, usH, pxWidParent, true)) {
 
-		xP = (xMenuButtonProps*)pvMemoryMalloc(sizeof(xMenuButtonProps), MEMORY_EXT);
-
+		xP = (xMenuButtonProps*)malloc(sizeof(xMenuButtonProps));
 		if (!xP)
 			return NULL;
 
@@ -72,11 +68,11 @@ xMenuButton * pxMenuButtonCreate(u16 usX, u16 usY, xPicture xPicFG, char* strLab
 		pxW->bClickable = false;
 
 		// ----
-		xP->xButton = pxButtonCreate(0, 0, xPicFG, pxW);
+		xP->xButton = pxButtonCreate(0, 0, pusPic, pxW);
 		bButtonSetOnClickHandler(xP->xButton, prvButtonClick);
 
 		xP->xText = pxLabelCreate(0, usWidgetGetH(xP->xButton), 1, 1, "", FONT_ASCII_8_X, 10, pxW);
-		bWidgetSetBgPicture(xP->xText, xPicText);
+		bWidgetSetBgPicture(xP->xText, pusPicText);
 		vLabelSetVerticalAlign(xP->xText, LABEL_ALIGN_MIDDLE);
 		vLabelSetTextAlign(xP->xText, LABEL_ALIGN_CENTER);
 		vLabelSetTextColor(xP->xText, 65535);
@@ -87,20 +83,19 @@ xMenuButton * pxMenuButtonCreate(u16 usX, u16 usY, xPicture xPicFG, char* strLab
 	}
 
 	else {
-
-		vMemoryFree(pxW);
+		free(pxW);
 		return NULL;
 
 	}
 }
 
-void pxMenuButtonSetMainPic(xWidget * pxW, xPicture xPic) {
+void pxMenuButtonSetMainPic(xWidget * pxW, unsigned short const* pusPic) {
 	xMenuButtonProps *xP;
 
 	if (!(xP = (xMenuButtonProps*)pxWidgetGetProps(pxW, WidgetMenuButton)))
 		return;
 
-	bWidgetSetBgPicture(xP->xButton, xPic);
+	bWidgetSetBgPicture(xP->xButton, pusPic);
 
 	return;
 }

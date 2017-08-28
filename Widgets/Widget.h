@@ -52,7 +52,8 @@ extern "C" {
 		WidgetLabel,
 		WidgetButton,
 		WidgetWindow,
-		WidgetStatusBar
+		WidgetStatusBar,
+		WidgetMenuButton
 	} eWidgetType;
 
 	typedef enum {

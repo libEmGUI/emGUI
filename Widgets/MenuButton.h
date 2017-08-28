@@ -16,9 +16,14 @@
 *  @{
 */
 
-#include "Widget.h"
-#include "Button.h"
-#include "PictureStorage.h"
+#include "Widgets/Widget.h"
+#include "Widgets/Button.h"
+#include "Widgets/Label.h"
+#include "Fonts/Font.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 typedef xWidget xMenuButton; ///< тип для кнопки меню
 
@@ -34,7 +39,7 @@ typedef xWidget xMenuButton; ///< тип для кнопки меню
 							 *
 							 * @returns указатель на созданную кнопку
 							 */
-xMenuButton * pxMenuButtonCreate(u16 usX, u16 usY, xPicture xPicFG, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
+xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, unsigned short const*  pusPic, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
 
 /**
 * @brief устанавливает картинку на кнопке
@@ -43,7 +48,7 @@ xMenuButton * pxMenuButtonCreate(u16 usX, u16 usY, xPicture xPicFG, char* strLab
 * @param xPic - указатель на картинку
 *
 */
-void pxMenuButtonSetMainPic(xWidget * pxW, xPicture xPic);
+void pxMenuButtonSetMainPic(xWidget * pxW, unsigned short const*  pusPic);
 
 /**
 * @brief устанавливает подпись под кнопкой
@@ -60,5 +65,7 @@ void pxMenuButtonSetLabelText(xWidget * pxW, char const* strL);
 /**
 *  @}
 */
-
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 #endif /* MENUBUTTON_H_ */
