@@ -10,6 +10,9 @@ extern "C" {
 	extern const unsigned short no[];
 	extern const unsigned short yes[];
 	extern const unsigned short refresh[];
+	extern const unsigned short folder[];
+	extern const unsigned short magic[];
+	extern const unsigned short process[];
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,3 @@
-#include "Images.h" 
-
 const unsigned short close[]={
 16,16,
 19049,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19049,
