@@ -11,7 +11,6 @@
 #include <stdint.h>
 
 #include "Widgets/StatusBar.h"
-#include "Images/Cross.c"
  /** @weakgroup prop-widget-statusbar
  *  @{
  */
@@ -45,10 +44,10 @@ bool bStatusBarCreate(uint16_t usColor) {
 
 	uint16_t usX, usY, usW;
 
-	usY = (LCD_STATUS_BAR_HEIGHT - usPictureGetH(SRATUS_BAR_CROSS_PIC)) / 2;
-	usX = LCD_SizeX - usPictureGetW(SRATUS_BAR_CROSS_PIC) - usY;
+	usY = (LCD_STATUS_BAR_HEIGHT - usPictureGetH(STATUS_BAR_CROSS_PIC)) / 2;
+	usX = LCD_SizeX - usPictureGetW(STATUS_BAR_CROSS_PIC) - usY;
 
-	xCloseButton = pxButtonCreate(usX, usY, SRATUS_BAR_CROSS_PIC, xStatusBarInstance);
+	xCloseButton = pxButtonCreate(usX, usY, STATUS_BAR_CROSS_PIC, xStatusBarInstance);
 	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);
 
 	usY = (usStatusBarGetH() - usFontGetH(FONT_ASCII_16_X)) / 2;

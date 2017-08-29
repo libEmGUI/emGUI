@@ -7,7 +7,6 @@
 */
 
 #include "MenuButton.h"
-#include "Images/Label_bg.c" 
 
 
 /** @weakgroup prop-widget-menu-button
@@ -50,7 +49,7 @@ xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, unsigned short cons
 
 	uint16_t usW, usH;
 
-	pusPicText = (label_bg);
+	pusPicText = (PIC_LABEL_BG);
 	usW = usPictureGetW(pusPic); // ширина
 	usH = usPictureGetH(pusPic) + usPictureGetH(pusPicText);
 
