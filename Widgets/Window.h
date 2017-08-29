@@ -23,7 +23,9 @@
 #ifndef WINDOW_H_
 #define WINDOW_H_
 
+
 #include "Widgets/Widget.h"
+
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
 #ifdef __cplusplus

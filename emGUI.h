@@ -10,5 +10,5 @@
 #include "Widgets/StatusBar.h"
 #include "Widgets/Button.h"
 #include "Widgets/MenuButton.h"
-
+#include "opts.h"
 #endif // !EMGUI_H

@@ -28,7 +28,7 @@
 //#include "utils.h"
 
 
-#define WINDOW_HEADER_LENGTH 25
+
 
 xWindow * pxWindowCreate(eWindow eWnd) {
 	xWindowProps *xP;

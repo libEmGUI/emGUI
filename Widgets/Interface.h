@@ -28,22 +28,11 @@
 #include "Window.h"
 #include <stdint.h>
 #include "StatusBar.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-#ifndef LCD_SizeX
-#define LCD_SizeX 240
-#endif
 
-#ifndef LCD_SizeY
-#define LCD_SizeY 240
-#endif
-
-#ifndef LCD_STATUS_BAR_HEIGHT
-#define LCD_STATUS_BAR_HEIGHT 26
-#endif
 
 	typedef xWidget xInterface;
 

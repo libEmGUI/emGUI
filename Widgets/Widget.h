@@ -23,9 +23,7 @@
 #ifndef __WIDGET_H
 #define __WIDGET_H
 
-#ifndef DEBUG_EMGUI
-#define DEBUG_EMGUI 0
-#endif // !DEBUG_EMGUI
+
 
 
 #include <stdint.h>
@@ -35,13 +33,8 @@
 #include "Fonts/Font.h"
 #include "Draw/Draw.h"
 
-#ifndef WIDGET_COLOR_WHITE
-#define WIDGET_COLOR_WHITE 0xFFFF
-#endif
+#include "opts.h"
 
-#ifndef WIDGET_COLOR_BLACK
-#define WIDGET_COLOR_BLACK 0
-#endif
 
 #ifdef __cplusplus
 extern "C" {

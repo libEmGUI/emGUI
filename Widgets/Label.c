@@ -30,7 +30,7 @@
 #define min(a,b) ((a < b) ? a :b)
 #endif
 
-#define LABEL_MAX_LENGTH 10000
+
 
 static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t *puXLinePosition,
 	xFont pubFont, eLabelTextAlign eHorAlign) {

@@ -11,20 +11,12 @@
 #include <stdint.h>
 
 #include "Widgets/StatusBar.h"
-#include "Images/Cross.c" 
+#include "Images/Cross.c"
  /** @weakgroup prop-widget-statusbar
  *  @{
  */
 
-#define       STATUS_BAR_FILT_INFO_GAP 5 ///< расстояние м/д элементами
 
-#ifndef STATUS_BAR_CROSS_PIC 
-#define SRATUS_BAR_CROSS_PIC cross
-#endif 
-
-#ifndef ColorMenuHeaderText
-#define ColorMenuHeaderText 0 //black
-#endif
 
 typedef struct xStatusBarProps_struct {
 	uint16_t usColor;          ///< цвет статус-бара

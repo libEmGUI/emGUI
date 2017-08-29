@@ -24,23 +24,10 @@
 #include "Widgets/Button.h"
 #include "Widgets/Label.h"
 #include "Fonts/Font.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-
-#ifndef LCD_SizeX
-#define LCD_SizeX 240
-#endif
-
-#ifndef LCD_SizeY
-#define LCD_SizeY 240
-#endif
-
-#ifndef LCD_STATUS_BAR_HEIGHT
-#define LCD_STATUS_BAR_HEIGHT 26
-#endif
 
 	typedef xWidget xStatusBar; ///< тип виджета
 
