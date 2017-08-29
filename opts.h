@@ -59,7 +59,7 @@ typedef XPICTURE_TYPE xPicture;
 	#include "Images/Images.h"
 
 	#ifndef STATUS_BAR_CROSS_PIC 
-	#define STATUS_BAR_CROSS_PIC	cross
+	#define STATUS_BAR_CROSS_PIC	close
 	#endif 
 
 	#ifndef PIC_LABEL_BG 
