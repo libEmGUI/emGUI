@@ -163,11 +163,11 @@ xWidget * pxModalDialogWindowCreate(){
   //xPBar = pxProgressBarCreate(PB_BORDER, usY, usWidgetGetW(xThisWnd) - PB_BORDER * 2, 30, xThisWnd);
   //vProgressBarSetProcExec(xPBar, 55);
 
-  usY = (usInterfaceGetWindowH()/2 + LCD_TsBtn_SIZE/3);
+  usY = (usInterfaceGetWindowH()/2 + usPictureGetH(PIC_YES)/3);
   usX = 0;
 
   for(int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++){
-    xButtons[c] = pxMenuButtonCreate(usX, usY, pxPictureGet(Pic_ButtonOk), "", prvButtonHandler, xThisWnd);
+    xButtons[c] = pxMenuButtonCreate(usX, usY, PIC_YES, "", prvButtonHandler, xThisWnd);
     usX += LCD_TsBtn_SIZE;
     vWidgetHide(xButtons[c]);
   }
@@ -178,28 +178,28 @@ xModalDialogPictureSet prvGetPicSet(char cType){
   xModalDialogPictureSet xPicSet;
   switch(cType){
   /*case 'y':
-    xPicSet.xPicMain = pxPictureGet(Pic_ButtonOk);
+    xPicSet.xPicMain = pxPictureGet(PIC_YES);
     xPicSet.xPicMainPress = pxPictureGet(Pic_ButtonOk_press);
     xPicSet.xPicLabel = pxPictureGet(Pic_b2_yes);*/
   case 'n':
-    xPicSet.xPicMain = pxPictureGet(Pic_ButtonNo);
-    xPicSet.strLabel = "Нет";
+    xPicSet.xPicMain = (PIC_NO);
+    xPicSet.strLabel = "No";
     break;
   case 'c':
-    xPicSet.xPicMain = pxPictureGet(Pic_return);
-    xPicSet.strLabel = "Отмена";
+    xPicSet.xPicMain = (PIC_RETURN);
+    xPicSet.strLabel = "Cancel";
     break;
   case 'o':
-    xPicSet.xPicMain = pxPictureGet(Pic_ButtonOk);
-    xPicSet.strLabel = "ОК";
+    xPicSet.xPicMain = (PIC_YES);
+    xPicSet.strLabel = "OK";
     break;
   case 'e':
-    xPicSet.xPicMain = pxPictureGet(Pic_ButtonNo);
-    xPicSet.strLabel = "ОК";
+    xPicSet.xPicMain = (PIC_NO);
+    xPicSet.strLabel = "OK";
     break;
   default:
-    xPicSet.xPicMain = pxPictureGet(Pic_ButtonOk);
-    xPicSet.strLabel = "ОК";
+    xPicSet.xPicMain = (PIC_YES);
+    xPicSet.strLabel = "OK";
     break;
   }
 
@@ -221,6 +221,7 @@ static void prvDlgShowActive(){
   if(!xDlg){
     //return;
     vInterfaceCloseWindow(WINDOW_MODAL);
+	return;
     //TODO: выставить кол-во активных диалогов в 0
   }
   
@@ -253,7 +254,7 @@ static void prvDlgShowActive(){
     vWidgetShow(xBtn);
 
     pxMenuButtonSetMainPic(xBtn, xPicSet.xPicMain);
-    pxMenuButtonSetPushPic(xBtn, xPicSet.xPicMainPress);
+    //pxMenuButtonSetPushPic(xBtn, xPicSet.xPicMainPress);
     pxMenuButtonSetLabelText(xBtn, xPicSet.strLabel);
 
     usX += betweenBtnsX + usWidgetGetW(xBtn);
@@ -344,7 +345,7 @@ int iModalDialogOpen(int iDlgId, char const * sBtns, char const * sHdr, char con
     prvDelDlgFromStack(xDlg, xDlgNext);
   }else{
     //Диалога в стеке нет, создаем новую структуру
-    xDlg = pvMemoryMalloc(sizeof(xModalDialog), MEMORY_EXT);
+    xDlg = malloc(sizeof(xModalDialog));
     //cDialogCount ++;
     memcpy(xDlg->sDialogConfig, sBtns, MODAL_DIALOG_MAX_BUTTONS + 1);
     xDlg->sDialogConfig[MODAL_DIALOG_MAX_BUTTONS] = '\0';
@@ -454,7 +455,7 @@ void vModalDialogClose(int iDlgID, bool bFireDefault){
     if(xDlg->pxDefaultHandler)
       xDlg->pxDefaultHandler(NULL);
   }
-  vMemoryFree(xDlg);
+  free(xDlg);
   prvDlgShowActive();
 }
 

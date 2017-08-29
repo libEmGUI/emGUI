@@ -23,13 +23,12 @@
 #ifndef MODALDIALOG_H_
 #define MODALDIALOG_H_
 
-#include "include.h"
+
 #include "Widgets/Label.h"
 #include "Widgets/Button.h"
 #include "Widgets/StatusBar.h"
 #include "Widgets/Window.h"
 #include "Widgets/MenuButton.h"
-#include "Fonts/Font.h"
 
 //#include "GuiInterface.h"
 //#include "GsmInterface.h"
@@ -53,6 +52,7 @@ void vModalDialogClose(int iDlgID, bool bFireDefault);
 void vModalDialogSetHandler(int iDlgID, char cHandler, void (*pxHandler)());
 void vModalDialogSetProgress(int iDlgID, int iProgress);
 void vModalDialogSetCloseable(int iDlgID, bool bCanClose);
+
 
 #ifdef __cplusplus
 }

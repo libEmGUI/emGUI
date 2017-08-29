@@ -65,6 +65,23 @@ typedef XPICTURE_TYPE xPicture;
 	#ifndef PIC_LABEL_BG 
 	#define PIC_LABEL_BG			label_bg
 	#endif
+
+	#ifndef PIC_YES 
+	#define PIC_YES					yes
+	#endif
+
+	#ifndef PIC_NO 
+	#define PIC_NO					no
+	#endif
+
+	#ifndef PIC_REFRESH 
+	#define PIC_REFRESH				refresh
+	#endif
+	
+	// TODO: MAKE RETURN BUTTON !!
+	#ifndef PIC_RETURN 
+	#define PIC_RETURN				refresh
+	#endif
 #else
 	#ifndef STATUS_BAR_CROSS_PIC 
 	#error "Please define STATUS_BAR_CROSS_PIC"
@@ -81,6 +98,20 @@ typedef XPICTURE_TYPE xPicture;
 #ifndef ColorMenuHeaderText
 #define ColorMenuHeaderText WIDGET_COLOR_BLACK //black
 #endif
+
+#ifndef ColorEcgBackground
+#define ColorEcgBackground WIDGET_COLOR_WHITE
+#endif // !ColorEcgBackground
+
+#ifndef ColorMessageHeaderBackground
+#define ColorMessageHeaderBackground WIDGET_COLOR_WHITE
+#endif // !ColorMessageHeaderBackground
+
+#ifndef ColorMessageHeaderText
+#define ColorMessageHeaderText WIDGET_COLOR_BLACK
+#endif // !ColorMessageHeaderText
+
+
 
 
 
