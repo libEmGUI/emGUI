@@ -67,7 +67,7 @@ typedef XPICTURE_TYPE xPicture;
 	#endif
 
 	#ifndef PIC_YES 
-	#define PIC_YES					yes
+	#define PIC_YES					ok
 	#endif
 
 	#ifndef PIC_NO 
