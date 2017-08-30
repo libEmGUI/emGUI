@@ -13,6 +13,7 @@ extern "C" {
 	extern const unsigned short folder[];
 	extern const unsigned short magic[];
 	extern const unsigned short process[];
+	extern const unsigned short help[];
 
 #ifdef __cplusplus
 }

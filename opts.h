@@ -95,8 +95,22 @@ typedef XPICTURE_TYPE xPicture;
 
 // GUI COLORS
 
+// RGB565 definition
+#define SEA_COLOR5 0x02AC	// Sea colors map from drakest to lightest
+#define SEA_COLOR4 0x1B2E
+#define SEA_COLOR3 0x0413
+#define SEA_COLOR2 0x3599
+#define SEA_COLOR1 0x5DD9 
+
+#define EARTH_COLOR5 0xA280	// Earth colors map from drakest to lightest
+#define EARTH_COLOR4 0xBBA5
+#define EARTH_COLOR3 0xFBC0
+#define EARTH_COLOR2 0xFCC7
+#define EARTH_COLOR1 0xFDAD 
+
+
 #ifndef ColorMenuHeaderText
-#define ColorMenuHeaderText WIDGET_COLOR_BLACK //black
+#define ColorMenuHeaderText WIDGET_COLOR_WHITE //black
 #endif
 
 #ifndef ColorEcgBackground
@@ -104,7 +118,7 @@ typedef XPICTURE_TYPE xPicture;
 #endif // !ColorEcgBackground
 
 #ifndef ColorMessageHeaderBackground
-#define ColorMessageHeaderBackground WIDGET_COLOR_WHITE
+#define ColorMessageHeaderBackground EARTH_COLOR1
 #endif // !ColorMessageHeaderBackground
 
 #ifndef ColorMessageHeaderText
@@ -119,6 +133,10 @@ typedef XPICTURE_TYPE xPicture;
 #define MENU_BUTTON_LABEL_BG_COLOR WIDGET_COLOR_WHITE
 #endif // MENU_BUTTON_LABEL_TEXT_COLOR
 
+
+#ifndef STATUS_BAR_BG
+#define STATUS_BAR_BG SEA_COLOR5 //light-blue
+#endif
 
 
 #endif // !OPTS_H
