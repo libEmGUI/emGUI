@@ -163,7 +163,7 @@ xWidget * pxModalDialogWindowCreate(){
   //xPBar = pxProgressBarCreate(PB_BORDER, usY, usWidgetGetW(xThisWnd) - PB_BORDER * 2, 30, xThisWnd);
   //vProgressBarSetProcExec(xPBar, 55);
 
-  usY = (usInterfaceGetWindowH()/2 + usPictureGetH(PIC_YES)/3);
+  usY = (usInterfaceGetWindowH()/2 + pxDrawHDL()->usGetPictureH(PIC_YES)/3);
   usX = 0;
 
   for(int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++){

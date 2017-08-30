@@ -55,34 +55,8 @@
 
 typedef XPICTURE_TYPE xPicture;
 
-#ifndef OVERRIDE_DEFAULT_PICS
-	#include "Images/Images.h"
+#ifdef OVERRIDE_DEFAULT_PICS
 
-	#ifndef STATUS_BAR_CROSS_PIC 
-	#define STATUS_BAR_CROSS_PIC	close
-	#endif 
-
-	#ifndef PIC_LABEL_BG 
-	#define PIC_LABEL_BG			label_bg
-	#endif
-
-	#ifndef PIC_YES 
-	#define PIC_YES					ok
-	#endif
-
-	#ifndef PIC_NO 
-	#define PIC_NO					no
-	#endif
-
-	#ifndef PIC_REFRESH 
-	#define PIC_REFRESH				refresh
-	#endif
-	
-	// TODO: MAKE RETURN BUTTON !!
-	#ifndef PIC_RETURN 
-	#define PIC_RETURN				refresh
-	#endif
-#else
 	#ifndef STATUS_BAR_CROSS_PIC 
 	#error "Please define STATUS_BAR_CROSS_PIC"
 	#endif 
@@ -90,6 +64,17 @@ typedef XPICTURE_TYPE xPicture;
 	#ifndef PIC_LABEL_BG 
 	#error "Please define PIC_LABEL_BG"
 	#endif
+#else
+	#include "Images/Images.h"
+
+	#define STATUS_BAR_CROSS_PIC	close
+	#define PIC_LABEL_BG			label_bg
+	#define PIC_YES					ok
+	#define PIC_NO					no
+	#define PIC_REFRESH				refresh
+	// TODO: MAKE RETURN BUTTON !!
+	#define PIC_RETURN				refresh
+
 #endif // !OVERRIDE_DEFAULT_PICS
 
 

@@ -40,7 +40,7 @@ typedef xWidget xMenuButton; ///< тип для кнопки меню
 							 *
 							 * @returns указатель на созданную кнопку
 							 */
-xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, unsigned short const*  pusPic, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
+xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
 
 /**
 * @brief устанавливает картинку на кнопке

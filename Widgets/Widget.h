@@ -136,7 +136,7 @@ extern "C" {
 	void vWidgesSetClickable(xWidget *pxW, bool bClickable);
 	void vWidgetSetBgColor(xWidget *pxW, uint16_t usBgColor, bool bTransparent);
 	void vWidgetSetTransparency(xWidget *pxW, bool bTransparent);
-	bool bWidgetSetBgPicture(xWidget *pxW, unsigned short const* pusBgPicture);
+	bool bWidgetSetBgPicture(xWidget *pxW, xPicture pusBgPicture);
 	void vWidgetSetVisible(xWidget *pxW, bool bVisible);
 	bool bWidgetSetCoords(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, bool bUseWH);
 
@@ -217,15 +217,6 @@ extern "C" {
 
 
 	bool bInterfaceGetDebug();
-
-	//TODO: Not sure if this stuff should be in this .h
-	unsigned short inline usPictureGetW(unsigned short const* pusPic) {
-		return pusPic[1];
-	}
-
-	unsigned short inline usPictureGetH(unsigned short const* pusPic) {
-		return pusPic[0];
-	}
 
 #ifdef __cplusplus
 }

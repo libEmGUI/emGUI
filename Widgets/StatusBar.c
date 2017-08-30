@@ -44,8 +44,8 @@ bool bStatusBarCreate(uint16_t usColor) {
 
 	uint16_t usX, usY, usW;
 
-	usY = (LCD_STATUS_BAR_HEIGHT - usPictureGetH(STATUS_BAR_CROSS_PIC)) / 2;
-	usX = LCD_SizeX - usPictureGetW(STATUS_BAR_CROSS_PIC) - usY;
+	usY = (LCD_STATUS_BAR_HEIGHT - pxDrawHDL()->usGetPictureH(STATUS_BAR_CROSS_PIC)) / 2;
+	usX = LCD_SizeX - pxDrawHDL()->usGetPictureW(STATUS_BAR_CROSS_PIC) - usY;
 
 	xCloseButton = pxButtonCreate(usX, usY, STATUS_BAR_CROSS_PIC, xStatusBarInstance);
 	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);

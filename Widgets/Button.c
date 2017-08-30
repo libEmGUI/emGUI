@@ -71,7 +71,7 @@ bool static bButtonCheckTSRoutine(xButton *pxW, xTouchEvent *pxTouchScreenEv) {
 	return (pxTouchScreenEv->eventTouchScreen == popTs) ? false : true;
 }
 
-xButton * pxButtonCreate(uint16_t usX, uint16_t usY, unsigned short const* pusPic, xWidget *pxWidParent) {
+xButton * pxButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *pxWidParent) {
 	xButton *pxW;
 	xButtonProps *xP;
 
@@ -106,7 +106,7 @@ xButton * pxButtonCreate(uint16_t usX, uint16_t usY, unsigned short const* pusPi
 	}
 }
 
-bool bButtonSetPushPic(xButton *pxW, unsigned short const* pusPic) {
+bool bButtonSetPushPic(xButton *pxW, xPicture pusPic) {
 	//xButtonProps *xP;
 
 	if (!pxW)
@@ -117,10 +117,10 @@ bool bButtonSetPushPic(xButton *pxW, unsigned short const* pusPic) {
 	/*xP->bEmulatePressure = pusPic;
 	//press picture must be the same size as foreground pic
 
-	if(usPictureGetH(pusPic) != usWidgetGetH(pxW))
+	if(pxDrawHDL()->usGetPictureH(pusPic) != usWidgetGetH(pxW))
 	  return false;
 
-	if(usPictureGetW(pusPic) != usWidgetGetW(pxW))
+	if(pxDrawHDL()->usGetPictureW(pusPic) != usWidgetGetW(pxW))
 	  return false;
 
 	if(pxW->bPressed)

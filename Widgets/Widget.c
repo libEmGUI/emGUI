@@ -288,15 +288,15 @@ void vWidgetSetTransparency(xWidget *pxW, bool bTransparent) {
 };
 
 
-bool bWidgetSetBgPicture(xWidget *pxW, unsigned short const* pusBgPicture) {
+bool bWidgetSetBgPicture(xWidget *pxW, xPicture pusBgPicture) {
 	if (!pxW)
 		return false;
 	bool bInvalidateParent = false;
 
-	if (usPictureGetW(pusBgPicture) < usWidgetGetW(pxW) || usPictureGetH(pusBgPicture) < usWidgetGetH(pxW))
+	if (pxDrawHDL()->usGetPictureW(pusBgPicture) < usWidgetGetW(pxW) || pxDrawHDL()->usGetPictureH(pusBgPicture) < usWidgetGetH(pxW))
 		bInvalidateParent = true;
 
-	if (!bWidgetResize(pxW, usPictureGetW(pusBgPicture), usPictureGetH(pusBgPicture)))
+	if (!bWidgetResize(pxW, pxDrawHDL()->usGetPictureW(pusBgPicture), pxDrawHDL()->usGetPictureH(pusBgPicture)))
 		return false;
 	//do not invalidate if picture is not changed
 	if (pxW->pusBgPicture != pusBgPicture) {

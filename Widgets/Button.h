@@ -38,8 +38,8 @@ extern "C" {
 		unsigned short const* pusPicDisabled;
 	} xButtonProps;
 
-	xButton * pxButtonCreate(uint16_t usX, uint16_t usY, unsigned short const* pusPic, xWidget *pxWidParent);
-	bool bButtonSetPushPic(xButton *pxW, unsigned short const* pusPic);
+	xButton * pxButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *pxWidParent);
+	bool bButtonSetPushPic(xButton *pxW, xPicture pusPic);
 	void inline bButtonSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
 		vWidgetSetOnClickHandler(pxW, pxCallback);
 	}
