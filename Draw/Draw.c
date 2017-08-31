@@ -3,7 +3,7 @@
 
 static xDraw_t * _HDL;
 
-#ifndef OVERRIDE_DEFAULT_PICS
+#ifndef EM_GUI_OVERRIDE_DEFAULT_PICS
 
 static uint16_t usGetPictureW(xPicture pusPic) {
 	return pusPic[1];
@@ -13,7 +13,7 @@ static uint16_t usGetPictureH(xPicture pusPic) {
 	return pusPic[0];
 }
 
-#endif // !OVERRIDE_DEFAULT_PICS
+#endif // !EM_GUI_OVERRIDE_DEFAULT_PICS
 
 
 
@@ -27,7 +27,7 @@ xDraw_t * pxDrawHDL() {
 
 void vDrawHandlerInit(xDraw_t * hdl) {
 	memset(hdl, 0, sizeof(xDraw_t));
-#ifndef OVERRIDE_DEFAULT_PICS
+#ifndef EM_GUI_OVERRIDE_DEFAULT_PICS
 	hdl->usGetPictureH = &usGetPictureH;
 	hdl->usGetPictureW = &usGetPictureW;
 #endif

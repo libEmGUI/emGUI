@@ -163,11 +163,11 @@ xWidget * pxModalDialogWindowCreate(){
   //xPBar = pxProgressBarCreate(PB_BORDER, usY, usWidgetGetW(xThisWnd) - PB_BORDER * 2, 30, xThisWnd);
   //vProgressBarSetProcExec(xPBar, 55);
 
-  usY = (usInterfaceGetWindowH()/2 + pxDrawHDL()->usGetPictureH(PIC_YES)/3);
+  usY = (usInterfaceGetWindowH()/2 + pxDrawHDL()->usGetPictureH(EM_GUI_PIC_YES)/3);
   usX = 0;
 
   for(int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++){
-    xButtons[c] = pxMenuButtonCreate(usX, usY, PIC_YES, "", prvButtonHandler, xThisWnd);
+    xButtons[c] = pxMenuButtonCreate(usX, usY, EM_GUI_PIC_YES, "", prvButtonHandler, xThisWnd);
     usX += LCD_TsBtn_SIZE;
     vWidgetHide(xButtons[c]);
   }
@@ -178,27 +178,27 @@ xModalDialogPictureSet prvGetPicSet(char cType){
   xModalDialogPictureSet xPicSet;
   switch(cType){
   /*case 'y':
-    xPicSet.xPicMain = pxPictureGet(PIC_YES);
+    xPicSet.xPicMain = pxPictureGet(EM_GUI_PIC_YES);
     xPicSet.xPicMainPress = pxPictureGet(Pic_ButtonOk_press);
     xPicSet.xPicLabel = pxPictureGet(Pic_b2_yes);*/
   case 'n':
-    xPicSet.xPicMain = (PIC_NO);
+    xPicSet.xPicMain = (EM_GUI_PIC_NO);
     xPicSet.strLabel = "No";
     break;
   case 'c':
-    xPicSet.xPicMain = (PIC_RETURN);
+    xPicSet.xPicMain = (EM_GUI_PIC_RETURN);
     xPicSet.strLabel = "Cancel";
     break;
   case 'o':
-    xPicSet.xPicMain = (PIC_YES);
+    xPicSet.xPicMain = (EM_GUI_PIC_YES);
     xPicSet.strLabel = "OK";
     break;
   case 'e':
-    xPicSet.xPicMain = (PIC_NO);
+    xPicSet.xPicMain = (EM_GUI_PIC_NO);
     xPicSet.strLabel = "OK";
     break;
   default:
-    xPicSet.xPicMain = (PIC_YES);
+    xPicSet.xPicMain = (EM_GUI_PIC_YES);
     xPicSet.strLabel = "OK";
     break;
   }

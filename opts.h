@@ -55,28 +55,63 @@
 
 typedef XPICTURE_TYPE xPicture;
 
-#ifdef OVERRIDE_DEFAULT_PICS
+#ifdef EM_GUI_OVERRIDE_DEFAULT_PICS
 
-	#ifndef STATUS_BAR_CROSS_PIC 
-	#error "Please define STATUS_BAR_CROSS_PIC"
+	#ifndef EM_GUI_PIC_CROSS 
+	#error "Please define EM_GUI_PIC_CROSS"
 	#endif 
 
-	#ifndef PIC_LABEL_BG 
-	#error "Please define PIC_LABEL_BG"
+	#ifndef EM_GUI_PIC_LABEL_BG 
+	#error "Please define EM_GUI_PIC_LABEL_BG"
+	#endif
+	
+	#ifndef EM_GUI_PIC_YES 
+	#error "Please define EM_GUI_PIC_YES"
+	#endif
+
+	#ifndef EM_GUI_PIC_NO 
+	#error "Please define EM_GUI_PIC_NO"
+	#endif
+
+	#ifndef EM_GUI_PIC_REFRESH
+	#error "Please define EM_GUI_PIC_REFRESH"
+	#endif
+
+	#ifndef EM_GUI_PIC_RETURN
+	#error "Please define EM_GUI_PIC_RETURN"
+	#endif
+
+	#ifndef EM_GUI_PIC_OPENFOLDER
+	#error "Please define EM_GUI_PIC_OPENFOLDER"
+	#endif
+
+	#ifndef EM_GUI_PIC_PROCESS
+	#error "Please define EM_GUI_PIC_PROCESS"
+	#endif
+
+	#ifndef EM_GUI_PIC_MAGIC
+	#error "Please define EM_GUI_PIC_MAGIC"
+	#endif
+
+	#ifndef EM_GUI_PIC_HELP
+	#error "Please define EM_GUI_PIC_HELP"
 	#endif
 #else
 	#include "Images/Images.h"
 
-	#define STATUS_BAR_CROSS_PIC	close
-	#define PIC_LABEL_BG			label_bg
-	#define PIC_YES					ok
-	#define PIC_NO					no
-	#define PIC_REFRESH				refresh
-	// TODO: MAKE RETURN BUTTON !!
-	#define PIC_RETURN				refresh
+	#define EM_GUI_PIC_CROSS		close
+	#define EM_GUI_PIC_LABEL_BG		label_bg
+	#define EM_GUI_PIC_YES			ok
+	#define EM_GUI_PIC_NO			no
+	#define EM_GUI_PIC_REFRESH		refresh
+	#define EM_GUI_PIC_RETURN		left
 
-	#define PIC_WRENCH
-#endif // !OVERRIDE_DEFAULT_PICS
+	#define EM_GUI_PIC_OPENFOLDER	open_folder		
+	#define EM_GUI_PIC_PROCESS		process
+	#define EM_GUI_PIC_MAGIC		magic
+	#define EM_GUI_PIC_HELP			help
+
+#endif // !EM_GUI_OVERRIDE_DEFAULT_PICS
 
 
 // GUI COLORS
