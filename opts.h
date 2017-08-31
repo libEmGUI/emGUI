@@ -75,6 +75,7 @@ typedef XPICTURE_TYPE xPicture;
 	// TODO: MAKE RETURN BUTTON !!
 	#define PIC_RETURN				refresh
 
+	#define PIC_WRENCH
 #endif // !OVERRIDE_DEFAULT_PICS
 
 

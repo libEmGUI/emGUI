@@ -28,7 +28,7 @@ xDraw_t * pxDrawHDL() {
 void vDrawHandlerInit(xDraw_t * hdl) {
 	memset(hdl, 0, sizeof(xDraw_t));
 #ifndef OVERRIDE_DEFAULT_PICS
-	hdl->usGetPictureH = usGetPictureH;
-	hdl->usGetPictureW = usGetPictureW;
+	hdl->usGetPictureH = &usGetPictureH;
+	hdl->usGetPictureW = &usGetPictureW;
 #endif
 }
