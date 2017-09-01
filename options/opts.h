@@ -69,24 +69,13 @@ typedef XPICTURE_TYPE xPicture;
 	#error "Please define EM_GUI_PIC_CROSS"
 	#endif 
 
-	#ifndef EM_GUI_PIC_LABEL_BG 
-	#error "Please define EM_GUI_PIC_LABEL_BG"
-	#endif
-	
+
 	#ifndef EM_GUI_PIC_YES 
 	#error "Please define EM_GUI_PIC_YES"
 	#endif
 
 	#ifndef EM_GUI_PIC_NO 
 	#error "Please define EM_GUI_PIC_NO"
-	#endif
-
-	#ifndef EM_GUI_PIC_REFRESH
-	#error "Please define EM_GUI_PIC_REFRESH"
-	#endif
-
-	#ifndef EM_GUI_PIC_RETURN
-	#error "Please define EM_GUI_PIC_RETURN"
 	#endif
 
 	#ifndef EM_GUI_PIC_OPENFOLDER
@@ -108,10 +97,8 @@ typedef XPICTURE_TYPE xPicture;
 	#include "Images/Images.h"
 
 	#define EM_GUI_PIC_CROSS		cross
-	#define EM_GUI_PIC_LABEL_BG		label_bg
 	#define EM_GUI_PIC_YES			ok
 	#define EM_GUI_PIC_NO			no
-	#define EM_GUI_PIC_REFRESH		refresh
 	#define EM_GUI_PIC_RETURN		left
 
 	#define EM_GUI_PIC_OPENFOLDER	open_folder		

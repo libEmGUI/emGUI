@@ -15,7 +15,6 @@ extern "C" {
 	extern const unsigned short folder[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short help[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short keyboard[] EM_GUI_PICTURE_STORAGE_ATTR;
-	extern const unsigned short label_bg[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short left[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short magic[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short mail[] EM_GUI_PICTURE_STORAGE_ATTR;
