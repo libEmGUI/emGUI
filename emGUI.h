@@ -1,6 +1,7 @@
 #ifndef EMGUI_H
 #define EMGUI_H
 
+#include "options/opts.h"
 #include "Draw/Draw.h"
 #include "Widgets/Widget.h"
 #include "Widgets/Interface.h"
@@ -11,5 +12,4 @@
 #include "Widgets/Button.h"
 #include "Widgets/MenuButton.h"
 #include "Widgets/ModalDialog.h"
-#include "opts.h"
 #endif // !EMGUI_H

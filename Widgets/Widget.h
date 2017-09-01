@@ -33,7 +33,7 @@
 #include "Fonts/Font.h"
 #include "Draw/Draw.h"
 
-#include "opts.h"
+#include "options/opts.h"
 
 
 #ifdef __cplusplus

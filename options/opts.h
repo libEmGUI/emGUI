@@ -1,9 +1,17 @@
 #ifndef OPTS_H
 #define OPTS_H
 
+#ifdef ARDUINO
+#include "options/emGUI_opts_arduino.h"
+#else
 #include "emGUI_opts.h"
+#endif
 
 #include "Fonts/Font.h"
+
+#ifndef EM_GUI_PICTURE_STORAGE_ATTR
+#define EM_GUI_PICTURE_STORAGE_ATTR
+#endif
 
 #ifndef DEBUG_EMGUI
 #define DEBUG_EMGUI				0
@@ -99,7 +107,7 @@ typedef XPICTURE_TYPE xPicture;
 #else
 	#include "Images/Images.h"
 
-	#define EM_GUI_PIC_CROSS		close
+	#define EM_GUI_PIC_CROSS		cross
 	#define EM_GUI_PIC_LABEL_BG		label_bg
 	#define EM_GUI_PIC_YES			ok
 	#define EM_GUI_PIC_NO			no

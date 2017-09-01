@@ -1,6 +1,8 @@
 #ifndef __IMAGES_H
 #define __IMAGES_H
 
+#include "options/opts.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
