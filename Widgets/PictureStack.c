@@ -21,8 +21,7 @@
 	
 	Created on: 24.12.2012
 */
-#ifndef __PICTURE_STACK_C
-#define __PICTURE_STACK_C
+#ifdef EMGUI_USE_PICTURE_STACK_C
 
 #include "PictureStack.h"
 #include "StatusBar.h"
