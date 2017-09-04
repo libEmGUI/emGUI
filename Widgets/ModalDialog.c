@@ -27,6 +27,7 @@ extern "C" {
   
 
 #include "ModalDialog.h"
+#include <stdlib.h>
 
 #define MODAL_DIALOG_MAX_BUTTONS    3
 #define MODAL_DIALOG_MAX_COUNT      10
@@ -225,15 +226,15 @@ static void prvDlgShowActive(){
     //TODO: выставить кол-во активных диалогов в 0
   }
   
-  char cBtnCnt = strlen(xDlg->sDialogConfig);
+  uint16_t cBtnCnt = (uint16_t) strlen(xDlg->sDialogConfig);
   xModalDialogPictureSet xPicSet;
 
   char * sBtns = xDlg->sDialogConfig;
 
   xMenuButton * xBtn;
 
-  uint16_t betweenBtnsX,
-        usX, usY;
+  uint16_t betweenBtnsX, 
+	  usX, usY;
 
   prvResetDlgWnd();
 

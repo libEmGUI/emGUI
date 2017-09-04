@@ -40,7 +40,7 @@ static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t
 	if (!pcLine || uXTo <= uXFrom)
 		return NULL;
 
-	uMaxLineLen = strlen(pcLine);
+	uMaxLineLen = (uint16_t) strlen(pcLine);
 	pcSeparator = NULL;
 	pcCharCount = pcLine;
 	uXBefor = uXFrom;
@@ -150,7 +150,7 @@ bool static prvDraw(xWidget *pxW) {
 	if (!xP->pcStr)
 		return false;
 
-	//if (strlen(xP->pcStr) > xP->iMaxLength)
+	//if (strlen(xP->pcStr) > xP->usMaxLength)
 	  //return false;
 
 	if (pxW->bValid)
@@ -203,10 +203,10 @@ bool bLabelDrawPrevPage(xLabel *pxW) {
 	return false;
 }
 
-//если iMaxLength = 0, то текст в метку устанавливается только сменой указателя на строку,
+//если usMaxLength = 0, то текст в метку устанавливается только сменой указателя на строку,
 //т.е. он не копируется во внутреннее хранилище и под него не выделяется память. Идеально для
 //реализации меток с текстом ReadOnly
-xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, int iMaxLength, xWidget *pxWidParent) {
+xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, uint16_t usMaxLength, xWidget *pxWidParent) {
 	xLabel *pxW;
 	xLabelProps *xP;
 
@@ -226,12 +226,12 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 		if (!xP)
 			return NULL;
 
-		iMaxLength = (iMaxLength > LABEL_MAX_LENGTH) ? LABEL_MAX_LENGTH : iMaxLength;
+		usMaxLength = (usMaxLength > LABEL_MAX_LENGTH) ? LABEL_MAX_LENGTH : usMaxLength;
 
 		//Выделяем память для внутр. хранилища
-		if (iMaxLength) {
+		if (usMaxLength) {
 			//+ 1 //for '\0' char in the end
-			xP->pcStr = malloc(iMaxLength + 1);
+			xP->pcStr = malloc(usMaxLength + 1);
 		}
 		else
 			xP->pcStr = (char *)cStr; ///WARNING!
@@ -239,10 +239,10 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 		  //Память не выделилась, строка Read Only
 		if (!xP->pcStr) {
 			xP->pcStr = (char *)cStr; ///WARNING!
-			iMaxLength = 0;
+			usMaxLength = 0;
 		}
 
-		xP->iMaxLength = iMaxLength;
+		xP->usMaxLength = usMaxLength;
 
 		xP->eTextAlign = LABEL_ALIGN_LEFT;
 		xP->eVerticalAlign = LABEL_ALIGN_TOP;
@@ -252,10 +252,10 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 
 		xP->bHaveCursor = false;
 
-		if (iMaxLength) {
-			memcpy(xP->pcStr, cStr, min(strlen(cStr), iMaxLength) + 1);
+		if (usMaxLength) {
+			memcpy(xP->pcStr, cStr, min(strlen(cStr), usMaxLength) + 1);
 			//Terminating string
-			xP->pcStr[iMaxLength] = '\0';
+			xP->pcStr[usMaxLength] = '\0';
 		}
 
 		xP->onEditHandler = NULL;
@@ -280,7 +280,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 	xLabelProps *xP;
 	char *pcLine;
-	int  iMaxLength;
+	uint16_t  usMaxLength;
 
 	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)))
 		return NULL;
@@ -290,17 +290,17 @@ char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 	  return NULL;*/
 
 	pcLine = xP->pcStr;
-	iMaxLength = xP->iMaxLength;
+	usMaxLength = xP->usMaxLength;
 
 
 	//Если возможно копирование во внутр. или внешн. память
-	if (iMaxLength) {
+	if (usMaxLength) {
 		if (!strcmp(pcStr, pcLine))
 			return NULL;
 
 		if (pcStr != NULL) {
-			memcpy(pcLine, pcStr, min(strlen(pcStr), iMaxLength) + 1);
-			pcLine[iMaxLength] = '\0';
+			memcpy(pcLine, pcStr, min(strlen(pcStr), usMaxLength) + 1);
+			pcLine[usMaxLength] = '\0';
 		}
 
 	}
@@ -326,7 +326,7 @@ char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 
 void pcLabelSetTextAdaptWidth(xLabel *pxL, char * pcStr) {
 	pcLabelSetText(pxL, pcStr);
-	pxL->usX1 = pxL->usX0 + 8 * strlen(pcStr);
+	pxL->usX1 = pxL->usX0 + 8 * (uint16_t) strlen(pcStr);
 	vWidgetInvalidate(pxL);
 }
 
@@ -360,27 +360,27 @@ void vLabelSetVerticalAlign(xWidget *pxW, eLabelVerticalAlign eAlign) {
 	vWidgetInvalidate(pxW);
 }
 
-void vLabelSetTextExt(xWidget *pxW, char * pStr, int iMaxLength) {
+void vLabelSetTextExt(xWidget *pxW, char * pStr, int usMaxLength) {
 	xLabelProps *xP;
 
 	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)))
 		return;
 
 	//Для сброса режима
-	if (!iMaxLength) {
+	if (!usMaxLength) {
 		pcLabelSetText(pxW, pStr);
-		xP->iMaxLength = 0;
+		xP->usMaxLength = 0;
 	}
 
 	//Внешнюю строку можно устанавливать только если не было создано внутр. хранилище!
-	if (xP->iMaxLength)
+	if (xP->usMaxLength)
 		return;
 
 	if (xP->pcStr == pStr)
 		return;
 
 	xP->pcStr = pStr;
-	xP->iMaxLength = iMaxLength;
+	xP->usMaxLength = usMaxLength;
 
 	xP->pcCrntPage = xP->pcStr;
 	xP->pcPrvPage = xP->pcNxtPage = NULL;
@@ -415,14 +415,14 @@ int         iLabelGetMaxLength(xLabel *pxL) {
 	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxL, WidgetLabel)))
 		return 0;
 
-	return xP->iMaxLength;
+	return xP->usMaxLength;
 }
 
 bool bLabelAppendChar(xWidget *pxW, char cChar, bool bSetInvalidate) {
 	xLabelProps *xP;
 	if ((xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel))) {
-		uint16_t usLen = strlen(xP->pcStr);
-		if (usLen + 1 <= xP->iMaxLength) {
+		uint16_t usLen = (uint16_t) strlen(xP->pcStr);
+		if (usLen + 1 <= xP->usMaxLength) {
 			xP->pcStr[usLen] = cChar;
 			xP->pcStr[usLen + 1] = '\0';
 			if (bSetInvalidate)
@@ -436,7 +436,7 @@ bool bLabelAppendChar(xWidget *pxW, char cChar, bool bSetInvalidate) {
 bool bLabelBackSpace(xWidget *pxW, bool bSetInvalidate) {
 	xLabelProps *xP;
 	if ((xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel))) {
-		uint16_t usLen = strlen(xP->pcStr);
+		uint16_t usLen = (uint16_t) strlen(xP->pcStr);
 		if (usLen) {
 			xP->pcStr[usLen - 1] = '\0';
 			if (bSetInvalidate)

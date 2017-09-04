@@ -7,6 +7,7 @@
 */
 
 #include "MenuButton.h"
+#include <stdlib.h>
 
 
 /** @weakgroup prop-widget-menu-button
@@ -40,8 +41,6 @@ xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, ch
 	xMenuButton *pxW;
 	xMenuButtonProps *xP;
 
-	xPicture pusPicText;
-
 	// memory for MenuButton
 
 	pxW = (xMenuButton*)malloc(sizeof(xWidget));
@@ -49,7 +48,6 @@ xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, ch
 
 	uint16_t usW, usH;
 
-	//pusPicText = (EM_GUI_PIC_LABEL_BG);
 	usW = pxDrawHDL()->usGetPictureW(pusPic); // ширина
 	usH = pxDrawHDL()->usGetPictureH(pusPic); // +pxDrawHDL()->usGetPictureH(pusPicText);
 

@@ -1,5 +1,5 @@
 #include "Draw/Draw.h"
-#include <malloc.h>
+#include <string.h>
 
 static xDraw_t * _HDL;
 
