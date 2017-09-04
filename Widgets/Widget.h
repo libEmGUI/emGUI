@@ -93,7 +93,7 @@ extern "C" {
 
 		//background
 		uint16_t usBgColor;
-		uint16_t const* pusBgPicture;
+		xPicture pusBgPicture;
 
 		//Child object properties   
 		void* pvProp;

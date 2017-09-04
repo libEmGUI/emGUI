@@ -49,7 +49,7 @@ extern "C" {
 	* @param xPic - указатель на картинку
 	*
 	*/
-	void pxMenuButtonSetMainPic(xWidget * pxW, unsigned short const*  pusPic);
+	void pxMenuButtonSetMainPic(xWidget * pxW, xPicture  pusPic);
 
 	/**
 	* @brief устанавливает подпись под кнопкой
