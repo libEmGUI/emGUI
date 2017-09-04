@@ -26,46 +26,46 @@
 extern "C" {
 #endif // __cplusplus
 
-typedef xWidget xMenuButton; ///< тип для кнопки меню
+	typedef xWidget xMenuButton; ///< тип для кнопки меню
 
-							 /**
-							 * @brief создает виджет кнопки
-							 *
-							 * @param uX - положение по горизонтали относительно родительского элемента
-							 * @param uY - положение по веркикали относительно родительского элемента
-							 * @param xPicFG - указатель на картинку
-							 * @param strLabel - подпись под кнопкой
-							 * @param pvClickHanlder - обработчик нажатия
-							 * @param pxWidParent - родитель виджета
-							 *
-							 * @returns указатель на созданную кнопку
-							 */
-xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
+								 /**
+								 * @brief создает виджет кнопки
+								 *
+								 * @param uX - положение по горизонтали относительно родительского элемента
+								 * @param uY - положение по веркикали относительно родительского элемента
+								 * @param xPicFG - указатель на картинку
+								 * @param strLabel - подпись под кнопкой
+								 * @param pvClickHanlder - обработчик нажатия
+								 * @param pxWidParent - родитель виджета
+								 *
+								 * @returns указатель на созданную кнопку
+								 */
+	xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
 
-/**
-* @brief устанавливает картинку на кнопке
-*
-* @param pxW - виджет
-* @param xPic - указатель на картинку
-*
-*/
-void pxMenuButtonSetMainPic(xWidget * pxW, unsigned short const*  pusPic);
+	/**
+	* @brief устанавливает картинку на кнопке
+	*
+	* @param pxW - виджет
+	* @param xPic - указатель на картинку
+	*
+	*/
+	void pxMenuButtonSetMainPic(xWidget * pxW, unsigned short const*  pusPic);
 
-/**
-* @brief устанавливает подпись под кнопкой
-*
-* @param pxW - виджет
-* @param xPic - указатель строку
-*
-*/
-void pxMenuButtonSetLabelText(xWidget * pxW, char const* strL);
+	/**
+	* @brief устанавливает подпись под кнопкой
+	*
+	* @param pxW - виджет
+	* @param xPic - указатель строку
+	*
+	*/
+	void pxMenuButtonSetLabelText(xWidget * pxW, char const* strL);
 
-/**
-*  @}
-*/
-/**
-*  @}
-*/
+	/**
+	*  @}
+	*/
+	/**
+	*  @}
+	*/
 #ifdef __cplusplus
 }
 #endif // __cplusplus

@@ -65,46 +65,46 @@ typedef XPICTURE_TYPE xPicture;
 
 #ifdef EM_GUI_OVERRIDE_DEFAULT_PICS
 
-	#ifndef EM_GUI_PIC_CROSS 
-	#error "Please define EM_GUI_PIC_CROSS"
-	#endif 
+#ifndef EM_GUI_PIC_CROSS 
+#error "Please define EM_GUI_PIC_CROSS"
+#endif 
 
 
-	#ifndef EM_GUI_PIC_YES 
-	#error "Please define EM_GUI_PIC_YES"
-	#endif
+#ifndef EM_GUI_PIC_YES 
+#error "Please define EM_GUI_PIC_YES"
+#endif
 
-	#ifndef EM_GUI_PIC_NO 
-	#error "Please define EM_GUI_PIC_NO"
-	#endif
+#ifndef EM_GUI_PIC_NO 
+#error "Please define EM_GUI_PIC_NO"
+#endif
 
-	#ifndef EM_GUI_PIC_OPENFOLDER
-	#error "Please define EM_GUI_PIC_OPENFOLDER"
-	#endif
+#ifndef EM_GUI_PIC_OPENFOLDER
+#error "Please define EM_GUI_PIC_OPENFOLDER"
+#endif
 
-	#ifndef EM_GUI_PIC_PROCESS
-	#error "Please define EM_GUI_PIC_PROCESS"
-	#endif
+#ifndef EM_GUI_PIC_PROCESS
+#error "Please define EM_GUI_PIC_PROCESS"
+#endif
 
-	#ifndef EM_GUI_PIC_MAGIC
-	#error "Please define EM_GUI_PIC_MAGIC"
-	#endif
+#ifndef EM_GUI_PIC_MAGIC
+#error "Please define EM_GUI_PIC_MAGIC"
+#endif
 
-	#ifndef EM_GUI_PIC_HELP
-	#error "Please define EM_GUI_PIC_HELP"
-	#endif
+#ifndef EM_GUI_PIC_HELP
+#error "Please define EM_GUI_PIC_HELP"
+#endif
 #else
-	#include "Images/Images.h"
+#include "Images/Images.h"
 
-	#define EM_GUI_PIC_CROSS		cross
-	#define EM_GUI_PIC_YES			ok
-	#define EM_GUI_PIC_NO			no
-	#define EM_GUI_PIC_RETURN		left
+#define EM_GUI_PIC_CROSS		cross
+#define EM_GUI_PIC_YES			ok
+#define EM_GUI_PIC_NO			no
+#define EM_GUI_PIC_RETURN		left
 
-	#define EM_GUI_PIC_OPENFOLDER	open_folder		
-	#define EM_GUI_PIC_PROCESS		process
-	#define EM_GUI_PIC_MAGIC		magic
-	#define EM_GUI_PIC_HELP			help
+#define EM_GUI_PIC_OPENFOLDER	open_folder		
+#define EM_GUI_PIC_PROCESS		process
+#define EM_GUI_PIC_MAGIC		magic
+#define EM_GUI_PIC_HELP			help
 
 #endif // !EM_GUI_OVERRIDE_DEFAULT_PICS
 

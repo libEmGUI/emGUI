@@ -40,7 +40,7 @@ static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t
 	if (!pcLine || uXTo <= uXFrom)
 		return NULL;
 
-	uMaxLineLen = (uint16_t) strlen(pcLine);
+	uMaxLineLen = (uint16_t)strlen(pcLine);
 	pcSeparator = NULL;
 	pcCharCount = pcLine;
 	uXBefor = uXFrom;
@@ -326,7 +326,7 @@ char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 
 void pcLabelSetTextAdaptWidth(xLabel *pxL, char * pcStr) {
 	pcLabelSetText(pxL, pcStr);
-	pxL->usX1 = pxL->usX0 + 8 * (uint16_t) strlen(pcStr);
+	pxL->usX1 = pxL->usX0 + 8 * (uint16_t)strlen(pcStr);
 	vWidgetInvalidate(pxL);
 }
 
@@ -421,7 +421,7 @@ int         iLabelGetMaxLength(xLabel *pxL) {
 bool bLabelAppendChar(xWidget *pxW, char cChar, bool bSetInvalidate) {
 	xLabelProps *xP;
 	if ((xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel))) {
-		uint16_t usLen = (uint16_t) strlen(xP->pcStr);
+		uint16_t usLen = (uint16_t)strlen(xP->pcStr);
 		if (usLen + 1 <= xP->usMaxLength) {
 			xP->pcStr[usLen] = cChar;
 			xP->pcStr[usLen + 1] = '\0';
@@ -436,7 +436,7 @@ bool bLabelAppendChar(xWidget *pxW, char cChar, bool bSetInvalidate) {
 bool bLabelBackSpace(xWidget *pxW, bool bSetInvalidate) {
 	xLabelProps *xP;
 	if ((xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel))) {
-		uint16_t usLen = (uint16_t) strlen(xP->pcStr);
+		uint16_t usLen = (uint16_t)strlen(xP->pcStr);
 		if (usLen) {
 			xP->pcStr[usLen - 1] = '\0';
 			if (bSetInvalidate)

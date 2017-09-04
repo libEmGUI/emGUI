@@ -1,10 +1,10 @@
 #include "Fonts/Font.h"
 
 static const unsigned char HEIGHT_8[] = { 8 };
- 
+
 static const unsigned char GAP8[] = { 6,0,0,0,0,0,0 };
 static const unsigned char UZK_GAP8[] = { 3,0,0,0 };
- 
+
 static const unsigned char char8_033[] = { 4,0,0,0,94 };
 static const unsigned char char8_034[] = { 5,0,0,6,0,6 };
 static const unsigned char char8_035[] = { 6,0,36,126,36,126,36 };

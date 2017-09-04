@@ -9,7 +9,7 @@ extern "C" {
 
 	extern const unsigned short ban[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short bars[] EM_GUI_PICTURE_STORAGE_ATTR;
-	extern const unsigned short cross [] EM_GUI_PICTURE_STORAGE_ATTR;
+	extern const unsigned short cross[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short down[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short error[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short folder[] EM_GUI_PICTURE_STORAGE_ATTR;

@@ -212,7 +212,7 @@ void vInterfaceCloseActiveWindow() {
 		if (xP->pxOnClose)
 			xP->pxOnClose(xActiveWindow);
 	}*/
-	
+
 }
 
 void vInterfaceCloseWindow(eWindow eWnd) {
