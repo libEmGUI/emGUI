@@ -36,7 +36,6 @@ extern "C" {
 
 	static xWindow *xThisWnd;
 
-	static xLabel         *xMessageHeader;
 	static xLabel         *xMessage;
 	//static xProgressBar   *xPBar;
 	static xMenuButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS]; // y(ok)/n/c Максимум в диалоге видно 4 кнопки.
@@ -86,7 +85,7 @@ extern "C" {
 			vWidgetHide(xButtons[c]);
 		}
 
-		pcLabelSetText(xMessageHeader, "");
+		vWindowSetHeader(xThisWnd, "");
 		pcLabelSetText(xMessage, "");
 		//vWidgetHide(xPBar);
 	}
@@ -146,15 +145,9 @@ extern "C" {
 		vWindowSetOnCloseHandler(xThisWnd, prvOnCloseHandler);
 		vWindowSetOnCloseRequestHandler(xThisWnd, prvOnCloseRequestHandler);
 
-		xMessageHeader = pxLabelCreate(0, 0, usWidgetGetW(xThisWnd), usStatusBarGetH(), "ModalDialogHeader", FONT_ASCII_16_X, 0, xThisWnd);
-		vWidgetSetBgColor(xMessageHeader, ColorMessageHeaderBackground, false);
-		vLabelSetTextAlign(xMessageHeader, LABEL_ALIGN_CENTER);
-		vLabelSetVerticalAlign(xMessageHeader, LABEL_ALIGN_MIDDLE);
-		vLabelSetTextColor(xMessageHeader, ColorMessageHeaderText);
-
 		usY = (usInterfaceGetWindowH() * 4) / 10 - usStatusBarGetH();
 
-		xMessage = pxLabelCreate(0, usWidgetGetH(xMessageHeader), usWidgetGetW(xThisWnd), usY, "ModalDialogText", FONT_ASCII_16_X, MODAL_DIALOG_MAX_MSG_LENGTH, xThisWnd);
+		xMessage = pxLabelCreate(0, 0, usWidgetGetW(xThisWnd), usY, "ModalDialogText", FONT_ASCII_16_X, MODAL_DIALOG_MAX_MSG_LENGTH, xThisWnd);
 		bLabelSetMultiline(xMessage, true);
 		vLabelSetTextAlign(xMessage, LABEL_ALIGN_CENTER);
 		vLabelSetVerticalAlign(xMessage, LABEL_ALIGN_MIDDLE);
@@ -243,7 +236,7 @@ extern "C" {
 		usY = usWidgetGetY0(xButtons[0], false);
 		usX = betweenBtnsX;
 
-		pcLabelSetText(xMessageHeader, xDlg->sHdr);
+		vWindowSetHeader(xThisWnd, xDlg->sHdr);
 		pcLabelSetText(xMessage, xDlg->sMsg);
 
 		prvShowPB(xDlg);
