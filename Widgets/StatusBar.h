@@ -20,6 +20,7 @@
    *  @{
    */
 
+#include "Widgets/Widget.h"
 #include "Widgets/Interface.h"
 #include "Widgets/Button.h"
 #include "Widgets/Label.h"

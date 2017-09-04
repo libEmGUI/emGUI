@@ -51,7 +51,7 @@ xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, ch
 
 	//pusPicText = (EM_GUI_PIC_LABEL_BG);
 	usW = pxDrawHDL()->usGetPictureW(pusPic); // ширина
-	//usH = pxDrawHDL()->usGetPictureH(pusPic) + pxDrawHDL()->usGetPictureH(pusPicText);
+	usH = pxDrawHDL()->usGetPictureH(pusPic); // +pxDrawHDL()->usGetPictureH(pusPicText);
 
 	if (bWidgetInit(pxW, usX, usY, usW, usH, pxWidParent, true)) {
 
