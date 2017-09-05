@@ -19,8 +19,7 @@
 	
 	Created on: 09.12.2012
 */
-#ifndef __CONSOLE_C
-#define __CONSOLE_C
+#ifdef EMGUI_USE_CONSOLE_C
 
 #include "Console.h"
 #include "Font.h"

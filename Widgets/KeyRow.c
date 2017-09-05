@@ -19,6 +19,7 @@
 	
 	Created on: 01.05.2013
 */
+#ifdef EMGUI_USE_KEYBOARD
 
 #include "Widget.h"
 #include "color.h"
@@ -128,3 +129,4 @@ bool bKeyRowSetKeysSymbols(xWidget* pxW, const char *cpcNewKeys){
 }
 
 
+#endif 

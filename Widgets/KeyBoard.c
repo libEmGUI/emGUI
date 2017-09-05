@@ -19,6 +19,8 @@
 	
 	Created on: 06.05.2013
 */
+#ifdef EMGUI_USE_KEYBOARD
+
 #include "Widget.h"
 #include "KeyRow.h"
 #include "memory.h"
@@ -132,3 +134,5 @@ void vKeyBoardSetOnKeyPressHandler(xWidget *pxW, void (*Callback)(xWidget*, char
   if((xP = pxWidgetGetProps(pxW, WidgetKeyBoard)) && Callback)
     xP->prvOnKeyPress = Callback;
 }
+
+#endif // EMGUI_USE_CONSOLE_C

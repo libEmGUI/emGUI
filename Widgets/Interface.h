@@ -17,35 +17,58 @@
 	License and the emGUI Library license exception along with emGUI Library; if not it
 	can be obtained by writing to Roman Savrulin <romeo.deepmind@gmail.com>.
 
-	Created on: 15.11.2012
+	Created on: 14.11.2012
 */
 
-#ifndef __BUTTON_H
-#define __BUTTON_H
+#ifndef __INTERFACE_H
+#define __INTERFACE_H
 
 
-#include "Widgets/Widget.h"
-#include <stdint.h> 
-
+#include "Widget.h"
+#include "Window.h"
+#include <stdint.h>
+#include "StatusBar.h"
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-	typedef xWidget xButton;
 
-	typedef struct xButtonProps_struct {
-		bool bEmulatePressure;
-		xPicture pusPicDisabled;
-	} xButtonProps;
 
-	xButton * pxButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *pxWidParent);
-	bool bButtonSetPushPic(xButton *pxW, xPicture pusPic);												// TODO: don't work
-	inline void bButtonSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
-		vWidgetSetOnClickHandler(pxW, pxCallback);
+	typedef xWidget xInterface;
+
+	xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *));
+	void vInterfaceDraw();
+	xInterface *pxInterfaceGet();
+	inline uint16_t usInterfaceGetW() {
+		return LCD_SizeX;
 	}
+	inline uint16_t usInterfaceGetH() {
+		return LCD_SizeY;
+	}
+	inline uint16_t usInterfaceGetWindowH() {
+		return LCD_SizeY - LCD_STATUS_BAR_HEIGHT;
+	}
+	inline uint16_t usInterfaceGetWindowW() {
+		return LCD_SizeX;
+	}
+	inline uint16_t usInterfaceGetWindowX() {
+		return 0;
+	}
+	inline uint16_t usInterfaceGetWindowY() {
+		return LCD_STATUS_BAR_HEIGHT;
+	}
+	void vInterfaceInvalidate();
+	bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv);
+	void vInterfaceDebug(bool bDebug);
+	bool bInterfaceGetDebug();
+	void vInterfaceOpenWindow(eWindow eWnd);
+	void vInterfaceCloseActiveWindow();
+	void vInterfaceCloseWindow(eWindow eWnd);
+	void vInterfaceUpdateWindow();
+	xWindow * pxInterfaceIsWindowActive(eWindow eWnd);
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
-#endif	//__BUTTON_H
+#endif	//__INTERFACE_H

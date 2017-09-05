@@ -26,6 +26,8 @@
 extern "C" {
 #endif
 
+#ifdef EMGUI_USE_PROGRESS_BAR
+
 #include "ProgressBar.h"
 #include "Widget.h"
 #include "Memory.h"
@@ -111,6 +113,8 @@ void vProgressBarSetProcExec(xWidget *pxW, u16 usExecProc){
   
   vWidgetInvalidate(pxW);
 }
+
+#endif
 
 #ifdef __cplusplus
 }
