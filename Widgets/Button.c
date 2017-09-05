@@ -108,14 +108,14 @@ xButton * pxButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *p
 
 //TODO: Test this code (should work)
 bool bButtonSetPushPic(xButton *pxW, xPicture pusPic) {
-	//xButtonProps *xP;
+	xButtonProps *xP;
 
 	if (!pxW)
 		return false;
 
-	//xP = pxW->pvProp;
+	xP = pxW->pvProp;
 
-	/*xP->bEmulatePressure = pusPic;
+	xP->bEmulatePressure = pusPic;
 	//press picture must be the same size as foreground pic
 
 	if(pxDrawHDL()->usGetPictureH(pusPic) != usWidgetGetH(pxW))
@@ -125,7 +125,7 @@ bool bButtonSetPushPic(xButton *pxW, xPicture pusPic) {
 	  return false;
 
 	if(pxW->bPressed)
-	  vWidgetInvalidate(pxW);*/
+	  vWidgetInvalidate(pxW);
 
 	return true;
 }
