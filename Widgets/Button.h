@@ -35,11 +35,11 @@ extern "C" {
 
 	typedef struct xButtonProps_struct {
 		bool bEmulatePressure;
-		unsigned short const* pusPicDisabled;
+		xPicture pusPicDisabled;
 	} xButtonProps;
 
 	xButton * pxButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *pxWidParent);
-	bool bButtonSetPushPic(xButton *pxW, xPicture pusPic);
+	bool bButtonSetPushPic(xButton *pxW, xPicture pusPic);												// TODO: don't work
 	inline void bButtonSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
 		vWidgetSetOnClickHandler(pxW, pxCallback);
 	}
