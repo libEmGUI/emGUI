@@ -38,9 +38,9 @@ extern "C" {
 
 	static xLabel         *xMessage;
 	//static xProgressBar   *xPBar;
-	static xMenuButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS]; // y(ok)/n/c Ìàêñèìóì â äèàëîãå âèäíî 4 êíîïêè.
+	static xMenuButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS]; // y(ok)/n/c ÐœÐ°ÐºÑÐ¸Ð¼ÑƒÐ¼ Ð² Ð´Ð¸Ð°Ð»Ð¾Ð³Ðµ Ð²Ð¸Ð´Ð½Ð¾ 4 ÐºÐ½Ð¾Ð¿ÐºÐ¸.
 
-	//àâòîíóìåðàöèÿ äëÿ àâòîìàòè÷åñêèõ äèàëîãîâ
+	//Ð°Ð²Ñ‚Ð¾Ð½ÑƒÐ¼ÐµÑ€Ð°Ñ†Ð¸Ñ Ð´Ð»Ñ Ð°Ð²Ñ‚Ð¾Ð¼Ð°Ñ‚Ð¸Ñ‡ÐµÑÐºÐ¸Ñ… Ð´Ð¸Ð°Ð»Ð¾Ð³Ð¾Ð²
 	uint16_t usDlgID = MODAL_AUTO + 1;
 
 	typedef struct xModalDialog_t xModalDialog;
@@ -90,23 +90,23 @@ extern "C" {
 		//vWidgetHide(xPBar);
 	}
 
-	bool static prvOnOpenHandler(xWidget *pxW) {
+	static bool prvOnOpenHandler(xWidget *pxW) {
 		prvDlgShowActive();
 		return true;
 	}
 
-	bool static prvOnOpenRequestHandler(xWidget *pxW) {
+	static bool prvOnOpenRequestHandler(xWidget *pxW) {
 		if (xMDActive)
 			return true;
 		else
 			return false;
 	}
 
-	bool static prvOnCloseHandler(xWidget *pxW) {
+	static bool prvOnCloseHandler(xWidget *pxW) {
 		return true;
 	}
 
-	bool static prvOnCloseRequestHandler(xWidget *pxW) {
+	static bool prvOnCloseRequestHandler(xWidget *pxW) {
 		if (xMDActive)
 			vModalDialogClose(xMDActive->usDlgID, true);
 
@@ -116,10 +116,10 @@ extern "C" {
 			return true;
 	}
 
-	bool static prvButtonHandler(xWidget *pxW) {
-		//äèàëîã â îáðàáîò÷èêå ìîæåò îòêðûòü åùå îäèí äèàëîã.
-		//ïðè ýòîì ID àêòîâíîãî èçìåíÿåòñÿ. Äëÿ ñîõðàíåíèÿ èñïîëüçóåì
-		//ýòó ïåðåìåííóþ. 
+	static bool prvButtonHandler(xWidget *pxW) {
+		//Ð´Ð¸Ð°Ð»Ð¾Ð³ Ð² Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚Ñ‡Ð¸ÐºÐµ Ð¼Ð¾Ð¶ÐµÑ‚ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ ÐµÑ‰Ðµ Ð¾Ð´Ð¸Ð½ Ð´Ð¸Ð°Ð»Ð¾Ð³.
+		//Ð¿Ñ€Ð¸ ÑÑ‚Ð¾Ð¼ ID Ð°ÐºÑ‚Ð¾Ð²Ð½Ð¾Ð³Ð¾ Ð¸Ð·Ð¼ÐµÐ½ÑÐµÑ‚ÑÑ. Ð”Ð»Ñ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ñ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÐ¼
+		//ÑÑ‚Ñƒ Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½ÑƒÑŽ.
 		int usDlgId = xMDActive->usDlgID;
 		if (!xMDActive)
 			return false;
@@ -135,7 +135,7 @@ extern "C" {
 
 	xWidget * pxModalDialogWindowCreate() {
 
-		// X0, Y0 - êîîðäèíàòû ðàñïîëîæåíèÿ âèäæåòîâ
+		// X0, Y0 - ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ñ€Ð°ÑÐ¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ Ð²Ð¸Ð´Ð¶ÐµÑ‚Ð¾Ð²
 		uint16_t usX, usY;
 
 		xThisWnd = pxWindowCreate(WINDOW_MODAL);
@@ -217,7 +217,7 @@ extern "C" {
 			//return;
 			vInterfaceCloseWindow(WINDOW_MODAL);
 			return;
-			//TODO: âûñòàâèòü êîë-âî àêòèâíûõ äèàëîãîâ â 0
+			//TODO: Ð²Ñ‹ÑÑ‚Ð°Ð²Ð¸Ñ‚ÑŒ ÐºÐ¾Ð»-Ð²Ð¾ Ð°ÐºÑ‚Ð¸Ð²Ð½Ñ‹Ñ… Ð´Ð¸Ð°Ð»Ð¾Ð³Ð¾Ð² Ð² 0
 		}
 
 		uint16_t cBtnCnt = (uint16_t)strlen(xDlg->sDialogConfig);
@@ -291,8 +291,7 @@ extern "C" {
 
 	inline xModalDialog *prvDelDlgFromStack(xModalDialog *pxN, xModalDialog *pxNext) {
 
-		xModalDialog * pxPrev; //ïðåä. äèàëîã â ñòåêå
-
+		xModalDialog * pxPrev; //Ð¿Ñ€ÐµÐ´. Ð´Ð¸Ð°Ð»Ð¾Ð³ Ð² ÑÑ‚ÐµÐºÐµ
 		pxPrev = pxN->pxPrev;
 		pxNext->pxPrev = pxPrev;
 
@@ -320,13 +319,13 @@ extern "C" {
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
-		/*/Ïðîâåðêà îãðàíè÷åíèÿ ìàêñ. êîëè÷åñòâà îòêðûòûõ äèàëîãîâ
+		/*/ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð¾Ð³Ñ€Ð°Ð½Ð¸Ñ‡ÐµÐ½Ð¸Ñ Ð¼Ð°ÐºÑ. ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð° Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚Ñ‹Ñ… Ð´Ð¸Ð°Ð»Ð¾Ð³Ð¾Ð²
 		if(cDialogCount >= MODAL_DIALOG_MAX_COUNT){
 		  vInterfaceOpenWindow(WINDOW_MODAL);
 		  return -1;
 		}*/
 
-		//Åñëè òàêîé äèàëîã óæå àêòèâåí - Ñáðîñèòü åãî îáðàáîò÷èêè è êîíôèãóðàöèþ.
+		//Ð•ÑÐ»Ð¸ Ñ‚Ð°ÐºÐ¾Ð¹ Ð´Ð¸Ð°Ð»Ð¾Ð³ ÑƒÐ¶Ðµ Ð°ÐºÑ‚Ð¸Ð²ÐµÐ½ - Ð¡Ð±Ñ€Ð¾ÑÐ¸Ñ‚ÑŒ ÐµÐ³Ð¾ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚Ñ‡Ð¸ÐºÐ¸ Ð¸ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸ÑŽ.
 		if ((xDlg = prvDlgIsActive(iDlgId))) {
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			prvDlgShowActive();
@@ -334,13 +333,13 @@ extern "C" {
 			return -1;
 		}
 
-		//Äèàëîã åñòü ãäå-òî â ñòåêå, åãî íàäî ïîäíÿòü
+		//Ð”Ð¸Ð°Ð»Ð¾Ð³ ÐµÑÑ‚ÑŒ Ð³Ð´Ðµ-Ñ‚Ð¾ Ð² ÑÑ‚ÐµÐºÐµ, ÐµÐ³Ð¾ Ð½Ð°Ð´Ð¾ Ð¿Ð¾Ð´Ð½ÑÑ‚ÑŒ
 		if ((xDlg = prvDlgIsOpened(iDlgId, &xDlgNext))) {
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			prvDelDlgFromStack(xDlg, xDlgNext);
 		}
 		else {
-			//Äèàëîãà â ñòåêå íåò, ñîçäàåì íîâóþ ñòðóêòóðó
+			//Ð”Ð¸Ð°Ð»Ð¾Ð³Ð° Ð² ÑÑ‚ÐµÐºÐµ Ð½ÐµÑ‚, ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ Ð½Ð¾Ð²ÑƒÑŽ ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñƒ
 			xDlg = malloc(sizeof(xModalDialog));
 			//cDialogCount ++;
 			memcpy(xDlg->sDialogConfig, sBtns, MODAL_DIALOG_MAX_BUTTONS + 1);
@@ -354,8 +353,8 @@ extern "C" {
 			for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++)
 				xDlg->pxClickHandlers[c] = NULL;
 
-			//Âûñòàâëÿåì èäåíòèôèêàòîð äèàëîãà, ïî êîòîðîìó
-			//áóäåò âîçìîæíîñòü äàëüíåéøåé ðàáîòû ñ ýòèì äèàëîãîì.
+			//Ð’Ñ‹ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ð´Ð¸Ð°Ð»Ð¾Ð³Ð°, Ð¿Ð¾ ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð¼Ñƒ
+			//Ð±ÑƒÐ´ÐµÑ‚ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ Ð´Ð°Ð»ÑŒÐ½ÐµÐ¹ÑˆÐµÐ¹ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ñ ÑÑ‚Ð¸Ð¼ Ð´Ð¸Ð°Ð»Ð¾Ð³Ð¾Ð¼.
 			if (iDlgId != MODAL_AUTO)
 				xDlg->usDlgID = iDlgId;
 			else {
@@ -364,7 +363,7 @@ extern "C" {
 			}
 		}
 
-		//äåëàåì äèàëîã àêòèâíûì
+		//Ð´ÐµÐ»Ð°ÐµÐ¼ Ð´Ð¸Ð°Ð»Ð¾Ð³ Ð°ÐºÑ‚Ð¸Ð²Ð½Ñ‹Ð¼
 		xDlg->pxPrev = xMDActive;
 		xMDActive = xDlg;
 
@@ -432,22 +431,22 @@ extern "C" {
 
 		xDlg = prvDlgIsOpened(iDlgID, &xDlgNext);
 
-		//òàêîé äèàëîã íå áûë â ñòåêå
+		//Ñ‚Ð°ÐºÐ¾Ð¹ Ð´Ð¸Ð°Ð»Ð¾Ð³ Ð½Ðµ Ð±Ñ‹Ð» Ð² ÑÑ‚ÐµÐºÐµ
 		if (!xDlg)
 			return;
 
-		//åñëè äèàëîã íåëüçÿ çàêðûâàòü
+		//ÐµÑÐ»Ð¸ Ð´Ð¸Ð°Ð»Ð¾Ð³ Ð½ÐµÐ»ÑŒÐ·Ñ Ð·Ð°ÐºÑ€Ñ‹Ð²Ð°Ñ‚ÑŒ
 		if (!xDlg->bCanClose)
 			return;
 
-		//åñëè äèàëîã àêòèâíûé, òî ñòàâèì àêòèâíûì ïðåäûäóùèé.
+		//ÐµÑÐ»Ð¸ Ð´Ð¸Ð°Ð»Ð¾Ð³ Ð°ÐºÑ‚Ð¸Ð²Ð½Ñ‹Ð¹, Ñ‚Ð¾ ÑÑ‚Ð°Ð²Ð¸Ð¼ Ð°ÐºÑ‚Ð¸Ð²Ð½Ñ‹Ð¼ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰Ð¸Ð¹.
 		if (prvDlgIsActive(iDlgID)) {
 			xMDActive = xMDActive->pxPrev;
 		}
 		else
 			prvDelDlgFromStack(xDlg, xDlgNext);
 
-		//ãåíåðèðóåì ñîáûòèå ïî óìîë÷àíèþ, åñëè íàäî è îíî åñòü.
+		//Ð³ÐµÐ½ÐµÑ€Ð¸Ñ€ÑƒÐµÐ¼ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ, ÐµÑÐ»Ð¸ Ð½Ð°Ð´Ð¾ Ð¸ Ð¾Ð½Ð¾ ÐµÑÑ‚ÑŒ.
 		if (bFireDefault) {
 			if (xDlg->pxDefaultHandler)
 				xDlg->pxDefaultHandler(NULL);

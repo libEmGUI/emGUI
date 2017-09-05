@@ -39,22 +39,22 @@ extern "C" {
 	xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *));
 	void vInterfaceDraw();
 	xInterface *pxInterfaceGet();
-	uint16_t inline usInterfaceGetW() {
+	inline uint16_t usInterfaceGetW() {
 		return LCD_SizeX;
 	}
-	uint16_t inline usInterfaceGetH() {
+	inline uint16_t usInterfaceGetH() {
 		return LCD_SizeY;
 	}
-	uint16_t inline usInterfaceGetWindowH() {
+	inline uint16_t usInterfaceGetWindowH() {
 		return LCD_SizeY - LCD_STATUS_BAR_HEIGHT;
 	}
-	uint16_t inline usInterfaceGetWindowW() {
+	inline uint16_t usInterfaceGetWindowW() {
 		return LCD_SizeX;
 	}
-	uint16_t inline usInterfaceGetWindowX() {
+	inline uint16_t usInterfaceGetWindowX() {
 		return 0;
 	}
-	uint16_t inline usInterfaceGetWindowY() {
+	inline uint16_t usInterfaceGetWindowY() {
 		return LCD_STATUS_BAR_HEIGHT;
 	}
 	void vInterfaceInvalidate();

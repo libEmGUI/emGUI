@@ -23,7 +23,7 @@
 #include "Widgets/Button.h"
 #include <malloc.h>
 
-bool static vButtonDraw(xButton *pxW) {
+static bool vButtonDraw(xButton *pxW) {
 	xButtonProps *xP;
 
 	if (!pxW)
@@ -57,7 +57,7 @@ bool static vButtonDraw(xButton *pxW) {
 	return true;
 }
 
-bool static bButtonCheckTSRoutine(xButton *pxW, xTouchEvent *pxTouchScreenEv) {
+static bool bButtonCheckTSRoutine(xButton *pxW, xTouchEvent *pxTouchScreenEv) {
 	xButtonProps *xP;
 
 	if (!pxW)
@@ -106,6 +106,7 @@ xButton * pxButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *p
 	}
 }
 
+//TODO: Test this code (should work)
 bool bButtonSetPushPic(xButton *pxW, xPicture pusPic) {
 	//xButtonProps *xP;
 

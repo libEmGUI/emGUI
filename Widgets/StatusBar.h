@@ -49,7 +49,7 @@ extern "C" {
 	*
 	* @returns ширина в пикселях
 	*/
-	uint16_t inline    usStatusBarGetW() {
+	inline uint16_t usStatusBarGetW() {
 		return LCD_SizeX;
 	}
 
@@ -58,7 +58,7 @@ extern "C" {
 	  *
 	  * @returns высота в пикселях
 	  */
-	uint16_t inline    usStatusBarGetH() {
+	inline uint16_t usStatusBarGetH() {
 		return LCD_STATUS_BAR_HEIGHT;
 	}
 

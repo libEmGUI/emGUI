@@ -2,7 +2,7 @@
 * @file   MenuButton.h
 * @author Lemeshev K (konstantin.lemeshev@gmail.com)
 * @date   21.02.2014
-* @brief  Реализация виджета кнопки для меню и диалогов
+* @brief  Р РµР°Р»РёР·Р°С†РёСЏ РІРёРґР¶РµС‚Р° РєРЅРѕРїРєРё РґР»СЏ РјРµРЅСЋ Рё РґРёР°Р»РѕРіРѕРІ
 *
 */
 #ifndef MENUBUTTON_H_
@@ -26,38 +26,39 @@
 extern "C" {
 #endif // __cplusplus
 
-	typedef xWidget xMenuButton; ///< тип для кнопки меню
+	typedef xWidget xMenuButton; ///< С‚РёРї РґР»СЏ РєРЅРѕРїРєРё РјРµРЅСЋ
 
-								 /**
-								 * @brief создает виджет кнопки
-								 *
-								 * @param uX - положение по горизонтали относительно родительского элемента
-								 * @param uY - положение по веркикали относительно родительского элемента
-								 * @param xPicFG - указатель на картинку
-								 * @param strLabel - подпись под кнопкой
-								 * @param pvClickHanlder - обработчик нажатия
-								 * @param pxWidParent - родитель виджета
-								 *
-								 * @returns указатель на созданную кнопку
-								 */
+  /**
+   * @brief СЃРѕР·РґР°РµС‚ РІРёРґР¶РµС‚ РєРЅРѕРїРєРё
+   *
+   * @param uX - РїРѕР»РѕР¶РµРЅРёРµ РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+   * @param uY - РїРѕР»РѕР¶РµРЅРёРµ РїРѕ РІРµСЂРєРёРєР°Р»Рё РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+   * @param xPicFG - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РєР°СЂС‚РёРЅРєСѓ
+   * @param strLabel - РїРѕРґРїРёСЃСЊ РїРѕРґ РєРЅРѕРїРєРѕР№
+   * @param pvClickHanlder - РѕР±СЂР°Р±РѕС‚С‡РёРє РЅР°Р¶Р°С‚РёСЏ
+   * @param pxWidParent - СЂРѕРґРёС‚РµР»СЊ РІРёРґР¶РµС‚Р°
+   *
+   * @returns СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃРѕР·РґР°РЅРЅСѓСЋ РєРЅРѕРїРєСѓ
+   */
 	xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
 
-	/**
-	* @brief устанавливает картинку на кнопке
-	*
-	* @param pxW - виджет
-	* @param xPic - указатель на картинку
-	*
-	*/
+
+  /**
+   * @brief СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РєР°СЂС‚РёРЅРєСѓ РЅР° РєРЅРѕРїРєРµ
+   *
+   * @param pxW - РІРёРґР¶РµС‚
+   * @param xPic - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РєР°СЂС‚РёРЅРєСѓ
+   *
+   */
 	void pxMenuButtonSetMainPic(xWidget * pxW, xPicture  pusPic);
 
-	/**
-	* @brief устанавливает подпись под кнопкой
-	*
-	* @param pxW - виджет
-	* @param xPic - указатель строку
-	*
-	*/
+  /**
+   * @brief СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїРѕРґРїРёСЃСЊ РїРѕРґ РєРЅРѕРїРєРѕР№
+   *
+   * @param pxW - РІРёРґР¶РµС‚
+   * @param xPic - СѓРєР°Р·Р°С‚РµР»СЊ СЃС‚СЂРѕРєСѓ
+   *
+   */
 	void pxMenuButtonSetLabelText(xWidget * pxW, char const* strL);
 
 	/**

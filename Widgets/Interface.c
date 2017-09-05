@@ -95,7 +95,7 @@ xWindow * pxInterfaceIsWindowActive(eWindow eWnd) {
 	return NULL;
 }
 
-void inline prvDelWndFromStack(xWindow *pxN, xWindow *pxNext) {
+inline void prvDelWndFromStack(xWindow *pxN, xWindow *pxNext) {
 
 	xWidget * pxPrev; //пред. окно в стеке
 	xWindowProps *xP;

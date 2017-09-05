@@ -40,7 +40,7 @@ extern "C" {
 
 	xButton * pxButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *pxWidParent);
 	bool bButtonSetPushPic(xButton *pxW, xPicture pusPic);
-	void inline bButtonSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
+	inline void bButtonSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
 		vWidgetSetOnClickHandler(pxW, pxCallback);
 	}
 

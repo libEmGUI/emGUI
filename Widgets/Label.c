@@ -44,6 +44,7 @@ static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t
 	pcSeparator = NULL;
 	pcCharCount = pcLine;
 	uXBefor = uXFrom;
+	uXSeparator = uXBefor;
 
 	while ((uXBefor + ucFontGetCharW(*pcCharCount, pubFont)) <= uXTo && uMaxLineLen) {
 		if (((*pcCharCount == ' ' || *pcCharCount == '\t') && pcCharCount != pcLine) // и разделитель будет не первый символ
@@ -140,7 +141,7 @@ static void prvPrintPage(char *pcPage, uint16_t uXFrom, uint16_t uXTo, uint16_t 
 	}
 }
 
-bool static prvDraw(xWidget *pxW) {
+static bool prvDraw(xWidget *pxW) {
 	xLabelProps *xP;
 	uint16_t uY, uLineCount;
 
