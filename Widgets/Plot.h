@@ -54,9 +54,9 @@ typedef struct {
 }xPlotData_t;
 
 
-#define AFE_DATA_RATE 500
+#define AFE_DATA_RATE 900
 
-#define PLOTRate (1575) ///< количество отсчетов в 1мв
+#define PLOTRate (1000) ///< количество отсчетов в 1клетке
 
 #define PLOT_1MV   PLOTRate                 ///< количество отсчетов в 1мв
 #define PLOT_2MV   (PLOTRate * PLOTScale2mV) ///< количество отсчетов в 2мв

@@ -459,7 +459,7 @@ xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1,
 		xP->usLastDrawedPosY1 = prvGetMiddleLine(pxW);
 
 		pxW->pxDrawHandler = prvEcgPlotDraw;
-		xP->usColor = COLOR_PLOT_GRAPH;
+		xP->usColor = COLOR_PLOT_SCALE_MARKER;
 		pxW->pvProp = xP;
 		return pxW;
 	}
