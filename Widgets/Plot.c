@@ -450,7 +450,7 @@ xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1,
 		xP->usLastDrawedPosX = 0;
 		xP->usLastDrawedSample = 0;
 		xP->sLeadMedian = 0;
-		xP->eScale = PLOTScale4mV;
+		xP->eScale = PLOTScale1mV;
 		xP->bLastFilled = false;
 		xP->bWriteEnabled = false;
 		xP->pxL = pxL;

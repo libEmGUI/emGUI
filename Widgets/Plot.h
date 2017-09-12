@@ -30,7 +30,8 @@ typedef enum {
 	PLOTScale1mV = 1, ///< 1mV в клетке
 	PLOTScale2mV = 2, ///< 2mV в клетке
 	PLOTScale4mV = 4, ///< 4mV в клетке
-	PLOTScale8mV = 8  ///< 8mV в клетке
+	PLOTScale8mV = 8,  ///< 8mV в клетке
+	PLOTScale10mV = 10  ///< 8mV в клетке
 } ePLOTScale;
 
 /**
@@ -56,7 +57,7 @@ typedef struct {
 
 #define AFE_DATA_RATE 900
 
-#define PLOTRate (1000) ///< количество отсчетов в 1клетке
+#define PLOTRate (10000) ///< количество отсчетов в 1клетке
 
 #define PLOT_1MV   PLOTRate                 ///< количество отсчетов в 1мв
 #define PLOT_2MV   (PLOTRate * PLOTScale2mV) ///< количество отсчетов в 2мв
