@@ -149,6 +149,8 @@ typedef XPICTURE_TYPE xPicture;
 #define MENU_BUTTON_LABEL_BG_COLOR WIDGET_COLOR_WHITE
 #endif // MENU_BUTTON_LABEL_TEXT_COLOR
 
+#define ColorPLOTGrid       EARTH_COLOR1  //= ((200 / 8) << 11) + ((200 / 4) << 5) + 200 / 8;
+#define ColorScaleMarker    EARTH_COLOR3   //= ((41 / 8) << 11) + ((69 / 4) << 5) + 90 / 8;
 
 #ifndef STATUS_BAR_BG
 #define STATUS_BAR_BG SEA_COLOR5 //light-blue

@@ -12,4 +12,5 @@
 #include "Widgets/Button.h"
 #include "Widgets/MenuButton.h"
 #include "Widgets/ModalDialog.h"
+#include "Widgets/Plot.h"
 #endif // !EMGUI_H
