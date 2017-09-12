@@ -19,6 +19,10 @@
 #include "Widgets/Widget.h"
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 /**
 * @brief масштаб сигнала
 */
@@ -47,7 +51,7 @@ typedef struct {
 	short    sMaxValue;       ///< максимальное значение
 	long     lRange;          ///< размах
 	unsigned char cRangeIdx;  ///< индекс масштаба*/
-}xLead_t;
+}xPlotData_t;
 
 
 #define AFE_DATA_RATE 500
@@ -84,7 +88,7 @@ typedef xWidget xPlot; ///< тип виджета
  *
  * @returns указатель на созданный виджет
  */
-xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, xLead_t * pxL);
+xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, xPlotData_t * pxL);
 
 /**
  * @brief устанавливает масштаб виджета
@@ -123,5 +127,10 @@ void vPlotSetColor(xPlot *pxW, uint16_t usColor, bool bInvalidate);
  /**
   *  @}
   */
+
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif	//__PLOT_PLOT_H

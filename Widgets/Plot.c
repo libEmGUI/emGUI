@@ -30,7 +30,7 @@ typedef struct xPlotProps_struct {
 	short       sLeadMedian;
 	bool        bWriteEnabled;
 	uint16_t    usColor;            ///< цвет графика
-	xLead_t      *pxL;                ///< Дескриптор отведения
+	xPlotData_t      *pxL;                ///< Дескриптор отведения
 } xPlotProps;
 
 
@@ -57,7 +57,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor);
 * @returns true если данные для интересующей точки получены
 * @returns false если данные для интересующей точки НЕ получены
 */
-static bool prvGetValue(xLead_t *pxL, short * psSample, uint32_t uiOffset, bool bActualData) {
+static bool prvGetValue(xPlotData_t *pxL, short * psSample, uint32_t uiOffset, bool bActualData) {
 	if (bActualData) {
 		if (uiOffset >= pxL->ulWritePos)
 			return false;
@@ -87,7 +87,7 @@ static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
 	uint16_t usX,
 		usH = usWidgetGetH(pxW);
 
-	xLead_t *xL = xP->pxL;
+	xPlotData_t *xL = xP->pxL;
 
 	short sY0,
 		sY1,
@@ -310,7 +310,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor) {
 		usX1 = usXCursor;
 		//if we use border, we need to add 1 to usY0, and sub 1 from usY1
 		if (usXCursor < usWidgetGetX1(pxW, true) - 1)
-			pxDrawHDL()->vVLine(usXCursor + 1, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), ColorPLOTGrid);//cursor(goes 1px forward)
+			pxDrawHDL()->vVLine(usXCursor + 1, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), COLOR_PLOT_SCALE_MARKER);//cursor(goes 1px forward)
 		pxDrawHDL()->vVLine(usXCursor, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), pxW->usBgColor);//splitter/eraser
 	}
 
@@ -332,17 +332,17 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor) {
 	//Vertical Grid
 	for (usX = usWidgetGetX0(pxW, true); usX < usWidgetGetX1(pxW, true); usX += usXGridSize) {
 		if (!psXCursor)
-			pxDrawHDL()->vVLine(usX, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), ColorPLOTGrid);
+			pxDrawHDL()->vVLine(usX, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), COLOR_PLOT_GRIDS);
 		else
 			if (usXCursor == usX) {
-				pxDrawHDL()->vVLine(usX, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), ColorPLOTGrid);
+				pxDrawHDL()->vVLine(usX, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), COLOR_PLOT_GRIDS);
 			}
 	}
 
 	//Horisontal Grid
 	//If we are drawing cursor, then it is just points on cursor line (see limits above)
 	for (usY = usWidgetGetY0(pxW, true); usY < usWidgetGetY1(pxW, true); usY += usYGridSize) {
-		pxDrawHDL()->vHLine(usX0, usY, usX1, ColorPLOTGrid);
+		pxDrawHDL()->vHLine(usX0, usY, usX1, COLOR_PLOT_GRIDS);
 	}
 
 	uint16_t usYMiddle = prvGetMiddleLine(pxW),
@@ -353,9 +353,9 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor) {
 		//redraw only if it is not cursor, or cursor is drawed in mv marker area.
 
 		//рисует масштаб милливольта
-		pxDrawHDL()->vVLine(usWidgetGetX0(pxW, true), usYMiddle - mvHeight, usYMiddle, ColorScaleMarker);
-		pxDrawHDL()->vHLine(usWidgetGetX0(pxW, true), usYMiddle - mvHeight, usWidgetGetX0(pxW, true) + usMvWidth, ColorScaleMarker);
-		pxDrawHDL()->vVLine(usWidgetGetX0(pxW, true) + usMvWidth, usYMiddle - mvHeight, usYMiddle, ColorScaleMarker);
+		pxDrawHDL()->vVLine(usWidgetGetX0(pxW, true), usYMiddle - mvHeight, usYMiddle, COLOR_PLOT_SCALE_MARKER);
+		pxDrawHDL()->vHLine(usWidgetGetX0(pxW, true), usYMiddle - mvHeight, usWidgetGetX0(pxW, true) + usMvWidth, COLOR_PLOT_SCALE_MARKER);
+		pxDrawHDL()->vVLine(usWidgetGetX0(pxW, true) + usMvWidth, usYMiddle - mvHeight, usYMiddle, COLOR_PLOT_SCALE_MARKER);
 	}
 
 	if (!psXCursor || (psXCursor && (usXCursor >= usXText) && (usXCursor <= usXText + usTextW))) {
@@ -365,8 +365,8 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor) {
 			usYText,
 			xP->pxL->sName,
 			FONT_ASCII_8_X,
-			ColorScaleMarker,
-			ColorScaleMarker,
+			COLOR_MESSAGE_TEXT,
+			COLOR_PLOT_BACKGROUND,
 			true
 		);
 	}
@@ -432,20 +432,20 @@ static bool prvEcgPlotDraw(xPlot *pxW) {
 	return true;
 }
 
-xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, xLead_t * pxL) {
+xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, xPlotData_t * pxL) {
 	xPlot *pxW;
 	pxW = pxWidgetCreate(usX0, usY0, usX1, usY1, pxWidParent, true);
-
+	
 	xPlotProps* xP;
 
 	if (pxW && pxL) {
 		pxW->eType = WidgetPlot;
 		vWidgetSetClickable(pxW, true);
-		vWidgetSetBgColor(pxW, ColorEcgBackground, false);
+		vWidgetSetBgColor(pxW, COLOR_PLOT_BACKGROUND, false);
 
 		xP = (xPlotProps*)malloc(sizeof(xPlotProps));
 
-		pxW->pvProp = xP;
+		
 
 		xP->usLastDrawedPosX = 0;
 		xP->usLastDrawedSample = 0;
@@ -459,10 +459,11 @@ xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1,
 		xP->usLastDrawedPosY1 = prvGetMiddleLine(pxW);
 
 		pxW->pxDrawHandler = prvEcgPlotDraw;
-		xP->usColor = ColorScaleMarker;
-
+		xP->usColor = COLOR_PLOT_GRAPH;
+		pxW->pvProp = xP;
 		return pxW;
 	}
+	
 
 	free(pxW);
 	return NULL;
