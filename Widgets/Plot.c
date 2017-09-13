@@ -13,7 +13,7 @@
 
 #define MIN_GRID_PERIOD_PX 16
 
- /** @weakgroup prop-widget-ecg-plot
+ /** @weakgroup prop-widget-plot
   *  @{
   */
 
@@ -21,16 +21,19 @@
    * @brief структура свойств виджета
    */
 typedef struct xPlotProps_struct {
-	ePLOTScale  eScale;             ///< установленный масштаб
 	uint16_t    usLastDrawedPosX;    ///< последняя отрисованная позиция по горизонтали
 	uint16_t    usLastDrawedPosY0;  ///< нижняя точка последнего отрисованного горизонтального отсчета бар-диаграммы по вертикали
 	uint16_t    usLastDrawedPosY1;  ///< верхняя точка последнего отрисованного горизонтального отсчета бар-диаграммы по вертикали
 	uint16_t    usLastDrawedSample;
 	bool        bLastFilled;
-	short       sLeadMedian;
+	int16_t     sDataDCOffset;
 	bool        bWriteEnabled;
 	uint16_t    usColor;            ///< цвет графика
 	xPlotData_t      *pxL;                ///< Дескриптор отведения
+	float       xScale;             ///< размер клетки по Y в единицах измерения
+	uint8_t     usXMarkerCount;
+	uint8_t     usYMarkerCount;
+	int16_t     drawOffset;
 } xPlotProps;
 
 
@@ -41,7 +44,7 @@ typedef struct xPlotProps_struct {
  *
  * @return середина виджета
  */
-static uint16_t inline prvGetMiddleLine(xPlot *pxW) {
+static uint16_t inline prvWidgetMiddleLine(xPlot *pxW) {
 	return usWidgetGetY0(pxW, true) + usWidgetGetH(pxW) / 2;
 }
 
@@ -57,7 +60,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t psXCursor, bool bPartialDraw);
 * @returns true если данные для интересующей точки получены
 * @returns false если данные для интересующей точки НЕ получены
 */
-static bool prvGetValue(xPlotData_t *pxL, short * psSample, uint32_t uiOffset, bool bActualData) {
+static bool prvGetValue(xPlotData_t *pxL, int16_t * psSample, uint32_t uiOffset, bool bActualData) {
 	if (bActualData) {
 		if (uiOffset >= pxL->ulWritePos)
 			return false;
@@ -75,8 +78,8 @@ static bool prvGetValue(xPlotData_t *pxL, short * psSample, uint32_t uiOffset, b
  * @brief производит отрисовку
  * @param pxW - виджет
  */
-static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
-	short bHaveSample,
+static bool prvPlot(xPlot *pxW) {
+	int16_t bHaveSample,
 		sSample;
 
 	if (!pxW)
@@ -85,20 +88,21 @@ static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
 	xPlotProps* xP = (xPlotProps*)pxW->pvProp;
 
 	if (!xP)
-		return false; //TODO: assert???
+		return false; 
 
 	uint16_t usX,
 		usH = usWidgetGetH(pxW);
 
 	xPlotData_t *xL = xP->pxL;
 
-	short sY0,
+	int16_t sY0,
 		sY1,
-		sGraphMiddleLine = prvGetMiddleLine(pxW),
+		sGraphMiddleLine = prvWidgetMiddleLine(pxW),
 		sMin,
 		sMax,
-		sLeadMedian = xP->sLeadMedian;
-
+		sDataDCOffset = xP->sDataDCOffset;
+	
+	int16_t drawOffset = xP->drawOffset;
 	uint32_t uiSampleCount = (pxW->bValid)?xP->pxL->ulWritePos:xP->pxL->ulElemCount;
 
 	bool bRedrawed = false;
@@ -108,12 +112,14 @@ static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
 	uint16_t i, usW = usWidgetGetW(pxW);
 
 #ifdef USE_FLOAT //if FPU is available
-	float coe = usH / (PLOT_2MV * xP->eScale); //при мин. масштабе во всей высоте 2мв
+	float coe = usH /( xP->usYMarkerCount * xP->xScale); //при мин. масштабе во всей высоте 2мв
 #else
-	long coe = (usH << 16) / (PLOT_1MV * xP->eScale); //при мин. масштабе во всей высоте 2мв
+	long coe = (usH << 16) / (PLOT_1MV * xP->xScale); //при мин. масштабе во всей высоте 2мв
 #endif
 
-	uint16_t usCorrection = xL->ulElemCount%usW;
+	uint16_t usCorrection = 0;
+	if (usW < xL->ulElemCount)
+		usCorrection = xL->ulElemCount%usW;
 
 	//коррекция для полной отрисовки данных. (например, если usAvgCount должно быть дробным)
 	if (usCorrection) {
@@ -130,7 +136,6 @@ static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
 	//График в каждой точке рисуется вертикальными линиями от минимума до максимума,
 	//найденного в усредненом отрезке.
 	for (i = (xP->usLastDrawedPosX == 0) ? 0 : xP->usLastDrawedPosX + 1; i < usW; i++) {
-
 		uint16_t usAvgCount = xL->ulElemCount / usW;
 		usSample = usAvgCount*i;
 
@@ -171,11 +176,11 @@ static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
 		usX = i + usWidgetGetX0(pxW, true);
 
 #ifdef USE_FLOAT //if FPU is available
-		sY1 = sGraphMiddleLine + (sLeadMedian - sMin) * coe;
-		sY0 = sGraphMiddleLine - (sMax - sLeadMedian) * coe;
+		sY1 = sGraphMiddleLine - (sMin + sDataDCOffset) * coe - drawOffset;
+		sY0 = sGraphMiddleLine - (sMax + sDataDCOffset) * coe - drawOffset;
 #else
-		sY1 = sGraphMiddleLine + (((sLeadMedian - sMin) * coe) >> 16);
-		sY0 = sGraphMiddleLine - (((sMax - sLeadMedian) * coe) >> 16);
+		sY1 = sGraphMiddleLine + (((sDataDCOffset - sMin) * coe) >> 16);
+		sY0 = sGraphMiddleLine - (((sMax - sDataDCOffset) * coe) >> 16);
 #endif
 
 		// Ограничение при выходе за границы виджета
@@ -191,8 +196,8 @@ static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
 			if (sY1 >= usWidgetGetY1(pxW, true))
 				sY1 = usWidgetGetY1(pxW, true);
 
-		uint16_t tmp;
 		if (sY0 > sY1) {
+			uint16_t tmp;
 			tmp = sY1;
 			sY1 = sY0;
 			sY0 = tmp;
@@ -244,33 +249,20 @@ void vPlotReset(xPlot *pxW, bool bInvalidate) {
 }
 
 /**
- * @brief получает высоту милливольта на графике
- * @param pxW - виджет
- */
-static short prvGetMvHeight(xPlot *pxW) {
-	if (!pxW)
-		return 1;
-
-	xPlotProps* xP = (xPlotProps*)pxW->pvProp;
-
-	return usWidgetGetH(pxW) / 2 / xP->eScale;
-}
-
-/**
  * @brief отрисовка сетки виджета
  * @param pxW - виджет
  * @param sXCursor - позиция курсора
  * @bPartialDraw - флаг полной или частичной отрисовки сетки
  * @return true - отрисовка проведена
  */
-static bool prvDrawGrid(xPlot * pxW, uint16_t sXCursor, bool bPartialDraw) {
+static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 	if (!pxW)
 		return false;
 
 	xPlotProps* xP = (xPlotProps*)pxW->pvProp;
 
-	uint16_t usXMarkerCount = 6;
-	uint16_t usYMarkerCount = 6;
+	uint16_t usXMarkerCount = xP->usXMarkerCount;
+	uint16_t usYMarkerCount = xP->usYMarkerCount;
 
 	//TODO: Make these variables double to improve precision
 	uint16_t usXGridSize = usWidgetGetW(pxW) / usXMarkerCount;
@@ -279,13 +271,11 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t sXCursor, bool bPartialDraw) {
 		usY,
 		usXText = usWidgetGetX0(pxW, true) + 1,
 		usYText = usWidgetGetY0(pxW, true) + 8, //font height here
-		mvHeight = prvGetMvHeight(pxW),
 		usX0 = usWidgetGetX0(pxW, true),
 		usX1 = usWidgetGetX1(pxW, true);
-	uint16_t usXCursor;
 
 	if (bPartialDraw) { //we need to draw 1 px blank cursor(with grid if needed)
-		usXCursor = sXCursor + usX0;
+		usXCursor = usXCursor + usX0;
 		usX0 = usXCursor;
 		usX1 = usXCursor;
 		//if we use border, we need to add 1 to usY0, and sub 1 from usY1
@@ -304,13 +294,18 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t sXCursor, bool bPartialDraw) {
 			}
 	}
 
-	//Horisontal Grid
+	//Horisontal Grid in two steps
 	//If we are drawing cursor, then it is just points on cursor line (see limits above)
-	for (usY = usWidgetGetY0(pxW, true); usY < usWidgetGetY1(pxW, true); usY += usYGridSize) {
+	for (usY = prvWidgetMiddleLine(pxW); usY > usWidgetGetY0(pxW, true); usY = (usY > usYGridSize) ? usY - usYGridSize : 0) {
 		pxDrawHDL()->vHLine(usX0, usY, usX1, COLOR_PLOT_GRIDS);
 	}
 
-	uint16_t usYMiddle = prvGetMiddleLine(pxW),
+	for (usY = prvWidgetMiddleLine(pxW); usY < usWidgetGetY1(pxW, true); usY += usYGridSize) {
+		//if (abs((int16_t)(usY - prvWidgetMiddleLine(pxW))) < usYGridSize) continue;
+		pxDrawHDL()->vHLine(usX0, usY, usX1, COLOR_PLOT_GRIDS);
+	}
+
+	uint16_t usYMiddle = prvWidgetMiddleLine(pxW),
 		usMvWidth = usXGridSize / 3,
 		usTextW = usFontGetStrW(xP->pxL->sName, FONT_ASCII_8_X);
 
@@ -336,7 +331,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t sXCursor, bool bPartialDraw) {
  * @return true - отрисовка проведена
  * @return false - отрисовки не было
  */
-static bool prvEcgPlotDraw(xPlot *pxW) {
+static bool prvPlotDraw(xPlot *pxW) {
 	if (!pxW)
 		return false;
 
@@ -358,10 +353,10 @@ static bool prvEcgPlotDraw(xPlot *pxW) {
 		xP->bWriteEnabled = xP->pxL->bWriteEnabled;
 	}
 
-	short sLeadMedian = xP->pxL->sMedian;
-	if (xP->sLeadMedian != sLeadMedian) {
+	int16_t sDataDCOffset = xP->pxL->sDataDCOffset;
+	if (xP->sDataDCOffset != sDataDCOffset) {
 		pxW->bValid = false;
-		xP->sLeadMedian = sLeadMedian;
+		xP->sDataDCOffset = sDataDCOffset;
 	}
 
 	xP->bLastFilled = xP->pxL->bDataFilled;
@@ -375,8 +370,8 @@ static bool prvEcgPlotDraw(xPlot *pxW) {
 
 	//if widget is invalid, then make it replot data
 	xP->usLastDrawedPosX = 0;
-	xP->usLastDrawedPosY0 = prvGetMiddleLine(pxW);
-	xP->usLastDrawedPosY1 = prvGetMiddleLine(pxW);
+	xP->usLastDrawedPosY0 = prvWidgetMiddleLine(pxW);
+	xP->usLastDrawedPosY1 = prvWidgetMiddleLine(pxW);
 
 	bWidgetDraw(pxW);
 	prvDrawGrid(pxW, 0, false);
@@ -405,16 +400,19 @@ xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1,
 
 		xP->usLastDrawedPosX = 0;
 		xP->usLastDrawedSample = 0;
-		xP->sLeadMedian = 0;
-		xP->eScale = PLOTScale4mV;
+		xP->sDataDCOffset = 0;
+		xP->xScale = 100;				// value in mA
 		xP->bLastFilled = false;
 		xP->bWriteEnabled = false;
+		xP->usYMarkerCount = 6;
+		xP->usXMarkerCount = 6;
+		xP->drawOffset = 0;
 		xP->pxL = pxL;
 
-		xP->usLastDrawedPosY0 = prvGetMiddleLine(pxW);
-		xP->usLastDrawedPosY1 = prvGetMiddleLine(pxW);
+		xP->usLastDrawedPosY0 = prvWidgetMiddleLine(pxW);
+		xP->usLastDrawedPosY1 = prvWidgetMiddleLine(pxW);
 
-		pxW->pxDrawHandler = prvEcgPlotDraw;
+		pxW->pxDrawHandler = prvPlotDraw;
 		xP->usColor = COLOR_PLOT_SCALE_MARKER;
 		pxW->pvProp = xP;
 		return pxW;
@@ -425,16 +423,16 @@ xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1,
 	return NULL;
 }
 
-void vPlotSetScale(xPlot * pxW, ePLOTScale eScale) {
+void vPlotSetScale(xPlot * pxW, float xScale) {
 	if (!pxW)
 		return;
 
 	xPlotProps* xP = (xPlotProps*)pxW->pvProp;
 
-	if (xP->eScale == eScale)
+	if (xP->xScale == xScale)
 		return;
 
-	xP->eScale = eScale;
+	xP->xScale = xScale;
 
 	vWidgetInvalidate(pxW);
 }

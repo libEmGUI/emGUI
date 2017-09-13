@@ -24,17 +24,6 @@ extern "C" {
 #endif // __cplusplus
 
 /**
-* @brief масштаб сигнала
-*/
-typedef enum {
-	PLOTScale1mV = 1, ///< 1mV в клетке
-	PLOTScale2mV = 2, ///< 2mV в клетке
-	PLOTScale4mV = 4, ///< 4mV в клетке
-	PLOTScale8mV = 8,  ///< 8mV в клетке
-	PLOTScale10mV = 10  ///< 8mV в клетке
-} ePLOTScale;
-
-/**
 * @brief дескриптор набора данных
 */
 typedef struct {
@@ -47,7 +36,7 @@ typedef struct {
 	uint32_t    ulElemCount;      ///< количество отсчётов в текущей сессии записи (для отведений контура значения равны)
 
 	short   *psData;          ///< указатель на буфер
-	short    sMedian;         ///< среднее значение
+	short    sDataDCOffset;         ///< среднее значение
 	/*short    sMinValue;       ///< минимальное значение
 	short    sMaxValue;       ///< максимальное значение
 	long     lRange;          ///< размах
@@ -56,14 +45,6 @@ typedef struct {
 
 
 #define AFE_DATA_RATE 700
-
-#define PLOT_1MV   10                 ///< количество отсчетов в 1мв
-#define PLOT_2MV   (PLOT_1MV * PLOTScale2mV) ///< количество отсчетов в 2мв
-#define PLOT_4MV   (PLOT_1MV * PLOTScale4mV) ///< количество отсчетов в 4мв
-#define PLOT_8MV   (PLOT_1MV * PLOTScale8mV) ///< количество отсчетов в 8мв
-
-#define PLOT_LOW_LIMIT_COEF  0.82f   ///< нижняя граница переключения масштабной сетки
-#define PLOT_HI_LIMIT_COEF   0.95f   ///< верхняя граница переключения масштабной сетки
 
 /** \weakgroup gui-prop-widgets
  *  @{
@@ -93,10 +74,10 @@ xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1,
  * @brief устанавливает масштаб виджета
  *
  * @param pxW - виджет
- * @param eScale - новый масштаб графика
+ * @param xScale - новый масштаб графика
  *
  */
-void vPlotSetScale(xPlot * pxW, ePLOTScale eScale);
+void vPlotSetScale(xPlot * pxW, float xScale);
 
 /**
  * @brief сбрасывает позицию курсора в виджете
