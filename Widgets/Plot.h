@@ -55,14 +55,12 @@ typedef struct {
 }xPlotData_t;
 
 
-#define AFE_DATA_RATE 900
+#define AFE_DATA_RATE 700
 
-#define PLOTRate (10000) ///< количество отсчетов в 1клетке
-
-#define PLOT_1MV   PLOTRate                 ///< количество отсчетов в 1мв
-#define PLOT_2MV   (PLOTRate * PLOTScale2mV) ///< количество отсчетов в 2мв
-#define PLOT_4MV   (PLOTRate * PLOTScale4mV) ///< количество отсчетов в 4мв
-#define PLOT_8MV   (PLOTRate * PLOTScale8mV) ///< количество отсчетов в 8мв
+#define PLOT_1MV   10                 ///< количество отсчетов в 1мв
+#define PLOT_2MV   (PLOT_1MV * PLOTScale2mV) ///< количество отсчетов в 2мв
+#define PLOT_4MV   (PLOT_1MV * PLOTScale4mV) ///< количество отсчетов в 4мв
+#define PLOT_8MV   (PLOT_1MV * PLOTScale8mV) ///< количество отсчетов в 8мв
 
 #define PLOT_LOW_LIMIT_COEF  0.82f   ///< нижняя граница переключения масштабной сетки
 #define PLOT_HI_LIMIT_COEF   0.95f   ///< верхняя граница переключения масштабной сетки

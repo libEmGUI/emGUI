@@ -37,7 +37,6 @@
 #define STATUS_BAR_FILT_INFO_GAP 5 ///< расстояние м/д элементами
 #endif 
 
-
 #ifndef WIDGET_COLOR_WHITE
 #define WIDGET_COLOR_WHITE		0xFFFF
 #endif

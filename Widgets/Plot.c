@@ -68,6 +68,9 @@ static bool prvGetValue(xPlotData_t *pxL, short * psSample, uint32_t uiOffset, b
 	return true;
 }
 
+//int math is broken yet
+#define USE_FLOAT 
+
 /**
  * @brief производит отрисовку
  * @param pxW - виджет
@@ -103,7 +106,13 @@ static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
 	uint16_t usSample = 0;
 
 	uint16_t i, usW = usWidgetGetW(pxW);
-	long coe = (usH << 16) / (PLOT_2MV * xP->eScale); //при мин. масштабе во всей высоте 2мв
+
+#ifdef USE_FLOAT //if FPU is available
+	float coe = usH / (PLOT_2MV * xP->eScale); //при мин. масштабе во всей высоте 2мв
+#else
+	long coe = (usH << 16) / (PLOT_1MV * xP->eScale); //при мин. масштабе во всей высоте 2мв
+#endif
+
 	uint16_t usCorrection = xL->ulElemCount%usW;
 
 	//коррекция для полной отрисовки данных. (например, если usAvgCount должно быть дробным)
@@ -161,12 +170,12 @@ static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
 		  //Draw line from min to max position, found in averaging samples
 		usX = i + usWidgetGetX0(pxW, true);
 
+#ifdef USE_FLOAT //if FPU is available
+		sY1 = sGraphMiddleLine + (sLeadMedian - sMin) * coe;
+		sY0 = sGraphMiddleLine - (sMax - sLeadMedian) * coe;
+#else
 		sY1 = sGraphMiddleLine + (((sLeadMedian - sMin) * coe) >> 16);
 		sY0 = sGraphMiddleLine - (((sMax - sLeadMedian) * coe) >> 16);
-
-#if 0 //if FPU is available
-		sY0 = sMean + (short)(((float)(sMin + sLeadMean)) / EcgRate * usH * 2) / xP->eScale;
-		sY1 = sMean + (short)(((float)(sMax + sLeadMean)) / EcgRate * usH * 2) / xP->eScale;
 #endif
 
 		// Ограничение при выходе за границы виджета
@@ -450,7 +459,7 @@ xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1,
 		xP->usLastDrawedPosX = 0;
 		xP->usLastDrawedSample = 0;
 		xP->sLeadMedian = 0;
-		xP->eScale = PLOTScale1mV;
+		xP->eScale = PLOTScale4mV;
 		xP->bLastFilled = false;
 		xP->bWriteEnabled = false;
 		xP->pxL = pxL;
