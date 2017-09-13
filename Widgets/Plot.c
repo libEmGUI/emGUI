@@ -45,7 +45,7 @@ static uint16_t inline prvGetMiddleLine(xPlot *pxW) {
 	return usWidgetGetY0(pxW, true) + usWidgetGetH(pxW) / 2;
 }
 
-static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor);
+static bool prvDrawGrid(xPlot * pxW, uint16_t psXCursor, bool bPartialDraw);
 
 /**
 * @brief получает значение данных в интересующей точке
@@ -199,7 +199,7 @@ static bool prvPlot(xPlot *pxW) {  //TODO(Andrew): graph drawing
 		}
 
 		if (pxW->bValid)
-			prvDrawGrid(pxW, &i); //Do not draw cursor on invalidates
+			prvDrawGrid(pxW, i, true); //Do not draw cursor on invalidates
 
 		  //заполнение пробелов в графике
 		if (sY0 > xP->usLastDrawedPosY1) {
@@ -256,54 +256,25 @@ static short prvGetMvHeight(xPlot *pxW) {
 	return usWidgetGetH(pxW) / 2 / xP->eScale;
 }
 
-static uint16_t prvGetMarkerCount(xPlot * pxW, uint16_t usElemCount) {
-	uint16_t usTemp = usElemCount / AFE_DATA_RATE;
-
-	switch (usTemp) {
-	case 16:
-		usTemp = 16;
-		break;
-	case 10:
-		usTemp = 5;
-		break;
-	case 8:
-		usTemp = 4;
-		break;
-	case 4:
-		usTemp = 4;
-		break;
-	default:
-		usTemp = 1;
-	}
-
-	uint16_t usW = usWidgetGetW(pxW) / usTemp;
-
-	if (usW < MIN_GRID_PERIOD_PX)
-		usTemp = 1;
-
-	if (usW > MIN_GRID_PERIOD_PX * 2)
-		usTemp *= 2;
-
-	return usTemp;
-}
-
 /**
  * @brief отрисовка сетки виджета
  * @param pxW - виджет
- * @param psXCursor - указатель на позицию курсора
+ * @param sXCursor - позиция курсора
+ * @bPartialDraw - флаг полной или частичной отрисовки сетки
  * @return true - отрисовка проведена
  */
-static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor) {
+static bool prvDrawGrid(xPlot * pxW, uint16_t sXCursor, bool bPartialDraw) {
 	if (!pxW)
 		return false;
 
 	xPlotProps* xP = (xPlotProps*)pxW->pvProp;
 
-	uint16_t usMarkerCount = prvGetMarkerCount(pxW, xP->pxL->ulElemCount);
+	uint16_t usXMarkerCount = 6;
+	uint16_t usYMarkerCount = 6;
 
 	//TODO: Make these variables double to improve precision
-	uint16_t usXGridSize = usWidgetGetW(pxW) / usMarkerCount;
-	uint16_t usYGridSize = usWidgetGetH(pxW) / xP->eScale;
+	uint16_t usXGridSize = usWidgetGetW(pxW) / usXMarkerCount;
+	uint16_t usYGridSize = usWidgetGetH(pxW) / usYMarkerCount;
 	uint16_t usX,
 		usY,
 		usXText = usWidgetGetX0(pxW, true) + 1,
@@ -313,8 +284,8 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor) {
 		usX1 = usWidgetGetX1(pxW, true);
 	uint16_t usXCursor;
 
-	if (psXCursor) { //we need to draw 1 px blank cursor(with grid if needed)
-		usXCursor = *psXCursor + usX0;
+	if (bPartialDraw) { //we need to draw 1 px blank cursor(with grid if needed)
+		usXCursor = sXCursor + usX0;
 		usX0 = usXCursor;
 		usX1 = usXCursor;
 		//if we use border, we need to add 1 to usY0, and sub 1 from usY1
@@ -323,24 +294,9 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor) {
 		pxDrawHDL()->vVLine(usXCursor, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), pxW->usBgColor);//splitter/eraser
 	}
 
-	switch (xP->eScale) {
-	case PLOTScale1mV:
-		usYGridSize /= 4;
-		//смещение текстовой метки
-		usXText += 8;
-		break;
-	case PLOTScale2mV:
-		usYGridSize /= 2;
-		break;
-	case PLOTScale4mV:
-		usYGridSize /= 2;
-		break;
-		//case EcgSize8mV:
-	}
-
 	//Vertical Grid
 	for (usX = usWidgetGetX0(pxW, true); usX < usWidgetGetX1(pxW, true); usX += usXGridSize) {
-		if (!psXCursor)
+		if (!bPartialDraw)
 			pxDrawHDL()->vVLine(usX, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), COLOR_PLOT_GRIDS);
 		else
 			if (usXCursor == usX) {
@@ -358,16 +314,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t *psXCursor) {
 		usMvWidth = usXGridSize / 3,
 		usTextW = usFontGetStrW(xP->pxL->sName, FONT_ASCII_8_X);
 
-	if (!psXCursor || (psXCursor && (usXCursor <= usWidgetGetX0(pxW, true) + usMvWidth))) {
-		//redraw only if it is not cursor, or cursor is drawed in mv marker area.
-
-		//рисует масштаб милливольта
-		pxDrawHDL()->vVLine(usWidgetGetX0(pxW, true), usYMiddle - mvHeight, usYMiddle, COLOR_PLOT_SCALE_MARKER);
-		pxDrawHDL()->vHLine(usWidgetGetX0(pxW, true), usYMiddle - mvHeight, usWidgetGetX0(pxW, true) + usMvWidth, COLOR_PLOT_SCALE_MARKER);
-		pxDrawHDL()->vVLine(usWidgetGetX0(pxW, true) + usMvWidth, usYMiddle - mvHeight, usYMiddle, COLOR_PLOT_SCALE_MARKER);
-	}
-
-	if (!psXCursor || (psXCursor && (usXCursor >= usXText) && (usXCursor <= usXText + usTextW))) {
+	if (!bPartialDraw || (bPartialDraw && (usXCursor >= usXText) && (usXCursor <= usXText + usTextW))) {
 		//Название отведения
 		pxDrawHDL()->vPutString(
 			usXText,
@@ -432,7 +379,7 @@ static bool prvEcgPlotDraw(xPlot *pxW) {
 	xP->usLastDrawedPosY1 = prvGetMiddleLine(pxW);
 
 	bWidgetDraw(pxW);
-	prvDrawGrid(pxW, NULL);
+	prvDrawGrid(pxW, 0, false);
 
 	//for fast redrawing without cursor
 	pxW->bValid = false;
