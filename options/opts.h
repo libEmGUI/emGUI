@@ -1,13 +1,20 @@
 #ifndef OPTS_H
 #define OPTS_H
 
+#ifdef __AVR__
+ #include <avr/io.h>
+ #include <avr/pgmspace.h>
+#elif defined(ESP8266)
+ #include <pgmspace.h>
+#else
+ #define PROGMEM
+#endif
+
 #ifdef ARDUINO
 #include "options/emGUI_opts_arduino.h"
 #else
 #include "emGUI_opts.h"
 #endif
-
-#include "Fonts/Font.h"
 
 #ifndef EM_GUI_PICTURE_STORAGE_ATTR
 #define EM_GUI_PICTURE_STORAGE_ATTR
@@ -62,18 +69,16 @@
 #endif
 
 #ifndef XFONT_TYPE
-#define XFONT_TYPE unsigned char const * const *
+#define XFONT_TYPE const GFXfont *
 #endif
 
 #ifndef EM_GUI_SMALL_FONT
-#define EM_GUI_SMALL_FONT FONT_ASCII_8_X
+#define EM_GUI_SMALL_FONT (&FreeSans9pt7b)
 #endif
 
 #ifndef EM_GUI_MIDDLE_FONT
-#define EM_GUI_MIDDLE_FONT FONT_ASCII_16_X
+#define EM_GUI_MIDDLE_FONT (&FreeSans9pt7b)
 #endif
-typedef XPICTURE_TYPE xPicture;
-typedef XFONT_TYPE xFont;
 
 #ifdef EM_GUI_OVERRIDE_DEFAULT_PICS
 

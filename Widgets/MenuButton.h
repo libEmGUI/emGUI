@@ -40,7 +40,7 @@ extern "C" {
    *
    * @returns указатель на созданную кнопку
    */
-	xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
+	xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, const char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
 
 
   /**

@@ -7,6 +7,8 @@
 extern "C" {
 #endif // __cplusplus
 
+	typedef XPICTURE_TYPE xPicture;
+
 	extern const unsigned short ban[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short bars[] EM_GUI_PICTURE_STORAGE_ATTR;
 	extern const unsigned short cross[] EM_GUI_PICTURE_STORAGE_ATTR;

@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "options/opts.h"
+#include "Fonts/Font.h"
 
 #ifdef __cplusplus
 extern "C" {

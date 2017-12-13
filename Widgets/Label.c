@@ -33,7 +33,7 @@
 
 
 static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t *puXLinePosition,
-	XFONT_TYPE pubFont, eLabelTextAlign eHorAlign) {
+	xFont pubFont, eLabelTextAlign eHorAlign) {
 	uint16_t uXBefor, uMaxLineLen, uXSeparator;
 	char *pcSeparator, *pcCharCount;
 
@@ -84,7 +84,7 @@ static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t
 }
 
 static void prvPrintLine(char *pcLine, uint16_t uCharCount, uint16_t uXFrom, uint16_t uY,
-	XFONT_TYPE pubFont, uint16_t usColor, uint16_t usBackground) {
+	xFont pubFont, uint16_t usColor, uint16_t usBackground) {
 	char *pcCharacter;
 	pcCharacter = pcLine;
 
@@ -98,7 +98,7 @@ static void prvPrintLine(char *pcLine, uint16_t uCharCount, uint16_t uXFrom, uin
 }
 
 static char *prvCountPage(char *pcPage, uint16_t uXFrom, uint16_t uXTo, uint16_t uYFrom, uint16_t uYTo, uint16_t *puYPosition, uint16_t *puLineCount,
-	XFONT_TYPE pubFont, eLabelTextAlign eHorAlign, eLabelVerticalAlign eVerAlign) {
+	xFont pubFont, eLabelTextAlign eHorAlign, eLabelVerticalAlign eVerAlign) {
 	char *pcNxtLine;
 	uint16_t uYBefor;
 	uYBefor = uYFrom;
@@ -127,7 +127,7 @@ static char *prvCountPage(char *pcPage, uint16_t uXFrom, uint16_t uXTo, uint16_t
 }
 
 static void prvPrintPage(char *pcPage, uint16_t uXFrom, uint16_t uXTo, uint16_t uYFrom, uint16_t uLineCount, eLabelTextAlign eHorAlign,
-	XFONT_TYPE pubFont, uint16_t usColor, uint16_t usBackground) {
+	xFont pubFont, uint16_t usColor, uint16_t usBackground) {
 	char *pcNxtLine, *pcCrntLine;
 	uint16_t uLineLen, uXPutLine;
 	pcCrntLine = pcPage;
@@ -207,13 +207,13 @@ bool bLabelDrawPrevPage(xLabel *pxW) {
 //если usMaxLength = 0, то текст в метку устанавливается только сменой указателя на строку,
 //т.е. он не копируется во внутреннее хранилище и под него не выделяется память. Идеально для
 //реализации меток с текстом ReadOnly
-xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, XFONT_TYPE xFnt, uint16_t usMaxLength, xWidget *pxWidParent) {
+xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, uint16_t usMaxLength, xWidget *pxWidParent) {
 	xLabel *pxW;
 	xLabelProps *xP;
 
 	pxW = malloc(sizeof(xWidget));
 
-	if (!cStr)
+	if (!xFnt || !cStr)
 		return NULL;
 
 	if (usH < pxDrawHDL()->usFontGetH(xFnt))
