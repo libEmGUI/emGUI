@@ -44,7 +44,7 @@ typedef struct xPlotProps_struct {
  *
  * @return середина виджета
  */
-static uint16_t inline prvWidgetMiddleLine(xPlot *pxW) {
+inline static uint16_t prvWidgetMiddleLine(xPlot *pxW) {
 	return usWidgetGetY0(pxW, true) + usWidgetGetH(pxW) / 2;
 }
 
@@ -307,7 +307,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 
 	uint16_t usYMiddle = prvWidgetMiddleLine(pxW),
 		usMvWidth = usXGridSize / 3,
-		usTextW = usFontGetStrW(xP->pxL->sName, FONT_ASCII_8_X);
+		usTextW = usFontGetStrW(xP->pxL->sName, EM_GUI_SMALL_FONT);
 
 	if (!bPartialDraw || (bPartialDraw && (usXCursor >= usXText) && (usXCursor <= usXText + usTextW))) {
 		//Название отведения
@@ -315,7 +315,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 			usXText,
 			usYText,
 			xP->pxL->sName,
-			FONT_ASCII_8_X,
+			EM_GUI_SMALL_FONT,
 			COLOR_MESSAGE_TEXT,
 			COLOR_PLOT_BACKGROUND,
 			true
