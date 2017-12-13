@@ -71,8 +71,8 @@ xProgressBar* pxProgressBarCreate(u16 usX, u16 usY, u16 usW, u16 usH, xWidget *p
   xProgressBar *pxW;
   xProgressBarProps *xP;
 
-  if (usH < usFontGetStrH(pcBarText, FONT_ASCII_16_X) + 4)
-    usH = usFontGetStrH(pcBarText, FONT_ASCII_16_X) + 4;
+  if (usH < usFontGetStrH(pcBarText, EM_GUI_MIDDLE_FONT) + 4)
+    usH = usFontGetStrH(pcBarText, EM_GUI_MIDDLE_FONT) + 4;
 
   pxW = pxWidgetCreate(usX, usY, usW, usH, pxWidParent, TRUE);
   pxW->eType = WidgetProgressBar;
@@ -85,7 +85,7 @@ xProgressBar* pxProgressBarCreate(u16 usX, u16 usY, u16 usW, u16 usH, xWidget *p
   xP->usBarColor = ColorMessageHeaderBackground;
   xP->usExProc = 0;
 
-  xP->pxBarLabel = pxLabelCreate(0, 0, usW, usFontGetStrH(pcBarText, FONT_ASCII_16_X) + 2, pcBarText, FONT_ASCII_16_X, strlen(pcBarText) + 5, pxW);
+  xP->pxBarLabel = pxLabelCreate(0, 0, usW, usFontGetStrH(pcBarText, EM_GUI_MIDDLE_FONT) + 2, pcBarText, EM_GUI_MIDDLE_FONT, strlen(pcBarText) + 5, pxW);
   vLabelSetTextAlign(xP->pxBarLabel, LABEL_ALIGN_CENTER);
   vLabelSetVerticalAlign(xP->pxBarLabel, LABEL_ALIGN_MIDDLE);
 

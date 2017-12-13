@@ -30,7 +30,7 @@
 #include "TouchScreen.h"
 #include <string.h>
 
-#define FONT_SIZE FONT_ASCII_16_X
+#define FONT_SIZE EM_GUI_MIDDLE_FONT
 #define KEY_BACKSPACE "backspace"
 #define KEY_SHIFT "shift"
 

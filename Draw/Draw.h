@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "Fonts/Font.h"
 #include "options/opts.h"
 
 #ifdef __cplusplus
@@ -18,6 +17,11 @@ extern "C" {
 		void(*bPicture)(int16_t sX0, int16_t sY0, xPicture pusPicture);
 		uint16_t(*usGetPictureH)(xPicture pusPic);
 		uint16_t(*usGetPictureW)(xPicture pusPic);
+
+		char (*ucFontGetCharW)(char cChar, xFont pubFont);
+		uint16_t (*usFontGetH)(xFont pubFont);
+		uint16_t (*usFontGetStrW)(const char * pcStr, xFont pubFont);
+		uint16_t (*usFontGetStrH)(const char * pcStr, xFont pubFont);
 	}xDraw_t;
 
 	void vDrawSetHandler(xDraw_t * hdl);

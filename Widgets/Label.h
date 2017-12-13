@@ -68,7 +68,7 @@ extern "C" {
 		eLabelVerticalAlign eVerticalAlign;
 		char *pcStr;
 		uint16_t usMaxLength;
-		xFont xFnt;
+		XFONT_TYPE xFnt;
 		uint16_t usColor;
 		bool bIsMultiLine;
 		bool bHaveCursor;
@@ -78,7 +78,7 @@ extern "C" {
 		void(*onEditHandler)(void);
 	} xLabelProps;
 
-	xLabel *    pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, uint16_t usMaxLength, xWidget *pxWidParent);
+	xLabel *    pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, XFONT_TYPE xFnt, uint16_t usMaxLength, xWidget *pxWidParent);
 	char *      pcLabelSetText(xWidget *pxW, const char * pcStr);
 	void        pcLabelSetTextAdaptWidth(xLabel *pxL, char * pcStr); // замена текста и адаптированние ширины Label под длину нового текста, работает только под 16 размер
 	void        vLabelSetTextColor(xWidget *pxW, uint16_t usColor);

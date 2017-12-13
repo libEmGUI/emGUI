@@ -68,7 +68,7 @@ xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, ch
 		xP->xButton = pxButtonCreate(0, 0, pusPic, pxW);
 		bButtonSetOnClickHandler(xP->xButton, prvButtonClick);
 
-		xP->xText = pxLabelCreate(0, usWidgetGetH(xP->xButton), usW, usFontGetH(FONT_ASCII_8_X) + 3, "", FONT_ASCII_8_X, 10, pxW);
+		xP->xText = pxLabelCreate(0, usWidgetGetH(xP->xButton), usW, pxDrawHDL()->usFontGetH(EM_GUI_SMALL_FONT) + 3, "", EM_GUI_SMALL_FONT, 10, pxW);
 		vWidgetSetBgColor(xP->xText, MENU_BUTTON_LABEL_BG_COLOR, false);
 		vLabelSetVerticalAlign(xP->xText, LABEL_ALIGN_MIDDLE);
 		vLabelSetTextAlign(xP->xText, LABEL_ALIGN_CENTER);

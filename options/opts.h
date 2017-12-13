@@ -61,7 +61,19 @@
 #define XPICTURE_TYPE  unsigned short const*
 #endif
 
+#ifndef XFONT_TYPE
+#define XFONT_TYPE unsigned char const * const *
+#endif
+
+#ifndef EM_GUI_SMALL_FONT
+#define EM_GUI_SMALL_FONT FONT_ASCII_8_X
+#endif
+
+#ifndef EM_GUI_MIDDLE_FONT
+#define EM_GUI_MIDDLE_FONT FONT_ASCII_16_X
+#endif
 typedef XPICTURE_TYPE xPicture;
+typedef XFONT_TYPE xFont;
 
 #ifdef EM_GUI_OVERRIDE_DEFAULT_PICS
 

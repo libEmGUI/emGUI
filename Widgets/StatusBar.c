@@ -50,11 +50,11 @@ bool bStatusBarCreate(uint16_t usColor) {
 	xCloseButton = pxButtonCreate(usX, usY, EM_GUI_PIC_CROSS, xStatusBarInstance);
 	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);
 
-	usY = (usStatusBarGetH() - usFontGetH(FONT_ASCII_16_X)) / 2;
-	usW = usFontGetStrW("Default Title", FONT_ASCII_16_X) + 10;
+	usY = (usStatusBarGetH() - pxDrawHDL()->usFontGetH(EM_GUI_MIDDLE_FONT)) / 2;
+	usW = pxDrawHDL()->usFontGetStrW("Default Title", EM_GUI_MIDDLE_FONT) + 10;
 	usX = usStatusBarGetW() / 2 - usW / 2;
 
-	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default Title", (xFont)FONT_ASCII_16_X, 100, xStatusBarInstance);
+	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default Title", (xFont)EM_GUI_MIDDLE_FONT, 100, xStatusBarInstance);
 	vWidgetSetBgColor(xWndHeader, usColor, false);
 	vLabelSetTextColor(xWndHeader, ColorMenuHeaderText);
 	vLabelSetTextAlign(xWndHeader, LABEL_ALIGN_CENTER);
