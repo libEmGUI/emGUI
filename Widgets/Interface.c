@@ -31,7 +31,7 @@ xWindow * xActiveWindow = NULL;
 xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *)) {
 
 	xInterfaceInstance = pxWidgetCreate(0, 0, LCD_SizeX, LCD_SizeY, NULL, true);
-	bStatusBarCreate(STATUS_BAR_BG);
+	bStatusBarCreate(COLOR_STATUS_BAR_BG);
 	if (pxOnCreateHandler)
 		pxOnCreateHandler(xInterfaceInstance);
 

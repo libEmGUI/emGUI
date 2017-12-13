@@ -26,11 +26,25 @@
 #include <string.h>
 #include <stdio.h>
 #include <malloc.h>
+#include <stdarg.h>
 #ifndef min
 #define min(a,b) ((a < b) ? a :b)
 #endif
 
-
+typedef struct xLabelProps_t {
+	eLabelTextAlign     eTextAlign;
+	eLabelVerticalAlign eVerticalAlign;
+	char *pcStr;
+	uint16_t usMaxLength;
+	xFont xFnt;
+	uint16_t usColor;
+	bool bIsMultiLine;
+	bool bHaveCursor;
+	char *pcPrvPage;
+	char *pcNxtPage;
+	char *pcCrntPage;
+	void(*onEditHandler)(void);
+} xLabelProps;
 
 static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t *puXLinePosition,
 	xFont pubFont, eLabelTextAlign eHorAlign) {
@@ -472,4 +486,23 @@ void vLabelClear(xWidget *pxW, bool bSetInvalidate) {
 		if (bSetInvalidate)
 			vWidgetInvalidate(pxW);
 	}
+}
+
+int iLabelPrintf(xWidget *pxW, char const *pcFmt, ...) {
+	xLabelProps *xP;
+	int iRet = 0;
+
+	if (!(xP = (xLabelProps*)pxWidgetGetProps(pxW, WidgetLabel)))
+		return 0;
+
+	if (!xP->usMaxLength)
+		return 0;
+
+	va_list args;
+	va_start(args, pcFmt);
+
+	iRet = vsnprintf(xP->pcStr, xP->usMaxLength, pcFmt, args);
+
+	vWidgetInvalidate(pxW);
+	return iRet;
 }

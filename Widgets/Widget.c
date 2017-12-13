@@ -262,7 +262,7 @@ bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
 	return false;
 }
 
-void vWidgesSetClickable(xWidget *pxW, bool bClickable) {
+void vWidgetSetClickable(xWidget *pxW, bool bClickable) {
 	if (!pxW)
 		return;
 	pxW->bClickable = bClickable;
@@ -331,12 +331,6 @@ void vWidgetSetVisible(xWidget *pxW, bool bVisible) {
 
 	//For now we are unable to hide interface instance (and any that have no parent)
 	//because there's no routine to clear the LCD in that case.
-}
-
-void vWidgetSetClickable(xWidget *pxW, bool bClickable) {
-	if (!pxW)
-		return;
-	pxW->bClickable = bClickable;
 }
 
 bool bWidgetSetCoords(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, bool bUseWH) {

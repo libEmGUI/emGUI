@@ -56,7 +56,7 @@ bool bStatusBarCreate(uint16_t usColor) {
 
 	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default Title", (xFont)EM_GUI_MIDDLE_FONT, 100, xStatusBarInstance);
 	vWidgetSetBgColor(xWndHeader, usColor, false);
-	vLabelSetTextColor(xWndHeader, ColorMenuHeaderText);
+	vLabelSetTextColor(xWndHeader, COLOR_MENU_HEADER_TEXT);
 	vLabelSetTextAlign(xWndHeader, LABEL_ALIGN_CENTER);
 
 

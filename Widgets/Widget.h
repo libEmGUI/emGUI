@@ -46,7 +46,8 @@ extern "C" {
 		WidgetButton,
 		WidgetWindow,
 		WidgetStatusBar,
-		WidgetMenuButton
+		WidgetMenuButton,
+		WidgetPlot
 	} eWidgetType;
 
 	typedef enum {
@@ -133,7 +134,7 @@ extern "C" {
 	void vWidgetSetOnHideHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
 	void vWidgetSetOnShowHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
 	void vWidgetSetDrawHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
-	void vWidgesSetClickable(xWidget *pxW, bool bClickable);
+	void vWidgetSetClickable(xWidget *pxW, bool bClickable);
 	void vWidgetSetBgColor(xWidget *pxW, uint16_t usBgColor, bool bTransparent);
 	void vWidgetSetTransparency(xWidget *pxW, bool bTransparent);
 	bool bWidgetSetBgPicture(xWidget *pxW, xPicture pusBgPicture);
