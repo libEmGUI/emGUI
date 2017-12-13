@@ -20,7 +20,7 @@ extern "C" {
 		uint16_t(*usGetPictureH)(xPicture pusPic);
 		uint16_t(*usGetPictureW)(xPicture pusPic);
 
-		char (*ucFontGetCharW)(char cChar, xFont pubFont);
+		uint16_t (*ucFontGetCharW)(char cChar, xFont pubFont);
 		uint16_t (*usFontGetH)(xFont pubFont);
 		uint16_t (*usFontGetStrW)(const char * pcStr, xFont pubFont);
 		uint16_t (*usFontGetStrH)(const char * pcStr, xFont pubFont);

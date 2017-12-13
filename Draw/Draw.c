@@ -26,7 +26,7 @@ static uint16_t usFontGetH(xFont pubFont) {
 	
 }
 
-static char ucFontGetCharW(char cChar, xFont pubFont) {
+static uint16_t ucFontGetCharW(char cChar, xFont pubFont) {
 	
 }
 
