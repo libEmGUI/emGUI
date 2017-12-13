@@ -63,20 +63,6 @@ extern "C" {
 		LABEL_ALIGN_BOTTOM,
 	} eLabelVerticalAlign;
 
-	typedef struct xLabelProps_t {
-		eLabelTextAlign     eTextAlign;
-		eLabelVerticalAlign eVerticalAlign;
-		char *pcStr;
-		uint16_t usMaxLength;
-		xFont xFnt;
-		uint16_t usColor;
-		bool bIsMultiLine;
-		bool bHaveCursor;
-		char *pcPrvPage;
-		char *pcNxtPage;
-		char *pcCrntPage;
-		void(*onEditHandler)(void);
-	} xLabelProps;
 
 	xLabel *    pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, uint16_t usMaxLength, xWidget *pxWidParent);
 	char *      pcLabelSetText(xWidget *pxW, const char * pcStr);
@@ -86,7 +72,6 @@ extern "C" {
 	void        vLabelSetVerticalAlign(xWidget *pxW, eLabelVerticalAlign eAlign);
 	void        vLabelSetTextExt(xWidget *pxW, char * pStr, int usMaxLength);
 	char *      pcLabelGetText(xWidget *pxW);
-	void        vLabelCheckCS(xWidget *pxW);
 	bool        bLabelSetMultiline(xWidget *pxW, bool bMultiLine);
 	bool        bLabelDrawNextPage(xLabel *pxL);
 	bool        bLabelDrawPrevPage(xLabel *pxL);
@@ -97,6 +82,7 @@ extern "C" {
 	void        vLabelSetOnEditHandler(xWidget *pxW, void(*callback)(void));
 	void        vLabelSetHaveCursor(xWidget *pxW, bool bLabelHaveCursor);
 	void        vLabelClear(xWidget *pxW, bool bSetInvalidate);
+	int         iLabelPrintf(xWidget *pxW, char const *pcFmt, ...);
 #ifdef __cplusplus
 }
 #endif // __cplusplus

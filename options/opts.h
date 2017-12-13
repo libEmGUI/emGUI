@@ -37,7 +37,6 @@
 #define STATUS_BAR_FILT_INFO_GAP 5 ///< расстояние м/д элементами
 #endif 
 
-
 #ifndef WIDGET_COLOR_WHITE
 #define WIDGET_COLOR_WHITE		0xFFFF
 #endif
@@ -111,35 +110,36 @@ typedef XPICTURE_TYPE xPicture;
 
 // GUI COLORS
 
-// RGB565 definition
-#define SEA_COLOR5 0x02AC	// Sea colors map from drakest to lightest
-#define SEA_COLOR4 0x1B2E
-#define SEA_COLOR3 0x0413
-#define SEA_COLOR2 0x3599
-#define SEA_COLOR1 0x5DD9 
+// RGB565 definition 
+#define COLOR_SEA_5 0x02AC	// Sea colors map from drakest to lightest
+#define COLOR_SEA_4 0x1B2E
+#define COLOR_SEA_3 0x0413
+#define COLOR_SEA_2 0x3599
+#define COLOR_SEA_1 0x5DD9 
 
-#define EARTH_COLOR5 0xA280	// Earth colors map from drakest to lightest
-#define EARTH_COLOR4 0xBBA5
-#define EARTH_COLOR3 0xFBC0
-#define EARTH_COLOR2 0xFCC7
-#define EARTH_COLOR1 0xFDAD 
+#define COLOR_BROWN_5 0xA280	// Earth colors map from drakest to lightest
+#define COLOR_BROWN_4 0xBBA5
+#define COLOR_BROWN_3 0xFBC0
+#define COLOR_BROWN_2 0xFCC7
+#define COLOR_BROWN_1 0xFDAD 
 
 
-#ifndef ColorMenuHeaderText
-#define ColorMenuHeaderText WIDGET_COLOR_WHITE //black
+// STATUSBAR STORY
+#ifndef COLOR_MENU_HEADER_TEXT
+#define COLOR_MENU_HEADER_TEXT WIDGET_COLOR_WHITE //WHITE
 #endif
 
-#ifndef ColorEcgBackground
-#define ColorEcgBackground WIDGET_COLOR_WHITE
-#endif // !ColorEcgBackground
+#ifndef COLOR_STATUS_BAR_BG
+#define COLOR_STATUS_BAR_BG COLOR_SEA_5 //light-blue
+#endif
 
-#ifndef ColorMessageHeaderBackground
-#define ColorMessageHeaderBackground EARTH_COLOR1
-#endif // !ColorMessageHeaderBackground
+#ifndef COLOR_MESSAGE_BACKGROUND
+#define COLOR_MESSAGE_BACKGROUND COLOR_BROWN_1
+#endif // !COLOR_MESSAGE_BACKGROUND
 
-#ifndef ColorMessageHeaderText
-#define ColorMessageHeaderText WIDGET_COLOR_BLACK
-#endif // !ColorMessageHeaderText
+#ifndef COLOR_MESSAGE_TEXT
+#define COLOR_MESSAGE_TEXT WIDGET_COLOR_BLACK
+#endif // !COLOR_MESSAGE_TEXT
 
 #ifndef MENU_BUTTON_LABEL_TEXT_COLOR
 #define MENU_BUTTON_LABEL_TEXT_COLOR WIDGET_COLOR_BLACK
@@ -149,10 +149,23 @@ typedef XPICTURE_TYPE xPicture;
 #define MENU_BUTTON_LABEL_BG_COLOR WIDGET_COLOR_WHITE
 #endif // MENU_BUTTON_LABEL_TEXT_COLOR
 
+// PLOT STORY
 
-#ifndef STATUS_BAR_BG
-#define STATUS_BAR_BG SEA_COLOR5 //light-blue
-#endif
+#ifndef COLOR_PLOT_BACKGROUND
+#define COLOR_PLOT_BACKGROUND WIDGET_COLOR_WHITE
+#endif // !COLOR_PLOT_BACKGROUND
+
+#ifndef COLOR_PLOT_GRIDS
+#define COLOR_PLOT_GRIDS COLOR_SEA_1
+#endif // !COLOR_PLOT_GRIDS
+
+#ifndef COLOR_PLOT_SCALE_MARKER
+#define COLOR_PLOT_SCALE_MARKER    COLOR_BROWN_5
+#endif // !COLOR_PLOT_SCALE_MARKER
+
+#ifndef COLOR_PLOT_GRAPH
+#define COLOR_PLOT_GRAPH    COLOR_BROWN_4
+#endif // !COLOR_PLOT_SCALE_MARKER
 
 
 #endif // !OPTS_H

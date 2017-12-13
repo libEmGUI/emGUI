@@ -139,7 +139,7 @@ extern "C" {
 		uint16_t usX, usY;
 
 		xThisWnd = pxWindowCreate(WINDOW_MODAL);
-		vWidgetSetBgColor(xThisWnd, ColorEcgBackground, false);
+		vWidgetSetBgColor(xThisWnd, COLOR_PLOT_BACKGROUND, false);
 		vWindowSetOnOpenHandler(xThisWnd, prvOnOpenHandler);
 		vWindowSetOnOpenRequestHandler(xThisWnd, prvOnOpenRequestHandler);
 		vWindowSetOnCloseHandler(xThisWnd, prvOnCloseHandler);
