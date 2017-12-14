@@ -22,6 +22,7 @@
 
 #include "Widgets/Button.h"
 #include <malloc.h>
+#include "Draw/Draw.h"
 
 static bool vButtonDraw(xButton *pxW) {
 	xButtonProps *xP;

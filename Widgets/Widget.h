@@ -24,15 +24,11 @@
 #define __WIDGET_H
 
 
-
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
 
 #include "Fonts/Font.h"
-#include "Draw/Draw.h"
-
 #include "options/opts.h"
 
 

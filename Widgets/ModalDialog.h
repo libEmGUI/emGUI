@@ -23,20 +23,9 @@
 #ifndef MODALDIALOG_H_
 #define MODALDIALOG_H_
 
-
-#include "Widgets/Label.h"
-#include "Widgets/Button.h"
-#include "Widgets/StatusBar.h"
-#include "Widgets/Window.h"
-#include "Widgets/MenuButton.h"
-
-//#include "GuiInterface.h"
-//#include "GsmInterface.h"
-//#include "Memory.h"
 #include <string.h>
-//#include "Widgets/ProgressBar.h"
 
-
+#include "Widgets/Widget.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,6 +34,13 @@ extern "C" {
 	typedef enum {
 		MODAL_AUTO,
 	}eModalDialog;
+
+	typedef struct xModalDialogPictureSet_t {
+		xPicture xPicMain;
+		xPicture xPicMainPress;
+		const char* strLabel;
+		//bool (*pxClickHandler)   (xWidget *);
+	}xModalDialogPictureSet;
 
 	xWidget * pxModalDialogWindowCreate();
 	int iModalDialogOpen(int iDlgId, char const * sBtns, char const * sHdr, char const* sMsg);

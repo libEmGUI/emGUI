@@ -1,24 +1,13 @@
-#ifndef OPTS_H
-#define OPTS_H
+#ifndef EMGUI_DEFAULT_OPTS_H
+#define EMGUI_DEFAULT_OPTS_H
 
-#ifdef __AVR__
- #include <avr/io.h>
- #include <avr/pgmspace.h>
-#elif defined(ESP8266)
- #include <pgmspace.h>
+#ifndef ARDUINO
+	#include "emGUI_port_opts.h"
 #else
- #define PROGMEM
+	#include "Ports/Arduino/emGUI_port_opts.h"
 #endif
 
-#ifdef ARDUINO
-#include "options/emGUI_opts_arduino.h"
-#else
-#include "emGUI_opts.h"
-#endif
-
-#ifndef EM_GUI_PICTURE_STORAGE_ATTR
-#define EM_GUI_PICTURE_STORAGE_ATTR
-#endif
+#include "Images/Images.h"
 
 #ifndef DEBUG_EMGUI
 #define DEBUG_EMGUI				0
@@ -38,10 +27,6 @@
 
 #ifndef LCD_STATUS_BAR_HEIGHT
 #define LCD_STATUS_BAR_HEIGHT	26
-#endif 
-
-#ifndef STATUS_BAR_FILT_INFO_GAP
-#define STATUS_BAR_FILT_INFO_GAP 5 ///< расстояние м/д элементами
 #endif 
 
 #ifndef WIDGET_COLOR_WHITE
@@ -64,7 +49,7 @@
 // DEFAULT IMAGES
 
 #ifndef XPICTURE_TYPE
-#define XPICTURE_TYPE  unsigned short const*
+#error "Please define XPICTURE_TYPE"
 #endif
 
 #ifndef XFONT_TYPE
@@ -79,50 +64,9 @@
 #define EM_GUI_MIDDLE_FONT (&FreeSans9pt7b)
 #endif
 
-#ifdef EM_GUI_OVERRIDE_DEFAULT_PICS
-
 #ifndef EM_GUI_PIC_CROSS 
 #error "Please define EM_GUI_PIC_CROSS"
-#endif 
-
-
-#ifndef EM_GUI_PIC_YES 
-#error "Please define EM_GUI_PIC_YES"
 #endif
-
-#ifndef EM_GUI_PIC_NO 
-#error "Please define EM_GUI_PIC_NO"
-#endif
-
-#ifndef EM_GUI_PIC_OPENFOLDER
-#error "Please define EM_GUI_PIC_OPENFOLDER"
-#endif
-
-#ifndef EM_GUI_PIC_PROCESS
-#error "Please define EM_GUI_PIC_PROCESS"
-#endif
-
-#ifndef EM_GUI_PIC_MAGIC
-#error "Please define EM_GUI_PIC_MAGIC"
-#endif
-
-#ifndef EM_GUI_PIC_HELP
-#error "Please define EM_GUI_PIC_HELP"
-#endif
-#else
-#include "Images/Images.h"
-
-#define EM_GUI_PIC_CROSS		cross
-#define EM_GUI_PIC_YES			ok
-#define EM_GUI_PIC_NO			no
-#define EM_GUI_PIC_RETURN		left
-
-#define EM_GUI_PIC_OPENFOLDER	open_folder		
-#define EM_GUI_PIC_PROCESS		process
-#define EM_GUI_PIC_MAGIC		magic
-#define EM_GUI_PIC_HELP			help
-
-#endif // !EM_GUI_OVERRIDE_DEFAULT_PICS
 
 
 // GUI COLORS

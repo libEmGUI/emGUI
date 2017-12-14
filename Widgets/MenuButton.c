@@ -8,6 +8,7 @@
 
 #include "MenuButton.h"
 #include <stdlib.h>
+#include "Draw/Draw.h"
 
 
 /** @weakgroup prop-widget-menu-button

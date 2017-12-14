@@ -27,6 +27,8 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <stdarg.h>
+#include "Draw/Draw.h"
+
 #ifndef min
 #define min(a,b) ((a < b) ? a :b)
 #endif

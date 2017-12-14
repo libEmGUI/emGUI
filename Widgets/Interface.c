@@ -22,6 +22,7 @@
 
 #include "Interface.h"
 #include <stdio.h>
+#include "Draw/Draw.h"
 
 xInterface *xInterfaceInstance;
 xTouchEventType eTouchState = popTs;

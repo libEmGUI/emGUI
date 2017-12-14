@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "options/opts.h"
 #include "Fonts/Font.h"
+#include "Widgets/ModalDialog.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +25,8 @@ extern "C" {
 		uint16_t (*usFontGetH)(xFont pubFont);
 		uint16_t (*usFontGetStrW)(const char * pcStr, xFont pubFont);
 		uint16_t (*usFontGetStrH)(const char * pcStr, xFont pubFont);
+
+		xModalDialogPictureSet (*xGetDialogPictureSet)(char cType);
 	}xDraw_t;
 
 	void vDrawSetHandler(xDraw_t * hdl);

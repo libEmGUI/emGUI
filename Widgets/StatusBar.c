@@ -11,6 +11,7 @@
 #include <stdint.h>
 
 #include "Widgets/StatusBar.h"
+#include "Draw/Draw.h"
  /** @weakgroup prop-widget-statusbar
  *  @{
  */

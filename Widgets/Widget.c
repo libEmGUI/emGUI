@@ -23,6 +23,7 @@
 #include "Widget.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "Draw/Draw.h"
 
 
 xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH) {

@@ -1,9 +1,0 @@
-#ifndef ARDIUNO_OPTS_H
-#define ARDIUNO_OPTS_H
-
-#include <stdint.h>
-
-#define EM_GUI_PICTURE_STORAGE_ATTR PROGMEM
-#define EM_GUI_OVERRIDE_DEFAULT_FONTS
-
-#endif // !ARDIUNO_OPTS_H

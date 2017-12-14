@@ -10,6 +10,7 @@
 #include <limits.h>
 #include <stdint.h>
 #include <malloc.h>
+#include "Draw/Draw.h"
 
 #define MIN_GRID_PERIOD_PX 16
 

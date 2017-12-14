@@ -22,9 +22,6 @@
 	Created on: 14.06.2013
 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #ifdef EMGUI_USE_PROGRESS_BAR
 
@@ -36,6 +33,7 @@ extern "C" {
 #include "Color.h"
 #include <string.h>
 #include <stdio.h>
+  #include "Draw/Draw.h"
 
 static char *pcBarText = "Выполнено";
 
@@ -116,6 +114,3 @@ void vProgressBarSetProcExec(xWidget *pxW, u16 usExecProc){
 
 #endif
 
-#ifdef __cplusplus
-}
-#endif

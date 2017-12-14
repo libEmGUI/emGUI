@@ -21,10 +21,14 @@
 */
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "Widgets/Label.h"
+#include "Widgets/Button.h"
+#include "Widgets/StatusBar.h"
+#include "Widgets/Window.h"
+#include "Widgets/MenuButton.h"
+//#include "Widgets/ProgressBar.h"
 
+#include "Draw/Draw.h"
 
 #include "ModalDialog.h"
 #include <stdlib.h>
@@ -59,13 +63,6 @@ extern "C" {
 		bool bCanClose;
 		xModalDialog * pxPrev;
 	};
-
-	typedef struct xModalDialogPictureSet_t {
-		xPicture xPicMain;
-		xPicture xPicMainPress;
-		char* strLabel;
-		//bool (*pxClickHandler)   (xWidget *);
-	}xModalDialogPictureSet;
 
 	xModalDialog *xMDActive = NULL;
 
@@ -157,47 +154,16 @@ extern "C" {
 		//xPBar = pxProgressBarCreate(PB_BORDER, usY, usWidgetGetW(xThisWnd) - PB_BORDER * 2, 30, xThisWnd);
 		//vProgressBarSetProcExec(xPBar, 55);
 
-		usY = (usInterfaceGetWindowH() / 2 + pxDrawHDL()->usGetPictureH(EM_GUI_PIC_YES) / 3);
+		//TODO: get rid of picture dimensions check on create and position buttons on show!
+		usY = (usInterfaceGetWindowH() / 2 + pxDrawHDL()->usGetPictureH(pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain) / 3);
 		usX = 0;
 
 		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++) {
-			xButtons[c] = pxMenuButtonCreate(usX, usY, EM_GUI_PIC_YES, "", prvButtonHandler, xThisWnd);
+			xButtons[c] = pxMenuButtonCreate(usX, usY, pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain, "", prvButtonHandler, xThisWnd);
 			usX += LCD_TsBtn_SIZE;
 			vWidgetHide(xButtons[c]);
 		}
 		return xThisWnd;
-	}
-
-	xModalDialogPictureSet prvGetPicSet(char cType) {
-		xModalDialogPictureSet xPicSet;
-		switch (cType) {
-			/*case 'y':
-			  xPicSet.xPicMain = pxPictureGet(EM_GUI_PIC_YES);
-			  xPicSet.xPicMainPress = pxPictureGet(Pic_ButtonOk_press);
-			  xPicSet.xPicLabel = pxPictureGet(Pic_b2_yes);*/
-		case 'n':
-			xPicSet.xPicMain = (EM_GUI_PIC_NO);
-			xPicSet.strLabel = "No";
-			break;
-		case 'c':
-			xPicSet.xPicMain = (EM_GUI_PIC_RETURN);
-			xPicSet.strLabel = "Cancel";
-			break;
-		case 'o':
-			xPicSet.xPicMain = (EM_GUI_PIC_YES);
-			xPicSet.strLabel = "OK";
-			break;
-		case 'e':
-			xPicSet.xPicMain = (EM_GUI_PIC_NO);
-			xPicSet.strLabel = "OK";
-			break;
-		default:
-			xPicSet.xPicMain = (EM_GUI_PIC_YES);
-			xPicSet.strLabel = "OK";
-			break;
-		}
-
-		return xPicSet;
 	}
 
 	static inline void prvShowPB(xModalDialog * xDlg) {
@@ -243,7 +209,7 @@ extern "C" {
 
 		for (int c = 0; c < cBtnCnt; c++) {
 			xBtn = xButtons[c];
-			xPicSet = prvGetPicSet(sBtns[c]);
+			xPicSet = pxDrawHDL()->xGetDialogPictureSet(sBtns[c]);
 
 			bWidgetMoveTo(xBtn, usX, usY);
 			vWidgetShow(xBtn);
@@ -454,8 +420,3 @@ extern "C" {
 		free(xDlg);
 		prvDlgShowActive();
 	}
-
-
-#ifdef __cplusplus
-}
-#endif
