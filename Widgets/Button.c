@@ -20,9 +20,9 @@
 	Created on: 15.11.2012
 */
 
-#include "Widgets/Button.h"
+#include "emGUI/Widgets/Button.h"
 #include <malloc.h>
-#include "Draw/Draw.h"
+#include "emGUI/Draw/Draw.h"
 
 static bool vButtonDraw(xButton *pxW) {
 	xButtonProps *xP;

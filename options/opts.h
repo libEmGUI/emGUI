@@ -1,13 +1,9 @@
 #ifndef EMGUI_DEFAULT_OPTS_H
 #define EMGUI_DEFAULT_OPTS_H
 
-#ifndef ARDUINO
-	#include "emGUI_port_opts.h"
-#else
-	#include "Ports/Arduino/emGUI_port_opts.h"
-#endif
+#include "emGUI_port_opts.h"
 
-#include "Images/Images.h"
+#include "emGUI/Images/Images.h"
 
 #ifndef DEBUG_EMGUI
 #define DEBUG_EMGUI				0

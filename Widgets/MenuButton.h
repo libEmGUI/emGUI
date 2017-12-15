@@ -17,9 +17,9 @@
 *  @{
 */
 
-#include "Widgets/Widget.h"
-#include "Widgets/Button.h"
-#include "Widgets/Label.h"
+#include "emGUI/Widgets/Widget.h"
+#include "emGUI/Widgets/Button.h"
+#include "emGUI/Widgets/Label.h"
 
 
 #ifdef __cplusplus

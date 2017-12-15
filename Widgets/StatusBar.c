@@ -10,8 +10,8 @@
 
 #include <stdint.h>
 
-#include "Widgets/StatusBar.h"
-#include "Draw/Draw.h"
+#include "emGUI/Widgets/StatusBar.h"
+#include "emGUI/Draw/Draw.h"
  /** @weakgroup prop-widget-statusbar
  *  @{
  */

@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "options/opts.h"
-#include "Fonts/Font.h"
-#include "Widgets/ModalDialog.h"
+#include "emGUI/options/opts.h"
+#include "emGUI/Fonts/Font.h"
+#include "emGUI/Widgets/ModalDialog.h"
 
 #ifdef __cplusplus
 extern "C" {

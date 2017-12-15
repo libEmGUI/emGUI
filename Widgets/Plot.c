@@ -6,11 +6,11 @@
  *
  */
 
-#include "Widgets/Plot.h"
+#include "emGUI/Widgets/Plot.h"
 #include <limits.h>
 #include <stdint.h>
 #include <malloc.h>
-#include "Draw/Draw.h"
+#include "emGUI/Draw/Draw.h"
 
 #define MIN_GRID_PERIOD_PX 16
 

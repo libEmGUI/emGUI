@@ -1,7 +1,7 @@
 #ifndef __IMAGES_H
 #define __IMAGES_H
 
-#include "options/opts.h"
+#include "emGUI/options/opts.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -9,12 +9,8 @@ extern "C" {
 
 	typedef XPICTURE_TYPE xPicture;
 
-#ifndef ARDUINO
-	#include "emGUI_static_images.h"
-#else
-	#include "Ports/Arduino/emGUI_static_images.h"
-#endif
 
+#include "emGUI_static_images.h"
 
 #ifdef __cplusplus
 }

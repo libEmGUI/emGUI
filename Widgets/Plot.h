@@ -16,7 +16,7 @@
 
 #ifndef __PLOT_H
 #define __PLOT_H
-#include "Widgets/Widget.h"
+#include "emGUI/Widgets/Widget.h"
 
 
 #ifdef __cplusplus

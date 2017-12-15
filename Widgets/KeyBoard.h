@@ -22,6 +22,8 @@
 #ifndef KEYBOARD_H_
 #define KEYBOARD_H_
 
+#ifdef EMGUI_USE_KEYBOARD
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -53,5 +55,6 @@ void vOnKeyRowPress(xKeyBoard *pxKRow, char cPress);
 }
 #endif
 
+#endif
 
 #endif /* KEYBOARD_H_ */

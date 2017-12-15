@@ -24,6 +24,8 @@
 #ifndef __PICTURE_STACK_H
 #define __PICTURE_STACK_H
 
+#ifdef EMGUI_USE_PICTURE_STACK_C
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -56,6 +58,8 @@ extern "C" {
   
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif	//__PICTURE_STACK_H

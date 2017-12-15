@@ -6,9 +6,9 @@
 *
 */
 
-#include "MenuButton.h"
+#include "emGUI/Widgets/MenuButton.h"
 #include <stdlib.h>
-#include "Draw/Draw.h"
+#include "emGUI/Draw/Draw.h"
 
 
 /** @weakgroup prop-widget-menu-button

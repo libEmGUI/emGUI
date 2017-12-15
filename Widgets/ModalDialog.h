@@ -25,7 +25,7 @@
 
 #include <string.h>
 
-#include "Widgets/Widget.h"
+#include "emGUI/Widgets/Widget.h"
 
 #ifdef __cplusplus
 extern "C" {

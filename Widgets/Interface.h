@@ -24,10 +24,10 @@
 #define __INTERFACE_H
 
 
-#include "Widget.h"
-#include "Window.h"
+#include "emGUI/Widgets/Widget.h"
+#include "emGUI/Widgets/Window.h"
 #include <stdint.h>
-#include "StatusBar.h"
+#include "emGUI/Widgets/StatusBar.h"
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus

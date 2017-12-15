@@ -20,9 +20,9 @@
 	Created on: 14.11.2012
 */
 
-#include "Interface.h"
+#include "emGUI/Widgets/Interface.h"
 #include <stdio.h>
-#include "Draw/Draw.h"
+#include "emGUI/Draw/Draw.h"
 
 xInterface *xInterfaceInstance;
 xTouchEventType eTouchState = popTs;

@@ -21,16 +21,16 @@
 */
 
 
-#include "Widgets/Label.h"
-#include "Widgets/Button.h"
-#include "Widgets/StatusBar.h"
-#include "Widgets/Window.h"
-#include "Widgets/MenuButton.h"
+#include "emGUI/Widgets/Label.h"
+#include "emGUI/Widgets/Button.h"
+#include "emGUI/Widgets/StatusBar.h"
+#include "emGUI/Widgets/Window.h"
+#include "emGUI/Widgets/MenuButton.h"
 //#include "Widgets/ProgressBar.h"
 
-#include "Draw/Draw.h"
+#include "emGUI/Draw/Draw.h"
 
-#include "ModalDialog.h"
+#include "emGUI/Widgets/ModalDialog.h"
 #include <stdlib.h>
 
 #define MODAL_DIALOG_MAX_BUTTONS    3

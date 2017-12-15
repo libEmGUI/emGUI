@@ -20,10 +20,10 @@
    *  @{
    */
 
-#include "Widgets/Widget.h"
-#include "Widgets/Interface.h"
-#include "Widgets/Button.h"
-#include "Widgets/Label.h"
+#include "emGUI/Widgets/Widget.h"
+#include "emGUI/Widgets/Interface.h"
+#include "emGUI/Widgets/Button.h"
+#include "emGUI/Widgets/Label.h"
 
 
 

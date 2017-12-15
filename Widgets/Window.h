@@ -24,7 +24,7 @@
 #define WINDOW_H_
 
 
-#include "Widgets/Widget.h"
+#include "emGUI/Widgets/Widget.h"
 
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 

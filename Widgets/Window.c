@@ -20,12 +20,12 @@
 	Created on: 19.02.2013
 */
 
-#include "Widgets/Window.h"
-#include "Widgets/Interface.h"
-#include "Widgets/StatusBar.h"
+#include "emGUI/Widgets/Window.h"
+#include "emGUI/Widgets/Interface.h"
+#include "emGUI/Widgets/StatusBar.h"
 #include <malloc.h>
 #include <string.h>
-#include "Draw/Draw.h"
+#include "emGUI/Draw/Draw.h"
 
 
 

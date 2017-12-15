@@ -22,12 +22,12 @@
 
 	Created on: 24.12.2012
 */
-#include "Widgets/Label.h"
+#include "emGUI/Widgets/Label.h"
 #include <string.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <stdarg.h>
-#include "Draw/Draw.h"
+#include "emGUI/Draw/Draw.h"
 
 #ifndef min
 #define min(a,b) ((a < b) ? a :b)

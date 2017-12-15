@@ -22,6 +22,8 @@
 #ifndef __CONSOLE_H
 #define __CONSOLE_H
 
+#ifdef EMGUI_USE_CONSOLE_C
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -49,6 +51,8 @@ void vConsoleSetClickHandler(bool (*pxHandler)(xWidget *));
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif	//__CONSOLE_H

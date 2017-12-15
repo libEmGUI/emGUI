@@ -42,8 +42,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "Widgets/Widget.h"
-#include "Fonts/Font.h"
+#include "emGUI/Widgets/Widget.h"
+#include "emGUI/Fonts/Font.h"
 
 #ifdef __cplusplus
 extern "C" {

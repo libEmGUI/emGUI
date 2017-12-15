@@ -28,8 +28,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "Fonts/Font.h"
-#include "options/opts.h"
+#include "emGUI/Fonts/Font.h"
+#include "emGUI/options/opts.h"
 
 
 #ifdef __cplusplus
