@@ -41,6 +41,8 @@ bool bStatusBarCreate(uint16_t usColor) {
 
 	xPicture xCross = pxDrawHDL()->xGetPicture("cross"); //TODO: Check for null?
 
+	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
+
 	xStatusBarInstance = pxWidgetCreate(0, 0, usInterfaceGetW(), LCD_STATUS_BAR_HEIGHT, pxInterfaceGet(), true);
 	xStatusBarInstance->eType = WidgetStatusBar;
 	vWidgetSetBgColor(xStatusBarInstance, usColor, false);
@@ -53,11 +55,11 @@ bool bStatusBarCreate(uint16_t usColor) {
 	xCloseButton = pxButtonCreate(usX, usY, xCross, xStatusBarInstance);
 	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);
 
-	usY = (usStatusBarGetH() - pxDrawHDL()->usFontGetH(EM_GUI_MIDDLE_FONT)) / 2;
-	usW = pxDrawHDL()->usFontGetStrW("Default", EM_GUI_MIDDLE_FONT) + 10;
+	usY = (usStatusBarGetH() - pxDrawHDL()->usFontGetH(xFnt)) / 2;
+	usW = pxDrawHDL()->usFontGetStrW("Default", xFnt) + 10;
 	usX = usStatusBarGetW() / 2 - usW / 2;
 
-	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default", EM_GUI_MIDDLE_FONT, 100, xStatusBarInstance);
+	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default", xFnt, 100, xStatusBarInstance);
 	vWidgetSetBgColor(xWndHeader, usColor, false);
 	vLabelSetTextColor(xWndHeader, COLOR_MENU_HEADER_TEXT);
 	vLabelSetTextAlign(xWndHeader, LABEL_ALIGN_CENTER);

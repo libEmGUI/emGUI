@@ -28,7 +28,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "emGUI/Fonts/Font.h"
 #include "emGUI/options/opts.h"
 
 

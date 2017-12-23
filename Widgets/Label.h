@@ -43,7 +43,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "emGUI/Widgets/Widget.h"
-#include "emGUI/Fonts/Font.h"
 
 #ifdef __cplusplus
 extern "C" {

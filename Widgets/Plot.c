@@ -306,9 +306,11 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 		pxDrawHDL()->vHLine(usX0, usY, usX1, COLOR_PLOT_GRIDS);
 	}
 
+	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
+
 	uint16_t usYMiddle = prvWidgetMiddleLine(pxW),
 		usMvWidth = usXGridSize / 3,
-		usTextW = usFontGetStrW(xP->pxL->sName, EM_GUI_SMALL_FONT);
+		usTextW = usFontGetStrW(xP->pxL->sName, xFnt);
 
 	if (!bPartialDraw || (bPartialDraw && (usXCursor >= usXText) && (usXCursor <= usXText + usTextW))) {
 		//Название отведения
@@ -316,7 +318,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 			usXText,
 			usYText,
 			xP->pxL->sName,
-			EM_GUI_SMALL_FONT,
+			xFnt,
 			COLOR_MESSAGE_TEXT,
 			COLOR_PLOT_BACKGROUND,
 			true

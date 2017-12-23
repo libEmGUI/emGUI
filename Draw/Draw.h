@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "emGUI/options/opts.h"
-#include "emGUI/Fonts/Font.h"
 #include "emGUI/Widgets/ModalDialog.h"
 
 #ifdef __cplusplus
@@ -28,6 +27,7 @@ extern "C" {
 
 		xModalDialogPictureSet (*xGetDialogPictureSet)(char cType);
 		xPicture (*xGetPicture)(const char *pxPicName);
+		xFont (*xGetDefaultFont)(); //TODO: getFontByName?
 	}xDraw_t;
 
 	void vDrawSetHandler(xDraw_t * hdl);

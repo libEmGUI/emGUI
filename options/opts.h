@@ -4,6 +4,7 @@
 #include "emGUI_port_opts.h"
 
 typedef XPICTURE_TYPE xPicture;
+typedef XFONT_TYPE xFont; //TODO: Add GFXFont segmented struct to allow UTF-8 fonts support!
 
 #ifndef DEBUG_EMGUI
 #define DEBUG_EMGUI				0
@@ -49,15 +50,7 @@ typedef XPICTURE_TYPE xPicture;
 #endif
 
 #ifndef XFONT_TYPE
-#define XFONT_TYPE const GFXfont *
-#endif
-
-#ifndef EM_GUI_SMALL_FONT
-#define EM_GUI_SMALL_FONT (&FreeSans9pt7b)
-#endif
-
-#ifndef EM_GUI_MIDDLE_FONT
-#define EM_GUI_MIDDLE_FONT (&FreeSans9pt7b)
+#error "Please define XFONT_TYPE"
 #endif
 
 // GUI COLORS

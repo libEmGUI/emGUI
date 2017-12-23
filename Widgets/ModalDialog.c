@@ -144,7 +144,9 @@
 
 		usY = (usInterfaceGetWindowH() * 4) / 10 - usStatusBarGetH();
 
-		xMessage = pxLabelCreate(0, 0, usWidgetGetW(xThisWnd), usY, "ModalDialogText", EM_GUI_MIDDLE_FONT, MODAL_DIALOG_MAX_MSG_LENGTH, xThisWnd);
+		xFont xFnt = pxDrawHDL()->xGetDefaultFont();
+
+		xMessage = pxLabelCreate(0, 0, usWidgetGetW(xThisWnd), usY, "ModalDialogText", xFnt, MODAL_DIALOG_MAX_MSG_LENGTH, xThisWnd);
 		bLabelSetMultiline(xMessage, true);
 		vLabelSetTextAlign(xMessage, LABEL_ALIGN_CENTER);
 		vLabelSetVerticalAlign(xMessage, LABEL_ALIGN_MIDDLE);
