@@ -10,6 +10,9 @@
 #include <stdlib.h>
 #include "emGUI/Draw/Draw.h"
 
+#include "emGUI/Widgets/Button.h"
+#include "emGUI/Widgets/Label.h"
+
 
 /** @weakgroup prop-widget-menu-button
 *  @{
@@ -72,10 +75,10 @@ xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, co
 		xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
 		xP->xText = pxLabelCreate(0, usWidgetGetH(xP->xButton), usW, pxDrawHDL()->usFontGetH(xFnt) + 3, "", xFnt, 10, pxW);
-		vWidgetSetBgColor(xP->xText, MENU_BUTTON_LABEL_BG_COLOR, false);
+		vWidgetSetBgColor(xP->xText, EMGUI_MENU_BUTTON_LABEL_BG_COLOR, false);
 		vLabelSetVerticalAlign(xP->xText, LABEL_ALIGN_MIDDLE);
 		vLabelSetTextAlign(xP->xText, LABEL_ALIGN_CENTER);
-		vLabelSetTextColor(xP->xText, MENU_BUTTON_LABEL_TEXT_COLOR);
+		vLabelSetTextColor(xP->xText, EMGUI_MENU_BUTTON_LABEL_TEXT_COLOR);
 		pcLabelSetText(xP->xText, strLabel);
 
 		// ----

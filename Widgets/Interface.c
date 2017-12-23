@@ -31,8 +31,8 @@ xWindow * xActiveWindow = NULL;
 
 xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *)) {
 
-	xInterfaceInstance = pxWidgetCreate(0, 0, LCD_SizeX, LCD_SizeY, NULL, true);
-	bStatusBarCreate(COLOR_STATUS_BAR_BG);
+	xInterfaceInstance = pxWidgetCreate(0, 0, EMGUI_LCD_WIDTH, EMGUI_LCD_HEIGHT, NULL, true);
+	bStatusBarCreate(EMGUI_COLOR_STATUS_BAR_BG);
 	if (pxOnCreateHandler)
 		pxOnCreateHandler(xInterfaceInstance);
 
@@ -64,7 +64,7 @@ bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv) {
 	return bWidgetCheckTouchScreenEvent(xInterfaceInstance, pxTouchScreenEv);
 }
 
-xWindow * pxInterfaceIsWindowOpened(eWindow eWnd, xWindow ** pxNext) {
+xWindow * pxInterfaceIsWindowOpened(int eWnd, xWindow ** pxNext) {
 	xWindowProps *xP;
 	xWindow *xW = xActiveWindow;
 	char cLimit = 100; //защита от зацикливания
@@ -84,7 +84,7 @@ xWindow * pxInterfaceIsWindowOpened(eWindow eWnd, xWindow ** pxNext) {
 	return NULL;
 }
 
-xWindow * pxInterfaceIsWindowActive(eWindow eWnd) {
+xWindow * pxInterfaceIsWindowActive(int eWnd) {
 	xWindowProps *xP;
 
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(xActiveWindow, WidgetWindow)))
@@ -112,7 +112,7 @@ inline void prvDelWndFromStack(xWindow *pxN, xWindow *pxNext) {
 	xP->xBackWindow = pxPrev;
 }
 
-void vInterfaceOpenWindow(eWindow eWnd) {
+void vInterfaceOpenWindow(int eWnd) {
 	xWidget * pxN,    //текущее окно в стеке
 		*pxNext = NULL; //следующее окно в стеке
 	xWindowProps *xP;
@@ -216,7 +216,7 @@ void vInterfaceCloseActiveWindow() {
 
 }
 
-void vInterfaceCloseWindow(eWindow eWnd) {
+void vInterfaceCloseWindow(int eWnd) {
 	xWidget * pxN = xActiveWindow,
 		*pxNext = NULL;
 	xWindowProps *xP;

@@ -40,32 +40,32 @@ extern "C" {
 	void vInterfaceDraw();
 	xInterface *pxInterfaceGet();
 	inline uint16_t usInterfaceGetW() {
-		return LCD_SizeX;
+		return EMGUI_LCD_WIDTH;
 	}
 	inline uint16_t usInterfaceGetH() {
-		return LCD_SizeY;
+		return EMGUI_LCD_HEIGHT;
 	}
 	inline uint16_t usInterfaceGetWindowH() {
-		return LCD_SizeY - LCD_STATUS_BAR_HEIGHT;
+		return EMGUI_LCD_HEIGHT - EMGUI_STATUS_BAR_HEIGHT;
 	}
 	inline uint16_t usInterfaceGetWindowW() {
-		return LCD_SizeX;
+		return EMGUI_LCD_WIDTH;
 	}
 	inline uint16_t usInterfaceGetWindowX() {
 		return 0;
 	}
 	inline uint16_t usInterfaceGetWindowY() {
-		return LCD_STATUS_BAR_HEIGHT;
+		return EMGUI_STATUS_BAR_HEIGHT;
 	}
 	void vInterfaceInvalidate();
 	bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv);
 	void vInterfaceDebug(bool bDebug);
 	bool bInterfaceGetDebug();
-	void vInterfaceOpenWindow(eWindow eWnd);
+	void vInterfaceOpenWindow(int eWnd);
 	void vInterfaceCloseActiveWindow();
-	void vInterfaceCloseWindow(eWindow eWnd);
+	void vInterfaceCloseWindow(int eWnd);
 	void vInterfaceUpdateWindow();
-	xWindow * pxInterfaceIsWindowActive(eWindow eWnd);
+	xWindow * pxInterfaceIsWindowActive(int eWnd);
 
 #ifdef __cplusplus
 }

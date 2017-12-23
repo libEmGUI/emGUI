@@ -237,13 +237,13 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 
 	if (bWidgetInit(pxW, usX, usY, usW, usH, pxWidParent, true)) {
 
-		vWidgetSetBgColor(pxW, WIDGET_COLOR_WHITE, false);
+		vWidgetSetBgColor(pxW, EMGUI_WIDGET_COLOR_WHITE, false);
 
 		xP = malloc(sizeof(xLabelProps));
 		if (!xP)
 			return NULL;
 
-		usMaxLength = (usMaxLength > LABEL_MAX_LENGTH) ? LABEL_MAX_LENGTH : usMaxLength;
+		usMaxLength = (usMaxLength > EMGUI_LABEL_MAX_LENGTH) ? EMGUI_LABEL_MAX_LENGTH : usMaxLength;
 
 		//Выделяем память для внутр. хранилища
 		if (usMaxLength) {
@@ -264,7 +264,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 		xP->eTextAlign = LABEL_ALIGN_LEFT;
 		xP->eVerticalAlign = LABEL_ALIGN_TOP;
 
-		xP->usColor = WIDGET_COLOR_BLACK;
+		xP->usColor = EMGUI_WIDGET_COLOR_BLACK;
 		xP->xFnt = xFnt;
 
 		xP->bHaveCursor = false;
@@ -341,7 +341,7 @@ char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 	return NULL;
 }
 
-void pcLabelSetTextAdaptWidth(xLabel *pxL, char * pcStr) {
+void pcLabelSetTextAdaptWidth(xLabel *pxL, const char * pcStr) {
 	pcLabelSetText(pxL, pcStr);
 	pxL->usX1 = pxL->usX0 + 8 * (uint16_t)strlen(pcStr);
 	vWidgetInvalidate(pxL);

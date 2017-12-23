@@ -26,32 +26,14 @@
 
 #include "emGUI/Widgets/Widget.h"
 
-#define MIN(a,b) ((a) < (b) ? (a) : (b))
-
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
 	typedef xWidget xWindow;
 
-	typedef enum {
-		WINDOW_MENU = 0,
-		WINDOW_ECG,
-		WINDOW_CLOCK,
-		WINDOW_GSM_CALL,
-		WINDOW_TRANSFER,
-		WINDOW_MODAL,
-		WINDOW_ABOUT,
-		WINDOW_TS_CALIB,
-		WINDOW_ARCHIVE,
-		WINDOW_OPINION,
-		WINDOW_CONSOLE,
-		WINDOW_TEXTEDITOR,
-		WINDOW_NOTES,
-	} eWindow;
-
 	typedef struct xWindowProps_t {
-		eWindow eId;
+		int eId;
 		xWindow *xBackWindow;
 		char*   strHeader;
 		bool    bFullScreen;
@@ -61,7 +43,7 @@ extern "C" {
 		bool(*pxOnOpen)               (xWidget *);
 	} xWindowProps;
 
-	xWindow * pxWindowCreate(eWindow eWnd);
+	xWindow * pxWindowCreate(int eWnd);
 	void vWindowSetOnOpenHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
 	void vWindowSetOnOpenRequestHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
 	void vWindowSetOnCloseHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));

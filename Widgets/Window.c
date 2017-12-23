@@ -27,10 +27,9 @@
 #include <string.h>
 #include "emGUI/Draw/Draw.h"
 
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
 
-
-
-xWindow * pxWindowCreate(eWindow eWnd) {
+xWindow * pxWindowCreate(int eWnd) {
 	xWindowProps *xP;
 	xWindow *pxW;
 
@@ -53,7 +52,7 @@ xWindow * pxWindowCreate(eWindow eWnd) {
 		xP->pxOnOpen = NULL;
 		xP->bFullScreen = false;
 		xP->eId = eWnd;
-		xP->strHeader = (char*)malloc(WINDOW_HEADER_LENGTH + 1);
+		xP->strHeader = (char*)malloc(EMGUI_WINDOW_HEADER_LENGTH + 1);
 		xP->strHeader[0] = '\0';
 		pxW->pvProp = xP;
 		pxW->eType = WidgetWindow;
@@ -68,7 +67,7 @@ xWindow * pxWindowCreate(eWindow eWnd) {
 
 void vWindowSetHeader(xWidget * pxW, char const* strH) {
 	xWindowProps *xP;
-	int iLen = MIN(strlen(strH), WINDOW_HEADER_LENGTH);
+	int iLen = MIN(strlen(strH), EMGUI_WINDOW_HEADER_LENGTH);
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	memcpy(xP->strHeader, strH, iLen + 1);
@@ -117,7 +116,7 @@ void vWindowSetFullScreen(xWidget *pxW, bool bFS) {
 		return;
 
 	if (bFS) {
-		if (bWidgetSetCoords(pxW, 0, 0, LCD_SizeX, LCD_SizeY, true))
+		if (bWidgetSetCoords(pxW, 0, 0, EMGUI_LCD_WIDTH, EMGUI_LCD_HEIGHT, true))
 			xP->bFullScreen = bFS;
 	}
 	else {

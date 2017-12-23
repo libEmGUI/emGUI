@@ -65,7 +65,7 @@ extern "C" {
 
 	xLabel *    pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, uint16_t usMaxLength, xWidget *pxWidParent);
 	char *      pcLabelSetText(xWidget *pxW, const char * pcStr);
-	void        pcLabelSetTextAdaptWidth(xLabel *pxL, char * pcStr); // замена текста и адаптированние ширины Label под длину нового текста, работает только под 16 размер
+	void        pcLabelSetTextAdaptWidth(xLabel *pxL, const char * pcStr); // замена текста и адаптированние ширины Label под длину нового текста, работает только под 16 размер
 	void        vLabelSetTextColor(xWidget *pxW, uint16_t usColor);
 	void        vLabelSetTextAlign(xWidget *pxW, eLabelTextAlign eAlign);
 	void        vLabelSetVerticalAlign(xWidget *pxW, eLabelVerticalAlign eAlign);

@@ -47,11 +47,11 @@ static bool vButtonDraw(xButton *pxW) {
 		if (pxW->pusBgPicture)
 			pxDrawHDL()->bPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
 
-		pxDrawHDL()->vVLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usY1 - 2, WIDGET_COLOR_BLACK);
-		pxDrawHDL()->vHLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usX1 - 2, WIDGET_COLOR_BLACK);
+		pxDrawHDL()->vVLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usY1 - 2, EMGUI_WIDGET_COLOR_BLACK);
+		pxDrawHDL()->vHLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usX1 - 2, EMGUI_WIDGET_COLOR_BLACK);
 
-		pxDrawHDL()->vVLine(pxW->usX1 - 2, pxW->usY0 + 2, pxW->usY1 - 2, WIDGET_COLOR_WHITE);
-		pxDrawHDL()->vHLine(pxW->usX0 + 2, pxW->usY1 - 2, pxW->usX1 - 2, WIDGET_COLOR_WHITE);
+		pxDrawHDL()->vVLine(pxW->usX1 - 2, pxW->usY0 + 2, pxW->usY1 - 2, EMGUI_WIDGET_COLOR_WHITE);
+		pxDrawHDL()->vHLine(pxW->usX0 + 2, pxW->usY1 - 2, pxW->usX1 - 2, EMGUI_WIDGET_COLOR_WHITE);
 
 	}
 

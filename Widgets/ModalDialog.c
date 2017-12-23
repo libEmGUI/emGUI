@@ -26,6 +26,7 @@
 #include "emGUI/Widgets/StatusBar.h"
 #include "emGUI/Widgets/Window.h"
 #include "emGUI/Widgets/MenuButton.h"
+#include "emGUI/Widgets/Interface.h"
 //#include "Widgets/ProgressBar.h"
 
 #include "emGUI/Draw/Draw.h"
@@ -45,7 +46,7 @@
 	static xMenuButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS]; // y(ok)/n/c Максимум в диалоге видно 4 кнопки.
 
 	//автонумерация для автоматических диалогов
-	uint16_t usDlgID = MODAL_AUTO + 1;
+	uint16_t usDlgID = EMGUI_MODAL_AUTO + 1;
 
 	typedef struct xModalDialog_t xModalDialog;
 
@@ -66,12 +67,9 @@
 
 	xModalDialog *xMDActive = NULL;
 
-	//char cDialogCount = 0;
-#define MDCurrent (cDialogCount - 1)
-
 	static void prvDlgShowActive();
 
-	static inline xModalDialog *prvGetNextDlg(xModalDialog *xDlg) {
+	static xModalDialog *prvGetNextDlg(xModalDialog *xDlg) {
 		if (!xDlg)
 			return NULL;
 		return xDlg->pxPrev;
@@ -135,8 +133,8 @@
 		// X0, Y0 - координаты расположения виджетов
 		uint16_t usX, usY;
 
-		xThisWnd = pxWindowCreate(WINDOW_MODAL);
-		vWidgetSetBgColor(xThisWnd, COLOR_PLOT_BACKGROUND, false);
+		xThisWnd = pxWindowCreate(EMGUI_MODAL_WINDOW_ID);
+		vWidgetSetBgColor(xThisWnd, EMGUI_COLOR_PLOT_BACKGROUND, false);
 		vWindowSetOnOpenHandler(xThisWnd, prvOnOpenHandler);
 		vWindowSetOnOpenRequestHandler(xThisWnd, prvOnOpenRequestHandler);
 		vWindowSetOnCloseHandler(xThisWnd, prvOnCloseHandler);
@@ -162,13 +160,13 @@
 
 		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++) {
 			xButtons[c] = pxMenuButtonCreate(usX, usY, pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain, "", prvButtonHandler, xThisWnd);
-			usX += LCD_TsBtn_SIZE;
+			usX += EMGUI_MODAL_DLG_BTN_SPACING;
 			vWidgetHide(xButtons[c]);
 		}
 		return xThisWnd;
 	}
 
-	static inline void prvShowPB(xModalDialog * xDlg) {
+	static void prvShowPB(xModalDialog * xDlg) {
 		if (xDlg->cProgress >= 0) {
 			//vWidgetShow(xPBar);
 			//vProgressBarSetProcExec(xPBar, xDlg->cProgress);
@@ -183,7 +181,7 @@
 
 		if (!xDlg) {
 			//return;
-			vInterfaceCloseWindow(WINDOW_MODAL);
+			vInterfaceCloseWindow(EMGUI_MODAL_WINDOW_ID);
 			return;
 			//TODO: выставить кол-во активных диалогов в 0
 		}
@@ -225,14 +223,14 @@
 
 	}
 
-	void prvIncDlgId() {
+	static void prvIncDlgId() {
 		//TODO: thread protection???
 		usDlgID++;
-		if (usDlgID <= MODAL_AUTO)
-			usDlgID = MODAL_AUTO + 1;
+		if (usDlgID <= EMGUI_MODAL_AUTO)
+			usDlgID = EMGUI_MODAL_AUTO + 1;
 	}
 
-	xModalDialog *prvDlgIsActive(int iDlgId) {
+	static xModalDialog *prvDlgIsActive(int iDlgId) {
 		if (!xMDActive)
 			return NULL;
 
@@ -242,7 +240,7 @@
 		return NULL;
 	}
 
-	xModalDialog *prvDlgIsOpened(int iDlgId, xModalDialog ** pxNext) {
+	static xModalDialog *prvDlgIsOpened(int iDlgId, xModalDialog ** pxNext) {
 		xModalDialog * xDlg = xMDActive;
 
 		*pxNext = NULL;
@@ -257,7 +255,7 @@
 		return NULL;
 	}
 
-	inline xModalDialog *prvDelDlgFromStack(xModalDialog *pxN, xModalDialog *pxNext) {
+	static xModalDialog *prvDelDlgFromStack(xModalDialog *pxN, xModalDialog *pxNext) {
 
 		xModalDialog * pxPrev; //пред. диалог в стеке
 		pxPrev = pxN->pxPrev;
@@ -266,7 +264,7 @@
 		return pxN;
 	}
 
-	void prvDlgRefresh(xModalDialog * xDlg, char const* sBtns, char const* sHdr, char const* sMsg) {
+	static void prvDlgRefresh(xModalDialog * xDlg, char const* sBtns, char const* sHdr, char const* sMsg) {
 		if (!xDlg)
 			return;
 
@@ -289,7 +287,7 @@
 
 		/*/Проверка ограничения макс. количества открытых диалогов
 		if(cDialogCount >= MODAL_DIALOG_MAX_COUNT){
-		  vInterfaceOpenWindow(WINDOW_MODAL);
+		  vInterfaceOpenWindow(EMGUI_MODAL_WINDOW_ID);
 		  return -1;
 		}*/
 
@@ -297,7 +295,7 @@
 		if ((xDlg = prvDlgIsActive(iDlgId))) {
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			prvDlgShowActive();
-			vInterfaceOpenWindow(WINDOW_MODAL);
+			vInterfaceOpenWindow(EMGUI_MODAL_WINDOW_ID);
 			return -1;
 		}
 
@@ -323,7 +321,7 @@
 
 			//Выставляем идентификатор диалога, по которому
 			//будет возможность дальнейшей работы с этим диалогом.
-			if (iDlgId != MODAL_AUTO)
+			if (iDlgId != EMGUI_MODAL_AUTO)
 				xDlg->usDlgID = iDlgId;
 			else {
 				xDlg->usDlgID = usDlgID;
@@ -337,7 +335,7 @@
 
 		prvDlgShowActive();
 
-		vInterfaceOpenWindow(WINDOW_MODAL);
+		vInterfaceOpenWindow(EMGUI_MODAL_WINDOW_ID);
 		vWidgetInvalidate(xThisWnd);
 
 		return xDlg->usDlgID;

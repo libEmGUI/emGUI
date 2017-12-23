@@ -281,29 +281,29 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 		usX1 = usXCursor;
 		//if we use border, we need to add 1 to usY0, and sub 1 from usY1
 		if (usXCursor < usWidgetGetX1(pxW, true) - 1)
-			pxDrawHDL()->vVLine(usXCursor + 1, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), COLOR_PLOT_SCALE_MARKER);//cursor(goes 1px forward)
+			pxDrawHDL()->vVLine(usXCursor + 1, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), EMGUI_COLOR_PLOT_SCALE_MARKER);//cursor(goes 1px forward)
 		pxDrawHDL()->vVLine(usXCursor, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), pxW->usBgColor);//splitter/eraser
 	}
 
 	//Vertical Grid
 	for (usX = usWidgetGetX0(pxW, true); usX < usWidgetGetX1(pxW, true); usX += usXGridSize) {
 		if (!bPartialDraw)
-			pxDrawHDL()->vVLine(usX, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), COLOR_PLOT_GRIDS);
+			pxDrawHDL()->vVLine(usX, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), EMGUI_COLOR_PLOT_GRIDS);
 		else
 			if (usXCursor == usX) {
-				pxDrawHDL()->vVLine(usX, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), COLOR_PLOT_GRIDS);
+				pxDrawHDL()->vVLine(usX, usWidgetGetY0(pxW, true), usWidgetGetY1(pxW, true), EMGUI_COLOR_PLOT_GRIDS);
 			}
 	}
 
 	//Horisontal Grid in two steps
 	//If we are drawing cursor, then it is just points on cursor line (see limits above)
 	for (usY = prvWidgetMiddleLine(pxW); usY > usWidgetGetY0(pxW, true); usY = (usY > usYGridSize) ? usY - usYGridSize : 0) {
-		pxDrawHDL()->vHLine(usX0, usY, usX1, COLOR_PLOT_GRIDS);
+		pxDrawHDL()->vHLine(usX0, usY, usX1, EMGUI_COLOR_PLOT_GRIDS);
 	}
 
 	for (usY = prvWidgetMiddleLine(pxW); usY < usWidgetGetY1(pxW, true); usY += usYGridSize) {
 		//if (abs((int16_t)(usY - prvWidgetMiddleLine(pxW))) < usYGridSize) continue;
-		pxDrawHDL()->vHLine(usX0, usY, usX1, COLOR_PLOT_GRIDS);
+		pxDrawHDL()->vHLine(usX0, usY, usX1, EMGUI_COLOR_PLOT_GRIDS);
 	}
 
 	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
@@ -319,8 +319,8 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 			usYText,
 			xP->pxL->sName,
 			xFnt,
-			COLOR_MESSAGE_TEXT,
-			COLOR_PLOT_BACKGROUND,
+			EMGUI_COLOR_MESSAGE_TEXT,
+			EMGUI_COLOR_PLOT_BACKGROUND,
 			true
 		);
 	}
@@ -395,7 +395,7 @@ xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1,
 	if (pxW && pxL) {
 		pxW->eType = WidgetPlot;
 		vWidgetSetClickable(pxW, true);
-		vWidgetSetBgColor(pxW, COLOR_PLOT_BACKGROUND, false);
+		vWidgetSetBgColor(pxW, EMGUI_COLOR_PLOT_BACKGROUND, false);
 
 		xP = (xPlotProps*)malloc(sizeof(xPlotProps));
 
@@ -416,7 +416,7 @@ xPlot * pxPlotCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1,
 		xP->usLastDrawedPosY1 = prvWidgetMiddleLine(pxW);
 
 		pxW->pxDrawHandler = prvPlotDraw;
-		xP->usColor = COLOR_PLOT_SCALE_MARKER;
+		xP->usColor = EMGUI_COLOR_PLOT_SCALE_MARKER;
 		pxW->pvProp = xP;
 		return pxW;
 	}

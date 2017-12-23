@@ -21,11 +21,6 @@
    */
 
 #include "emGUI/Widgets/Widget.h"
-#include "emGUI/Widgets/Interface.h"
-#include "emGUI/Widgets/Button.h"
-#include "emGUI/Widgets/Label.h"
-
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -50,7 +45,7 @@ extern "C" {
 	* @returns ширина в пикселях
 	*/
 	inline uint16_t usStatusBarGetW() {
-		return LCD_SizeX;
+		return EMGUI_LCD_WIDTH;
 	}
 
 	/**
@@ -59,7 +54,7 @@ extern "C" {
 	  * @returns высота в пикселях
 	  */
 	inline uint16_t usStatusBarGetH() {
-		return LCD_STATUS_BAR_HEIGHT;
+		return EMGUI_STATUS_BAR_HEIGHT;
 	}
 
 	/**
@@ -71,40 +66,11 @@ extern "C" {
 
 
 	/**
-	  * @brief запраивает дескриптор виджета часов
-	  *
-	  * @returns дескриптор виджета
-	  */
-	xLabel        *pxStatusBarGetClock();
-
-	/**
 	  * @brief устанавливает заголовок окна
 	  *
 	  * @param strH - заголовок
 	  */
-	void          vStatusBarSetWindowHeader(char * strH);
-
-	/**
-	  * @brief обновляет иконку качества связи
-	  *
-	  */
-	void          vStatusBarUpdateCSQ();
-
-	/**
-	  * @brief меняет статус отображения контрола фильтра
-	  *
-	  * @param bShow - новый статус элемента
-	  *
-	  */
-	void          vStatusBarFilterShow(bool bShow);
-
-	/**
-	  * @brief меняет статус отображения контрола информации о приборе
-	  *
-	  * @param bShow - новый статус элемента
-	  *
-	  */
-	void          vStatusBarInfoShow(bool bShow);
+	void          vStatusBarSetWindowHeader(const char * strH);
 
 	/**
 	 *  @}

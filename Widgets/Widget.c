@@ -431,5 +431,5 @@ void vWidgetSetDrawHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
 }
 
 bool bInterfaceGetDebug() {
-	return DEBUG_EMGUI;
+	return EMGUI_DEBUG;
 }

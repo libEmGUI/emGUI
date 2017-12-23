@@ -10,6 +10,10 @@
 
 #include <stdint.h>
 
+#include "emGUI/Widgets/Interface.h"
+#include "emGUI/Widgets/Button.h"
+#include "emGUI/Widgets/Label.h"
+
 #include "emGUI/Widgets/StatusBar.h"
 #include "emGUI/Draw/Draw.h"
  /** @weakgroup prop-widget-statusbar
@@ -43,14 +47,14 @@ bool bStatusBarCreate(uint16_t usColor) {
 
 	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
-	xStatusBarInstance = pxWidgetCreate(0, 0, usInterfaceGetW(), LCD_STATUS_BAR_HEIGHT, pxInterfaceGet(), true);
+	xStatusBarInstance = pxWidgetCreate(0, 0, usInterfaceGetW(), EMGUI_STATUS_BAR_HEIGHT, pxInterfaceGet(), true);
 	xStatusBarInstance->eType = WidgetStatusBar;
 	vWidgetSetBgColor(xStatusBarInstance, usColor, false);
 
 	uint16_t usX, usY, usW;
 
-	usY = (LCD_STATUS_BAR_HEIGHT - pxDrawHDL()->usGetPictureH(xCross)) / 2;
-	usX = LCD_SizeX - pxDrawHDL()->usGetPictureW(xCross) - usY;
+	usY = (EMGUI_STATUS_BAR_HEIGHT - pxDrawHDL()->usGetPictureH(xCross)) / 2;
+	usX = EMGUI_LCD_WIDTH - pxDrawHDL()->usGetPictureW(xCross) - usY;
 
 	xCloseButton = pxButtonCreate(usX, usY, xCross, xStatusBarInstance);
 	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);
@@ -61,7 +65,7 @@ bool bStatusBarCreate(uint16_t usColor) {
 
 	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default", xFnt, 100, xStatusBarInstance);
 	vWidgetSetBgColor(xWndHeader, usColor, false);
-	vLabelSetTextColor(xWndHeader, COLOR_MENU_HEADER_TEXT);
+	vLabelSetTextColor(xWndHeader, EMGUI_COLOR_MENU_HEADER_TEXT);
 	vLabelSetTextAlign(xWndHeader, LABEL_ALIGN_CENTER);
 
 
@@ -70,7 +74,7 @@ bool bStatusBarCreate(uint16_t usColor) {
 	return true;
 }
 
-void  vStatusBarSetWindowHeader(char * strH) {
+void  vStatusBarSetWindowHeader(const char * strH) {
 	pcLabelSetText(xWndHeader, strH);
 }
 

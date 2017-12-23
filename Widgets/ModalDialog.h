@@ -31,15 +31,10 @@
 extern "C" {
 #endif
 
-	typedef enum {
-		MODAL_AUTO,
-	}eModalDialog;
-
 	typedef struct xModalDialogPictureSet_t {
 		xPicture xPicMain;
 		xPicture xPicMainPress;
 		const char* strLabel;
-		//bool (*pxClickHandler)   (xWidget *);
 	}xModalDialogPictureSet;
 
 	xWidget * pxModalDialogWindowCreate();
