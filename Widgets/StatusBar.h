@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef __STATUS_BAR_H
-#define __STATUS_BAR_H
+#ifndef EMGUI_STATUS_BAR_H
+#define EMGUI_STATUS_BAR_H
 
  /** \weakgroup gui-prop-widgets
   *  @{

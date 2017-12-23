@@ -5,8 +5,8 @@
 * @brief  Реализация виджета кнопки для меню и диалогов
 *
 */
-#ifndef MENUBUTTON_H_
-#define MENUBUTTON_H_
+#ifndef EMGUI_MENU_BUTTON_H
+#define EMGUI_MENU_BUTTON_H
 
 
 /** \weakgroup gui-prop-widgets

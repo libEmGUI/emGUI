@@ -23,8 +23,8 @@
 
 #ifdef EMGUI_USE_KEYBOARD
 
-#ifndef _H_
-#define _H_
+#ifndef EMGUI_KEYROW_H
+#define EMGUI_KEYROW_H
 
 #ifdef __cplusplus
 extern "C" {

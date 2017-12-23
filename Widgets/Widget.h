@@ -20,8 +20,8 @@
 	Created on: 14.11.2012
 */
 
-#ifndef __WIDGET_H
-#define __WIDGET_H
+#ifndef EMGUI_WIDGET_H
+#define EMGUI_WIDGET_H
 
 
 #include <stdint.h>

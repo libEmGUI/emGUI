@@ -14,8 +14,8 @@
  *
  */
 
-#ifndef __PLOT_H
-#define __PLOT_H
+#ifndef EMGUI_PLOT_H
+#define EMGUI_PLOT_H
 #include "emGUI/Widgets/Widget.h"
 
 

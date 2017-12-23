@@ -37,8 +37,8 @@
  *          pcText -
  */
 
-#ifndef __LABEL_H
-#define __LABEL_H
+#ifndef EMGUI_LABEL_H
+#define EMGUI_LABEL_H
 
 #include <stdint.h>
 #include <stdbool.h>

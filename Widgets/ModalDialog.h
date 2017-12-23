@@ -20,8 +20,8 @@
 	Created on: 06.03.2013
 */
 
-#ifndef MODALDIALOG_H_
-#define MODALDIALOG_H_
+#ifndef EMGUI_MODAL_DIALOG_H
+#define EMGUI_MODAL_DIALOG_H
 
 #include <string.h>
 

@@ -20,8 +20,8 @@
 	Created on: 19.02.2013
 */
 
-#ifndef WINDOW_H_
-#define WINDOW_H_
+#ifndef EMGUI_WINDOW_H
+#define EMGUI_WINDOW_H
 
 
 #include "emGUI/Widgets/Widget.h"
