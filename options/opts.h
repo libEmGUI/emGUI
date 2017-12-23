@@ -3,7 +3,7 @@
 
 #include "emGUI_port_opts.h"
 
-#include "emGUI/Images/Images.h"
+typedef XPICTURE_TYPE xPicture;
 
 #ifndef DEBUG_EMGUI
 #define DEBUG_EMGUI				0
@@ -59,11 +59,6 @@
 #ifndef EM_GUI_MIDDLE_FONT
 #define EM_GUI_MIDDLE_FONT (&FreeSans9pt7b)
 #endif
-
-#ifndef EM_GUI_PIC_CROSS 
-#error "Please define EM_GUI_PIC_CROSS"
-#endif
-
 
 // GUI COLORS
 

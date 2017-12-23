@@ -27,6 +27,7 @@ extern "C" {
 		uint16_t (*usFontGetStrH)(const char * pcStr, xFont pubFont);
 
 		xModalDialogPictureSet (*xGetDialogPictureSet)(char cType);
+		xPicture (*xGetPicture)(const char *pxPicName);
 	}xDraw_t;
 
 	void vDrawSetHandler(xDraw_t * hdl);
