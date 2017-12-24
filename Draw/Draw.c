@@ -1,7 +1,7 @@
 #include "emGUI/Draw/Draw.h"
 #include <string.h>
 
-static xDraw_t * _HDL;
+static xDraw_t * _HDL = NULL;
 
 void vDrawSetHandler(xDraw_t * hdl) {
 	_HDL = hdl;
