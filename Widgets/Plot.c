@@ -310,7 +310,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 
 	uint16_t usYMiddle = prvWidgetMiddleLine(pxW),
 		usMvWidth = usXGridSize / 3,
-		usTextW = usFontGetStrW(xP->pxL->sName, xFnt);
+		usTextW = pxDrawHDL()->usFontGetStrW(xP->pxL->sName, xFnt);
 
 	if (!bPartialDraw || (bPartialDraw && (usXCursor >= usXText) && (usXCursor <= usXText + usTextW))) {
 		//Название отведения
