@@ -310,11 +310,11 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 
 	uint16_t usYMiddle = prvWidgetMiddleLine(pxW),
 		usMvWidth = usXGridSize / 3,
-		usTextW = usFontGetStrW(xP->pxL->sName, xFnt);
+		usTextW = pxDrawHDL()->usFontGetStrW(xP->pxL->sName, xFnt);
 
 	if (!bPartialDraw || (bPartialDraw && (usXCursor >= usXText) && (usXCursor <= usXText + usTextW))) {
-		//Название отведения
-		pxDrawHDL()->vPutString(
+		//TODO: Add Plot Name update here via Label
+		/*pxDrawHDL()->vPutString(
 			usXText,
 			usYText,
 			xP->pxL->sName,
@@ -322,7 +322,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 			EMGUI_COLOR_MESSAGE_TEXT,
 			EMGUI_COLOR_PLOT_BACKGROUND,
 			true
-		);
+		);*/
 	}
 
 	return true;
