@@ -43,7 +43,7 @@ static bool prvCloseClickHandler(xWidget* pxW) {
 
 bool bStatusBarCreate(uint16_t usColor) {
 
-	xPicture xCross = pxDrawHDL()->xGetPicture("cross"); //TODO: Check for null?
+	xPicture xCross = pxDrawHDL()->xGetPicture("SB_CROSS.pic"); //TODO: Check for null?
 
 	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
