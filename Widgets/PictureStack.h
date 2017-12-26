@@ -21,8 +21,10 @@
 	
 	Created on: 24.12.2012
 */
-#ifndef __PICTURE_STACK_H
-#define __PICTURE_STACK_H
+#ifndef EMGUI_PICTURE_STACK_H
+#define EMGUI_PICTURE_STACK_H
+
+#ifdef EMGUI_USE_PICTURE_STACK_C
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,6 +58,8 @@ extern "C" {
   
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif	//__PICTURE_STACK_H

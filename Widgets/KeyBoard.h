@@ -19,8 +19,10 @@
 	
 	Created on: 06.05.2013
 */
-#ifndef KEYBOARD_H_
-#define KEYBOARD_H_
+#ifndef EMGUI_KEYBOARD_H
+#define EMGUI_KEYBOARD_H
+
+#ifdef EMGUI_USE_KEYBOARD
 
 #ifdef __cplusplus
 extern "C" {
@@ -53,5 +55,6 @@ void vOnKeyRowPress(xKeyBoard *pxKRow, char cPress);
 }
 #endif
 
+#endif
 
 #endif /* KEYBOARD_H_ */

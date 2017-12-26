@@ -37,13 +37,12 @@
  *          pcText -
  */
 
-#ifndef __LABEL_H
-#define __LABEL_H
+#ifndef EMGUI_LABEL_H
+#define EMGUI_LABEL_H
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "Widgets/Widget.h"
-#include "Fonts/Font.h"
+#include "emGUI/Widgets/Widget.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,7 +65,7 @@ extern "C" {
 
 	xLabel *    pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, uint16_t usMaxLength, xWidget *pxWidParent);
 	char *      pcLabelSetText(xWidget *pxW, const char * pcStr);
-	void        pcLabelSetTextAdaptWidth(xLabel *pxL, char * pcStr); // замена текста и адаптированние ширины Label под длину нового текста, работает только под 16 размер
+	void        pcLabelSetTextAdaptWidth(xLabel *pxL, const char * pcStr); // замена текста и адаптированние ширины Label под длину нового текста, работает только под 16 размер
 	void        vLabelSetTextColor(xWidget *pxW, uint16_t usColor);
 	void        vLabelSetTextAlign(xWidget *pxW, eLabelTextAlign eAlign);
 	void        vLabelSetVerticalAlign(xWidget *pxW, eLabelVerticalAlign eAlign);

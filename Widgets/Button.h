@@ -20,11 +20,11 @@
 	Created on: 15.11.2012
 */
 
-#ifndef __BUTTON_H
-#define __BUTTON_H
+#ifndef EMGUI_BUTTON_H
+#define EMGUI_BUTTON_H
 
 
-#include "Widgets/Widget.h"
+#include "emGUI/Widgets/Widget.h"
 #include <stdint.h> 
 
 #ifdef __cplusplus

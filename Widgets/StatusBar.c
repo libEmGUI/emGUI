@@ -10,7 +10,12 @@
 
 #include <stdint.h>
 
-#include "Widgets/StatusBar.h"
+#include "emGUI/Widgets/Interface.h"
+#include "emGUI/Widgets/Button.h"
+#include "emGUI/Widgets/Label.h"
+
+#include "emGUI/Widgets/StatusBar.h"
+#include "emGUI/Draw/Draw.h"
  /** @weakgroup prop-widget-statusbar
  *  @{
  */
@@ -38,25 +43,29 @@ static bool prvCloseClickHandler(xWidget* pxW) {
 
 bool bStatusBarCreate(uint16_t usColor) {
 
-	xStatusBarInstance = pxWidgetCreate(0, 0, usInterfaceGetW(), LCD_STATUS_BAR_HEIGHT, pxInterfaceGet(), true);
+	xPicture xCross = pxDrawHDL()->xGetPicture("cross"); //TODO: Check for null?
+
+	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
+
+	xStatusBarInstance = pxWidgetCreate(0, 0, usInterfaceGetW(), EMGUI_STATUS_BAR_HEIGHT, pxInterfaceGet(), true);
 	xStatusBarInstance->eType = WidgetStatusBar;
 	vWidgetSetBgColor(xStatusBarInstance, usColor, false);
 
 	uint16_t usX, usY, usW;
 
-	usY = (LCD_STATUS_BAR_HEIGHT - pxDrawHDL()->usGetPictureH(EM_GUI_PIC_CROSS)) / 2;
-	usX = LCD_SizeX - pxDrawHDL()->usGetPictureW(EM_GUI_PIC_CROSS) - usY;
+	usY = (EMGUI_STATUS_BAR_HEIGHT - pxDrawHDL()->usGetPictureH(xCross)) / 2;
+	usX = EMGUI_LCD_WIDTH - pxDrawHDL()->usGetPictureW(xCross) - usY;
 
-	xCloseButton = pxButtonCreate(usX, usY, EM_GUI_PIC_CROSS, xStatusBarInstance);
+	xCloseButton = pxButtonCreate(usX, usY, xCross, xStatusBarInstance);
 	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);
 
-	usY = (usStatusBarGetH() - usFontGetH(FONT_ASCII_16_X)) / 2;
-	usW = usFontGetStrW("Default Title", FONT_ASCII_16_X) + 10;
+	usY = (usStatusBarGetH() - pxDrawHDL()->usFontGetH(xFnt)) / 2;
+	usW = pxDrawHDL()->usFontGetStrW("Default", xFnt) + 10;
 	usX = usStatusBarGetW() / 2 - usW / 2;
 
-	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default Title", (xFont)FONT_ASCII_16_X, 100, xStatusBarInstance);
+	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default", xFnt, 100, xStatusBarInstance);
 	vWidgetSetBgColor(xWndHeader, usColor, false);
-	vLabelSetTextColor(xWndHeader, COLOR_MENU_HEADER_TEXT);
+	vLabelSetTextColor(xWndHeader, EMGUI_COLOR_MENU_HEADER_TEXT);
 	vLabelSetTextAlign(xWndHeader, LABEL_ALIGN_CENTER);
 
 
@@ -65,7 +74,7 @@ bool bStatusBarCreate(uint16_t usColor) {
 	return true;
 }
 
-void  vStatusBarSetWindowHeader(char * strH) {
+void  vStatusBarSetWindowHeader(const char * strH) {
 	pcLabelSetText(xWndHeader, strH);
 }
 

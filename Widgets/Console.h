@@ -19,8 +19,10 @@
 	
 	Created on: 09.12.2012
 */
-#ifndef __CONSOLE_H
-#define __CONSOLE_H
+#ifndef EMGUI_CONSOLE_H
+#define EMGUI_CONSOLE_H
+
+#ifdef EMGUI_USE_CONSOLE_C
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,6 +51,8 @@ void vConsoleSetClickHandler(bool (*pxHandler)(xWidget *));
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif	//__CONSOLE_H

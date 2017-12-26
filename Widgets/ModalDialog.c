@@ -21,12 +21,17 @@
 */
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "emGUI/Widgets/Label.h"
+#include "emGUI/Widgets/Button.h"
+#include "emGUI/Widgets/StatusBar.h"
+#include "emGUI/Widgets/Window.h"
+#include "emGUI/Widgets/MenuButton.h"
+#include "emGUI/Widgets/Interface.h"
+//#include "Widgets/ProgressBar.h"
 
+#include "emGUI/Draw/Draw.h"
 
-#include "ModalDialog.h"
+#include "emGUI/Widgets/ModalDialog.h"
 #include <stdlib.h>
 
 #define MODAL_DIALOG_MAX_BUTTONS    3
@@ -41,7 +46,7 @@ extern "C" {
 	static xMenuButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS]; // y(ok)/n/c Максимум в диалоге видно 4 кнопки.
 
 	//автонумерация для автоматических диалогов
-	uint16_t usDlgID = MODAL_AUTO + 1;
+	uint16_t usDlgID = EMGUI_MODAL_AUTO + 1;
 
 	typedef struct xModalDialog_t xModalDialog;
 
@@ -60,21 +65,11 @@ extern "C" {
 		xModalDialog * pxPrev;
 	};
 
-	typedef struct xModalDialogPictureSet_t {
-		xPicture xPicMain;
-		xPicture xPicMainPress;
-		char* strLabel;
-		//bool (*pxClickHandler)   (xWidget *);
-	}xModalDialogPictureSet;
-
 	xModalDialog *xMDActive = NULL;
-
-	//char cDialogCount = 0;
-#define MDCurrent (cDialogCount - 1)
 
 	static void prvDlgShowActive();
 
-	static inline xModalDialog *prvGetNextDlg(xModalDialog *xDlg) {
+	static xModalDialog *prvGetNextDlg(xModalDialog *xDlg) {
 		if (!xDlg)
 			return NULL;
 		return xDlg->pxPrev;
@@ -138,8 +133,8 @@ extern "C" {
 		// X0, Y0 - координаты расположения виджетов
 		uint16_t usX, usY;
 
-		xThisWnd = pxWindowCreate(WINDOW_MODAL);
-		vWidgetSetBgColor(xThisWnd, COLOR_PLOT_BACKGROUND, false);
+		xThisWnd = pxWindowCreate(EMGUI_MODAL_WINDOW_ID);
+		vWidgetSetBgColor(xThisWnd, EMGUI_COLOR_PLOT_BACKGROUND, false);
 		vWindowSetOnOpenHandler(xThisWnd, prvOnOpenHandler);
 		vWindowSetOnOpenRequestHandler(xThisWnd, prvOnOpenRequestHandler);
 		vWindowSetOnCloseHandler(xThisWnd, prvOnCloseHandler);
@@ -147,7 +142,9 @@ extern "C" {
 
 		usY = (usInterfaceGetWindowH() * 4) / 10 - usStatusBarGetH();
 
-		xMessage = pxLabelCreate(0, 0, usWidgetGetW(xThisWnd), usY, "ModalDialogText", FONT_ASCII_16_X, MODAL_DIALOG_MAX_MSG_LENGTH, xThisWnd);
+		xFont xFnt = pxDrawHDL()->xGetDefaultFont();
+
+		xMessage = pxLabelCreate(0, 0, usWidgetGetW(xThisWnd), usY, "ModalDialogText", xFnt, MODAL_DIALOG_MAX_MSG_LENGTH, xThisWnd);
 		bLabelSetMultiline(xMessage, true);
 		vLabelSetTextAlign(xMessage, LABEL_ALIGN_CENTER);
 		vLabelSetVerticalAlign(xMessage, LABEL_ALIGN_MIDDLE);
@@ -157,50 +154,19 @@ extern "C" {
 		//xPBar = pxProgressBarCreate(PB_BORDER, usY, usWidgetGetW(xThisWnd) - PB_BORDER * 2, 30, xThisWnd);
 		//vProgressBarSetProcExec(xPBar, 55);
 
-		usY = (usInterfaceGetWindowH() / 2 + pxDrawHDL()->usGetPictureH(EM_GUI_PIC_YES) / 3);
+		//TODO: get rid of picture dimensions check on create and position buttons on show!
+		usY = (usInterfaceGetWindowH() / 2 + pxDrawHDL()->usGetPictureH(pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain) / 3);
 		usX = 0;
 
 		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++) {
-			xButtons[c] = pxMenuButtonCreate(usX, usY, EM_GUI_PIC_YES, "", prvButtonHandler, xThisWnd);
-			usX += LCD_TsBtn_SIZE;
+			xButtons[c] = pxMenuButtonCreate(usX, usY, pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain, "", prvButtonHandler, xThisWnd);
+			usX += EMGUI_MODAL_DLG_BTN_SPACING;
 			vWidgetHide(xButtons[c]);
 		}
 		return xThisWnd;
 	}
 
-	xModalDialogPictureSet prvGetPicSet(char cType) {
-		xModalDialogPictureSet xPicSet;
-		switch (cType) {
-			/*case 'y':
-			  xPicSet.xPicMain = pxPictureGet(EM_GUI_PIC_YES);
-			  xPicSet.xPicMainPress = pxPictureGet(Pic_ButtonOk_press);
-			  xPicSet.xPicLabel = pxPictureGet(Pic_b2_yes);*/
-		case 'n':
-			xPicSet.xPicMain = (EM_GUI_PIC_NO);
-			xPicSet.strLabel = "No";
-			break;
-		case 'c':
-			xPicSet.xPicMain = (EM_GUI_PIC_RETURN);
-			xPicSet.strLabel = "Cancel";
-			break;
-		case 'o':
-			xPicSet.xPicMain = (EM_GUI_PIC_YES);
-			xPicSet.strLabel = "OK";
-			break;
-		case 'e':
-			xPicSet.xPicMain = (EM_GUI_PIC_NO);
-			xPicSet.strLabel = "OK";
-			break;
-		default:
-			xPicSet.xPicMain = (EM_GUI_PIC_YES);
-			xPicSet.strLabel = "OK";
-			break;
-		}
-
-		return xPicSet;
-	}
-
-	static inline void prvShowPB(xModalDialog * xDlg) {
+	static void prvShowPB(xModalDialog * xDlg) {
 		if (xDlg->cProgress >= 0) {
 			//vWidgetShow(xPBar);
 			//vProgressBarSetProcExec(xPBar, xDlg->cProgress);
@@ -215,7 +181,7 @@ extern "C" {
 
 		if (!xDlg) {
 			//return;
-			vInterfaceCloseWindow(WINDOW_MODAL);
+			vInterfaceCloseWindow(EMGUI_MODAL_WINDOW_ID);
 			return;
 			//TODO: выставить кол-во активных диалогов в 0
 		}
@@ -243,7 +209,7 @@ extern "C" {
 
 		for (int c = 0; c < cBtnCnt; c++) {
 			xBtn = xButtons[c];
-			xPicSet = prvGetPicSet(sBtns[c]);
+			xPicSet = pxDrawHDL()->xGetDialogPictureSet(sBtns[c]);
 
 			bWidgetMoveTo(xBtn, usX, usY);
 			vWidgetShow(xBtn);
@@ -257,14 +223,14 @@ extern "C" {
 
 	}
 
-	void prvIncDlgId() {
+	static void prvIncDlgId() {
 		//TODO: thread protection???
 		usDlgID++;
-		if (usDlgID <= MODAL_AUTO)
-			usDlgID = MODAL_AUTO + 1;
+		if (usDlgID <= EMGUI_MODAL_AUTO)
+			usDlgID = EMGUI_MODAL_AUTO + 1;
 	}
 
-	xModalDialog *prvDlgIsActive(int iDlgId) {
+	static xModalDialog *prvDlgIsActive(int iDlgId) {
 		if (!xMDActive)
 			return NULL;
 
@@ -274,7 +240,7 @@ extern "C" {
 		return NULL;
 	}
 
-	xModalDialog *prvDlgIsOpened(int iDlgId, xModalDialog ** pxNext) {
+	static xModalDialog *prvDlgIsOpened(int iDlgId, xModalDialog ** pxNext) {
 		xModalDialog * xDlg = xMDActive;
 
 		*pxNext = NULL;
@@ -289,7 +255,7 @@ extern "C" {
 		return NULL;
 	}
 
-	inline xModalDialog *prvDelDlgFromStack(xModalDialog *pxN, xModalDialog *pxNext) {
+	static xModalDialog *prvDelDlgFromStack(xModalDialog *pxN, xModalDialog *pxNext) {
 
 		xModalDialog * pxPrev; //пред. диалог в стеке
 		pxPrev = pxN->pxPrev;
@@ -298,7 +264,7 @@ extern "C" {
 		return pxN;
 	}
 
-	void prvDlgRefresh(xModalDialog * xDlg, char const* sBtns, char const* sHdr, char const* sMsg) {
+	static void prvDlgRefresh(xModalDialog * xDlg, char const* sBtns, char const* sHdr, char const* sMsg) {
 		if (!xDlg)
 			return;
 
@@ -321,7 +287,7 @@ extern "C" {
 
 		/*/Проверка ограничения макс. количества открытых диалогов
 		if(cDialogCount >= MODAL_DIALOG_MAX_COUNT){
-		  vInterfaceOpenWindow(WINDOW_MODAL);
+		  vInterfaceOpenWindow(EMGUI_MODAL_WINDOW_ID);
 		  return -1;
 		}*/
 
@@ -329,7 +295,7 @@ extern "C" {
 		if ((xDlg = prvDlgIsActive(iDlgId))) {
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			prvDlgShowActive();
-			vInterfaceOpenWindow(WINDOW_MODAL);
+			vInterfaceOpenWindow(EMGUI_MODAL_WINDOW_ID);
 			return -1;
 		}
 
@@ -355,7 +321,7 @@ extern "C" {
 
 			//Выставляем идентификатор диалога, по которому
 			//будет возможность дальнейшей работы с этим диалогом.
-			if (iDlgId != MODAL_AUTO)
+			if (iDlgId != EMGUI_MODAL_AUTO)
 				xDlg->usDlgID = iDlgId;
 			else {
 				xDlg->usDlgID = usDlgID;
@@ -369,7 +335,7 @@ extern "C" {
 
 		prvDlgShowActive();
 
-		vInterfaceOpenWindow(WINDOW_MODAL);
+		vInterfaceOpenWindow(EMGUI_MODAL_WINDOW_ID);
 		vWidgetInvalidate(xThisWnd);
 
 		return xDlg->usDlgID;
@@ -454,8 +420,3 @@ extern "C" {
 		free(xDlg);
 		prvDlgShowActive();
 	}
-
-
-#ifdef __cplusplus
-}
-#endif

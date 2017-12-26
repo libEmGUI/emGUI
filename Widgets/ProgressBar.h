@@ -21,8 +21,8 @@
 	Created on: 14.06.2013
 */
 
-#ifndef PROGRESSBAR_H_
-#define PROGRESSBAR_H_
+#ifndef EMGUI_PROGRESSBAR_H
+#define EMGUI_PROGRESSBAR_H
 
 #ifdef __cplusplus
 extern "C" {

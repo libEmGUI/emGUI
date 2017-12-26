@@ -20,10 +20,11 @@
 	Created on: 14.11.2012
 */
 
-#include "Widget.h"
+#include "emGUI/Widgets/Widget.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "Draw/Draw.h"
+#include "emGUI/Draw/Draw.h"
+
 
 xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH) {
 	xWidget *pxW;
@@ -430,5 +431,5 @@ void vWidgetSetDrawHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
 }
 
 bool bInterfaceGetDebug() {
-	return DEBUG_EMGUI;
+	return EMGUI_DEBUG;
 }

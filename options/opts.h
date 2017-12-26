@@ -1,171 +1,115 @@
-#ifndef OPTS_H
-#define OPTS_H
+#ifndef EMGUI_DEFAULT_OPTS_H
+#define EMGUI_DEFAULT_OPTS_H
 
-#ifdef ARDUINO
-#include "options/emGUI_opts_arduino.h"
-#else
-#include "emGUI_opts.h"
+#include "emGUI_port_opts.h"
+
+// DEFAULT image and font types
+
+#ifndef EMGUI_XPICTURE_TYPE
+#error "Please define EMGUI_XPICTURE_TYPE"
 #endif
 
-#include "Fonts/Font.h"
-
-#ifndef EM_GUI_PICTURE_STORAGE_ATTR
-#define EM_GUI_PICTURE_STORAGE_ATTR
+#ifndef EMGUI_XFONT_TYPE
+#error "Please define EMGUI_XFONT_TYPE"
 #endif
 
-#ifndef DEBUG_EMGUI
-#define DEBUG_EMGUI				0
-#endif // !DEBUG_EMGUI
+typedef EMGUI_XPICTURE_TYPE xPicture;
+typedef EMGUI_XFONT_TYPE xFont; //TODO: Add GFXFont segmented struct to allow UTF-8 fonts support!
 
-#ifndef LCD_TsBtn_SIZE
-#define LCD_TsBtn_SIZE			100
-#endif // !LCD_TsBtn_SIZE
-
-#ifndef LCD_SizeX
-#define LCD_SizeX				240
-#endif  
-
-#ifndef LCD_SizeY
-#define LCD_SizeY				240
-#endif 
-
-#ifndef LCD_STATUS_BAR_HEIGHT
-#define LCD_STATUS_BAR_HEIGHT	26
-#endif 
-
-#ifndef STATUS_BAR_FILT_INFO_GAP
-#define STATUS_BAR_FILT_INFO_GAP 5 ///< расстояние м/д элементами
-#endif 
-
-#ifndef WIDGET_COLOR_WHITE
-#define WIDGET_COLOR_WHITE		0xFFFF
+#ifndef EMGUI_MODAL_AUTO
+#define EMGUI_MODAL_AUTO 1000
 #endif
 
-#ifndef WIDGET_COLOR_BLACK
-#define WIDGET_COLOR_BLACK		0
+#ifndef EMGUI_DEBUG
+#define EMGUI_DEBUG				0
 #endif
 
-#ifndef WINDOW_HEADER_LENGTH
-#define WINDOW_HEADER_LENGTH	25
+#ifndef EMGUI_MODAL_WINDOW_ID
+#define EMGUI_MODAL_WINDOW_ID 1000
 #endif
 
-#ifndef LABEL_MAX_LENGTH
-#define LABEL_MAX_LENGTH 10000
+#ifndef EMGUI_MODAL_DLG_BTN_SPACING
+#define EMGUI_MODAL_DLG_BTN_SPACING			100
 #endif
 
-
-// DEFAULT IMAGES
-
-#ifndef XPICTURE_TYPE
-#define XPICTURE_TYPE  unsigned short const*
+#ifndef EMGUI_LCD_WIDTH
+#define EMGUI_LCD_WIDTH				240
 #endif
 
-typedef XPICTURE_TYPE xPicture;
-
-#ifdef EM_GUI_OVERRIDE_DEFAULT_PICS
-
-#ifndef EM_GUI_PIC_CROSS 
-#error "Please define EM_GUI_PIC_CROSS"
-#endif 
-
-
-#ifndef EM_GUI_PIC_YES 
-#error "Please define EM_GUI_PIC_YES"
+#ifndef EMGUI_LCD_HEIGHT
+#define EMGUI_LCD_HEIGHT				240
 #endif
 
-#ifndef EM_GUI_PIC_NO 
-#error "Please define EM_GUI_PIC_NO"
+#ifndef EMGUI_STATUS_BAR_HEIGHT
+#define EMGUI_STATUS_BAR_HEIGHT	26
 #endif
 
-#ifndef EM_GUI_PIC_OPENFOLDER
-#error "Please define EM_GUI_PIC_OPENFOLDER"
+#ifndef EMGUI_WIDGET_COLOR_WHITE
+#define EMGUI_WIDGET_COLOR_WHITE		0xFFFF
 #endif
 
-#ifndef EM_GUI_PIC_PROCESS
-#error "Please define EM_GUI_PIC_PROCESS"
+#ifndef EMGUI_WIDGET_COLOR_BLACK
+#define EMGUI_WIDGET_COLOR_BLACK		0
 #endif
 
-#ifndef EM_GUI_PIC_MAGIC
-#error "Please define EM_GUI_PIC_MAGIC"
+#ifndef EMGUI_WINDOW_HEADER_LENGTH
+#define EMGUI_WINDOW_HEADER_LENGTH	25
 #endif
 
-#ifndef EM_GUI_PIC_HELP
-#error "Please define EM_GUI_PIC_HELP"
+#ifndef EMGUI_LABEL_MAX_LENGTH
+#define EMGUI_LABEL_MAX_LENGTH 1000
 #endif
-#else
-#include "Images/Images.h"
-
-#define EM_GUI_PIC_CROSS		cross
-#define EM_GUI_PIC_YES			ok
-#define EM_GUI_PIC_NO			no
-#define EM_GUI_PIC_RETURN		left
-
-#define EM_GUI_PIC_OPENFOLDER	open_folder		
-#define EM_GUI_PIC_PROCESS		process
-#define EM_GUI_PIC_MAGIC		magic
-#define EM_GUI_PIC_HELP			help
-
-#endif // !EM_GUI_OVERRIDE_DEFAULT_PICS
-
 
 // GUI COLORS
 
 // RGB565 definition 
-#define COLOR_SEA_5 0x02AC	// Sea colors map from drakest to lightest
-#define COLOR_SEA_4 0x1B2E
-#define COLOR_SEA_3 0x0413
-#define COLOR_SEA_2 0x3599
-#define COLOR_SEA_1 0x5DD9 
+#define EMGUI_COLOR_SEA_5 0x02AC	// Sea colors map from drakest to lightest
+#define EMGUI_COLOR_SEA_4 0x1B2E
+#define EMGUI_COLOR_SEA_3 0x0413
+#define EMGUI_COLOR_SEA_2 0x3599
+#define EMGUI_COLOR_SEA_1 0x5DD9
 
-#define COLOR_BROWN_5 0xA280	// Earth colors map from drakest to lightest
-#define COLOR_BROWN_4 0xBBA5
-#define COLOR_BROWN_3 0xFBC0
-#define COLOR_BROWN_2 0xFCC7
-#define COLOR_BROWN_1 0xFDAD 
+#define EMGUI_COLOR_BROWN_5 0xA280	// Earth colors map from drakest to lightest
+#define EMGUI_COLOR_BROWN_4 0xBBA5
+#define EMGUI_COLOR_BROWN_3 0xFBC0
+#define EMGUI_COLOR_BROWN_2 0xFCC7
+#define EMGUI_COLOR_BROWN_1 0xFDAD
 
 
 // STATUSBAR STORY
-#ifndef COLOR_MENU_HEADER_TEXT
-#define COLOR_MENU_HEADER_TEXT WIDGET_COLOR_WHITE //WHITE
+#ifndef EMGUI_COLOR_MENU_HEADER_TEXT
+#define EMGUI_COLOR_MENU_HEADER_TEXT EMGUI_WIDGET_COLOR_WHITE //WHITE
 #endif
 
-#ifndef COLOR_STATUS_BAR_BG
-#define COLOR_STATUS_BAR_BG COLOR_SEA_5 //light-blue
+#ifndef EMGUI_COLOR_STATUS_BAR_BG
+#define EMGUI_COLOR_STATUS_BAR_BG EMGUI_COLOR_SEA_5 //light-blue
 #endif
 
-#ifndef COLOR_MESSAGE_BACKGROUND
-#define COLOR_MESSAGE_BACKGROUND COLOR_BROWN_1
-#endif // !COLOR_MESSAGE_BACKGROUND
+#ifndef EMGUI_COLOR_MESSAGE_TEXT
+#define EMGUI_COLOR_MESSAGE_TEXT EMGUI_WIDGET_COLOR_BLACK
+#endif
 
-#ifndef COLOR_MESSAGE_TEXT
-#define COLOR_MESSAGE_TEXT WIDGET_COLOR_BLACK
-#endif // !COLOR_MESSAGE_TEXT
+#ifndef EMGUI_MENU_BUTTON_LABEL_TEXT_COLOR
+#define EMGUI_MENU_BUTTON_LABEL_TEXT_COLOR EMGUI_WIDGET_COLOR_BLACK
+#endif
 
-#ifndef MENU_BUTTON_LABEL_TEXT_COLOR
-#define MENU_BUTTON_LABEL_TEXT_COLOR WIDGET_COLOR_BLACK
-#endif // MENU_BUTTON_LABEL_TEXT_COLOR
-
-#ifndef MENU_BUTTON_LABEL_BG_COLOR
-#define MENU_BUTTON_LABEL_BG_COLOR WIDGET_COLOR_WHITE
-#endif // MENU_BUTTON_LABEL_TEXT_COLOR
+#ifndef EMGUI_MENU_BUTTON_LABEL_BG_COLOR
+#define EMGUI_MENU_BUTTON_LABEL_BG_COLOR EMGUI_WIDGET_COLOR_WHITE
+#endif
 
 // PLOT STORY
 
-#ifndef COLOR_PLOT_BACKGROUND
-#define COLOR_PLOT_BACKGROUND WIDGET_COLOR_WHITE
-#endif // !COLOR_PLOT_BACKGROUND
+#ifndef EMGUI_COLOR_PLOT_BACKGROUND
+#define EMGUI_COLOR_PLOT_BACKGROUND EMGUI_WIDGET_COLOR_WHITE
+#endif
 
-#ifndef COLOR_PLOT_GRIDS
-#define COLOR_PLOT_GRIDS COLOR_SEA_1
-#endif // !COLOR_PLOT_GRIDS
+#ifndef EMGUI_COLOR_PLOT_GRIDS
+#define EMGUI_COLOR_PLOT_GRIDS EMGUI_COLOR_SEA_1
+#endif
 
-#ifndef COLOR_PLOT_SCALE_MARKER
-#define COLOR_PLOT_SCALE_MARKER    COLOR_BROWN_5
-#endif // !COLOR_PLOT_SCALE_MARKER
-
-#ifndef COLOR_PLOT_GRAPH
-#define COLOR_PLOT_GRAPH    COLOR_BROWN_4
-#endif // !COLOR_PLOT_SCALE_MARKER
+#ifndef EMGUI_COLOR_PLOT_SCALE_MARKER
+#define EMGUI_COLOR_PLOT_SCALE_MARKER    EMGUI_COLOR_BROWN_5
+#endif
 
 
 #endif // !OPTS_H

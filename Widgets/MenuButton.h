@@ -5,8 +5,8 @@
 * @brief  Реализация виджета кнопки для меню и диалогов
 *
 */
-#ifndef MENUBUTTON_H_
-#define MENUBUTTON_H_
+#ifndef EMGUI_MENU_BUTTON_H
+#define EMGUI_MENU_BUTTON_H
 
 
 /** \weakgroup gui-prop-widgets
@@ -17,9 +17,7 @@
 *  @{
 */
 
-#include "Widgets/Widget.h"
-#include "Widgets/Button.h"
-#include "Widgets/Label.h"
+#include "emGUI/Widgets/Widget.h"
 
 
 #ifdef __cplusplus
@@ -40,7 +38,7 @@ extern "C" {
    *
    * @returns указатель на созданную кнопку
    */
-	xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
+	xMenuButton * pxMenuButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, const char* strLabel, bool(*pvClickHanlder) (xWidget *), xWidget *pxWidParent);
 
 
   /**

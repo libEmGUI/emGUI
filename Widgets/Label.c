@@ -22,11 +22,13 @@
 
 	Created on: 24.12.2012
 */
-#include "Widgets/Label.h"
+#include "emGUI/Widgets/Label.h"
 #include <string.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <stdarg.h>
+#include "emGUI/Draw/Draw.h"
+
 #ifndef min
 #define min(a,b) ((a < b) ? a :b)
 #endif
@@ -60,7 +62,7 @@ static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t
 	uXBefor = uXFrom;
 	uXSeparator = uXBefor;
 
-	while ((uXBefor + ucFontGetCharW(*pcCharCount, pubFont)) <= uXTo && uMaxLineLen) {
+	while ((uXBefor + pxDrawHDL()->ucFontGetCharW(*pcCharCount, pubFont)) <= uXTo && uMaxLineLen) {
 		if (((*pcCharCount == ' ' || *pcCharCount == '\t') && pcCharCount != pcLine) // и разделитель будет не первый символ
 			|| *pcCharCount == '\n') {
 			pcSeparator = pcCharCount;
@@ -70,7 +72,7 @@ static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t
 			break;
 		if (*pcCharCount == '\t')
 			*pcCharCount = ' ';
-		uXBefor += ucFontGetCharW(*pcCharCount, pubFont);
+		uXBefor += pxDrawHDL()->ucFontGetCharW(*pcCharCount, pubFont);
 		++pcCharCount;
 		--uMaxLineLen;
 	}
@@ -105,7 +107,7 @@ static void prvPrintLine(char *pcLine, uint16_t uCharCount, uint16_t uXFrom, uin
 	while (*pcCharacter && uCharCount) {
 		if (*pcCharacter != '\n')
 			pxDrawHDL()->vPutChar(uXFrom, uY, *pcCharacter, pubFont, usColor, usBackground, false);
-		uXFrom += ucFontGetCharW(*pcCharacter, pubFont);
+		uXFrom += pxDrawHDL()->ucFontGetCharW(*pcCharacter, pubFont);
 		++pcCharacter;
 		--uCharCount;
 	}
@@ -118,9 +120,9 @@ static char *prvCountPage(char *pcPage, uint16_t uXFrom, uint16_t uXTo, uint16_t
 	uYBefor = uYFrom;
 	pcNxtLine = pcPage;
 	*puLineCount = 0;
-	while ((uYBefor + usFontGetH(pubFont)) <= uYTo && pcNxtLine) {
+	while ((uYBefor + pxDrawHDL()->usFontGetH(pubFont)) <= uYTo && pcNxtLine) {
 		pcNxtLine = prvCountLine(pcNxtLine, uXFrom, uXTo, NULL, pubFont, eHorAlign);
-		uYBefor += usFontGetH(pubFont);
+		uYBefor += pxDrawHDL()->usFontGetH(pubFont);
 		if (puLineCount)
 			(*puLineCount)++;
 	}
@@ -149,7 +151,7 @@ static void prvPrintPage(char *pcPage, uint16_t uXFrom, uint16_t uXTo, uint16_t 
 		pcNxtLine = prvCountLine(pcCrntLine, uXFrom, uXTo, &uXPutLine, pubFont, eHorAlign);
 		uLineLen = pcNxtLine - pcCrntLine;
 		prvPrintLine(pcCrntLine, uLineLen, uXPutLine, uYFrom, pubFont, usColor, usBackground);
-		uYFrom += usFontGetH(pubFont);
+		uYFrom += pxDrawHDL()->usFontGetH(pubFont);
 		pcCrntLine = pcNxtLine;
 		--uLineCount;
 	}
@@ -230,18 +232,18 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 	if (!xFnt || !cStr)
 		return NULL;
 
-	if (usH < usFontGetH(xFnt))
-		usH = usFontGetH(xFnt);
+	if (usH < pxDrawHDL()->usFontGetH(xFnt))
+		usH = pxDrawHDL()->usFontGetH(xFnt);
 
 	if (bWidgetInit(pxW, usX, usY, usW, usH, pxWidParent, true)) {
 
-		vWidgetSetBgColor(pxW, WIDGET_COLOR_WHITE, false);
+		vWidgetSetBgColor(pxW, EMGUI_WIDGET_COLOR_WHITE, false);
 
 		xP = malloc(sizeof(xLabelProps));
 		if (!xP)
 			return NULL;
 
-		usMaxLength = (usMaxLength > LABEL_MAX_LENGTH) ? LABEL_MAX_LENGTH : usMaxLength;
+		usMaxLength = (usMaxLength > EMGUI_LABEL_MAX_LENGTH) ? EMGUI_LABEL_MAX_LENGTH : usMaxLength;
 
 		//Выделяем память для внутр. хранилища
 		if (usMaxLength) {
@@ -262,7 +264,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 		xP->eTextAlign = LABEL_ALIGN_LEFT;
 		xP->eVerticalAlign = LABEL_ALIGN_TOP;
 
-		xP->usColor = WIDGET_COLOR_BLACK;
+		xP->usColor = EMGUI_WIDGET_COLOR_BLACK;
 		xP->xFnt = xFnt;
 
 		xP->bHaveCursor = false;
@@ -339,7 +341,7 @@ char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 	return NULL;
 }
 
-void pcLabelSetTextAdaptWidth(xLabel *pxL, char * pcStr) {
+void pcLabelSetTextAdaptWidth(xLabel *pxL, const char * pcStr) {
 	pcLabelSetText(pxL, pcStr);
 	pxL->usX1 = pxL->usX0 + 8 * (uint16_t)strlen(pcStr);
 	vWidgetInvalidate(pxL);

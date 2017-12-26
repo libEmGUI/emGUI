@@ -70,7 +70,7 @@ bool prvDraw(xConsole *pxW){
     usX += cCharOffs;
     
     if(ucPrintChar != '\n' && ucPrintChar != '\r') {
-      vFramebufferPutChar(usX, usY, ucPrintChar, FONT_ASCII_8_X, CONSOLE_COLOR_FG, CONSOLE_COLOR_BG, FALSE);
+      vFramebufferPutChar(usX, usY, ucPrintChar, EM_GUI_SMALL_FONT, CONSOLE_COLOR_FG, CONSOLE_COLOR_BG, FALSE);
       xP->ucCaretX++;
     }
     else{

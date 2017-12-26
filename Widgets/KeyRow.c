@@ -30,7 +30,7 @@
 #include "TouchScreen.h"
 #include <string.h>
 
-#define FONT_SIZE FONT_ASCII_16_X
+#define FONT_SIZE EM_GUI_MIDDLE_FONT
 #define KEY_BACKSPACE "backspace"
 #define KEY_SHIFT "shift"
 
@@ -76,7 +76,7 @@ static bool prvDrawKeyRow(xWidget *pxW){
 // Draw:
   bWidgetDraw(pxW);
   u16 usX = pxW->usX0;
-  for(int i = 0; i != xP->usKeyCount && i*xP->usKeyWidth < LCD_SizeX ; ++i){
+  for(int i = 0; i != xP->usKeyCount && i*xP->usKeyWidth < EMGUI_LCD_WIDTH ; ++i){
     prvDrawCharKey(usX, pxW->usY0, xP->usKeyWidth, xP->usKeyHeight, xP->pcKeys[i], xP->usKeyLinesColor, pxW->usBgColor);
     usX+= xP->usKeyWidth;
   }

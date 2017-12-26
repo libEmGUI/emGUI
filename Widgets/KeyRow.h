@@ -21,8 +21,10 @@
 */
 #include "Widget.h"
 
-#ifndef _H_
-#define _H_
+#ifdef EMGUI_USE_KEYBOARD
+
+#ifndef EMGUI_KEYROW_H
+#define EMGUI_KEYROW_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,5 +51,6 @@ bool bKeyRowSetKeysSymbols(xWidget* pxW, const char *cpcNewKeys);
 }
 #endif
 
+#endif
 
 #endif /* _H_ */

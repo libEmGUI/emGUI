@@ -20,20 +20,15 @@
 	Created on: 14.11.2012
 */
 
-#ifndef __WIDGET_H
-#define __WIDGET_H
-
-
+#ifndef EMGUI_WIDGET_H
+#define EMGUI_WIDGET_H
 
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "Fonts/Font.h"
-#include "Draw/Draw.h"
-
-#include "options/opts.h"
+#include "emGUI/options/opts.h"
 
 
 #ifdef __cplusplus

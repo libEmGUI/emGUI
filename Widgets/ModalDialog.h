@@ -20,31 +20,22 @@
 	Created on: 06.03.2013
 */
 
-#ifndef MODALDIALOG_H_
-#define MODALDIALOG_H_
+#ifndef EMGUI_MODAL_DIALOG_H
+#define EMGUI_MODAL_DIALOG_H
 
-
-#include "Widgets/Label.h"
-#include "Widgets/Button.h"
-#include "Widgets/StatusBar.h"
-#include "Widgets/Window.h"
-#include "Widgets/MenuButton.h"
-
-//#include "GuiInterface.h"
-//#include "GsmInterface.h"
-//#include "Memory.h"
 #include <string.h>
-//#include "Widgets/ProgressBar.h"
 
-
+#include "emGUI/Widgets/Widget.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	typedef enum {
-		MODAL_AUTO,
-	}eModalDialog;
+	typedef struct xModalDialogPictureSet_t {
+		xPicture xPicMain;
+		xPicture xPicMainPress;
+		const char* strLabel;
+	}xModalDialogPictureSet;
 
 	xWidget * pxModalDialogWindowCreate();
 	int iModalDialogOpen(int iDlgId, char const * sBtns, char const * sHdr, char const* sMsg);
