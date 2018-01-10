@@ -48,7 +48,8 @@ xInterface *pxInterfaceGet() {
 }
 
 void vInterfaceInvalidate() {
-	vWidgetInvalidate(xInterfaceInstance);
+	if( xInterfaceInstance )
+		vWidgetInvalidate(xInterfaceInstance);
 }
 /*
 void vInterfaceDebug(bool bDebug){

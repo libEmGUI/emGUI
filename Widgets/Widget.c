@@ -86,11 +86,12 @@ bool bWidgetInit(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint
 }
 
 void vWidgetInvalidate(xWidget *pxW) {
-	pxW->bInvalidate = true;
+	if(pxW)
+		pxW->bInvalidate = true;
 }
 
 static void prvInvalidateChilds(xWidget *pxW) {
-	if (pxW->pxChild) {
+	if (pxW && pxW->pxChild) {
 		xWidget *pxWidChild = pxW->pxChild;
 		while (pxWidChild) {
 			vWidgetInvalidate(pxWidChild);
