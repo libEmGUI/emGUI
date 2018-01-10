@@ -63,7 +63,7 @@ bool bStatusBarCreate(uint16_t usColor) {
 	usW = pxDrawHDL()->usFontGetStrW("Default", xFnt) + 10;
 	usX = usStatusBarGetW() / 2 - usW / 2;
 
-	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default", xFnt, 100, xStatusBarInstance);
+	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default", xFnt, EMGUI_WINDOW_HEADER_LENGTH, xStatusBarInstance);
 	vWidgetSetBgColor(xWndHeader, usColor, false);
 	vLabelSetTextColor(xWndHeader, EMGUI_COLOR_MENU_HEADER_TEXT);
 	vLabelSetTextAlign(xWndHeader, LABEL_ALIGN_CENTER);
