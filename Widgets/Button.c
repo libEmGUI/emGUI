@@ -108,6 +108,8 @@ static xButton * prvAlloc() {
 	memset(xP, 0, sizeof(xButtonProps));
 	pxW->pvProp = xP;
 
+	pxW->pxOnDispose = prvDispose;
+
 	return pxW;
 };
 
@@ -121,9 +123,6 @@ static bool prvInit(xWidget * pxW) {
 
 	if (!xP)
 		return false;
-
-	
-	pxW->pxOnDispose = prvDispose;
 
 	pxW->pxDrawHandler = prvButtonDraw;
 	pxW->pxCheckTSRoutine = bButtonCheckTSRoutine;
