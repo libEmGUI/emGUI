@@ -33,12 +33,21 @@ xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t u
 	if (!pxW)
 		return NULL;
 
+	memset(pxW, 0, sizeof(xWidget));
+
 	if (bWidgetInit(pxW, usX0, usY0, usX1, usY1, pxWidParent, bUseWH))
 		return pxW;
 	else {
 		free(pxW);
 		return NULL;
 	}
+}
+
+void vWidgetDispose(xWidget *pxW) {
+	if (!pxW || !pxW->pxOnDispose)
+		return;
+
+	pxW->pxOnDispose(pxW);
 }
 
 bool bWidgetInit(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH) {
@@ -49,30 +58,11 @@ bool bWidgetInit(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint
 
 	pxW->pxParent = pxWidParent;
 
-	pxW->bValid = false;
 	pxW->bInvalidate = true;
-	pxW->bInvalidateParent = false;
-	pxW->bClickable = false;
 	pxW->bVisible = true;
 	pxW->bEnabled = true;
-	pxW->bPressed = false;
-	pxW->bPushEventCaught = false;
 
 	pxW->bTransparent = true;
-	pxW->usBgColor = 0;
-	pxW->pusBgPicture = NULL;
-
-	pxW->pxDrawHandler = NULL;
-	pxW->pxCheckTSRoutine = NULL;
-	pxW->pxOnClick = NULL;
-	pxW->pxOnShow = NULL;
-	pxW->pxOnHide = NULL;
-
-	pxW->pvProp = NULL;
-
-	pxW->pxChild = NULL;
-
-	pxW->pxNextSibling = NULL;
 
 	//TODO: check LCD sizes
 	if (!bWidgetSetCoords(pxW, usX0, usY0, usX1, usY1, bUseWH))
@@ -408,24 +398,24 @@ bool bWidgetMoveTo(xWidget *pxW, uint16_t usX0, uint16_t usY0) {
 	return true;
 }
 
-void vWidgetSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
+void vWidgetSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	if (!pxW)
 		return;
 	vWidgetSetClickable(pxW, true);
 	pxW->pxOnClick = pxCallback;
 }
-void vWidgetSetOnHideHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
+void vWidgetSetOnHideHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	if (!pxW)
 		return;
 	pxW->pxOnHide = pxCallback;
 }
-void vWidgetSetOnShowHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
+void vWidgetSetOnShowHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	if (!pxW)
 		return;
 	pxW->pxOnShow = pxCallback;
 }
 
-void vWidgetSetDrawHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
+void vWidgetSetDrawHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	if (!pxW)
 		return;
 	pxW->pxDrawHandler = pxCallback;

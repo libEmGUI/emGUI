@@ -228,6 +228,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 	xLabelProps *xP;
 
 	pxW = malloc(sizeof(xWidget));
+	memset(pxW, 0, sizeof(xWidget)); //TODO: add check logic!
 
 	if (!xFnt || !cStr)
 		return NULL;

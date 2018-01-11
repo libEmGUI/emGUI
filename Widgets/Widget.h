@@ -41,7 +41,6 @@ extern "C" {
 		WidgetButton,
 		WidgetWindow,
 		WidgetStatusBar,
-		WidgetMenuButton,
 		WidgetPlot
 	} eWidgetType;
 
@@ -65,6 +64,8 @@ extern "C" {
 
 
 	typedef struct xWidget_struct xWidget;
+
+	typedef bool(*WidgetEvent)        (xWidget *);
 
 	//The size of each widget is 60 bytes.
 	struct xWidget_struct {
@@ -98,15 +99,19 @@ extern "C" {
 		xWidget *pxChild;
 		xWidget *pxNextSibling;
 
-		bool(*pxDrawHandler)   (xWidget *);
+		WidgetEvent pxDrawHandler;
 		bool(*pxCheckTSRoutine)(xWidget *, xTouchEvent *);
-		bool(*pxOnClick)       (xWidget *);
-		bool(*pxOnShow)        (xWidget *);
-		bool(*pxOnHide)        (xWidget *);
+		WidgetEvent pxOnClick;
+		WidgetEvent pxOnShow;
+		WidgetEvent pxOnHide;
+
+		WidgetEvent pxOnDispose;
 
 	};
 
 	xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH);
+
+	void vWidgetDispose(xWidget *pxW);
 
 	inline xWidget *pxWidgetGetChild(xWidget *pxW) {
 		return pxW->pxChild;
@@ -125,10 +130,10 @@ extern "C" {
 	bool bWidgetMoveTo(xWidget *pxW, uint16_t usX0, uint16_t usY0);
 	//Setters
 
-	void vWidgetSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
-	void vWidgetSetOnHideHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
-	void vWidgetSetOnShowHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
-	void vWidgetSetDrawHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
+	void vWidgetSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback);
+	void vWidgetSetOnHideHandler(xWidget *pxW, WidgetEvent pxCallback);
+	void vWidgetSetOnShowHandler(xWidget *pxW, WidgetEvent pxCallback);
+	void vWidgetSetDrawHandler(xWidget *pxW, WidgetEvent pxCallback);
 	void vWidgetSetClickable(xWidget *pxW, bool bClickable);
 	void vWidgetSetBgColor(xWidget *pxW, uint16_t usBgColor, bool bTransparent);
 	void vWidgetSetTransparency(xWidget *pxW, bool bTransparent);

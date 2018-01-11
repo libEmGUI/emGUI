@@ -56,7 +56,7 @@ bool bStatusBarCreate(uint16_t usColor) {
 	usY = (EMGUI_STATUS_BAR_HEIGHT - pxDrawHDL()->usGetPictureH(xCross)) / 2;
 	usX = EMGUI_LCD_WIDTH - pxDrawHDL()->usGetPictureW(xCross) - usY;
 
-	xCloseButton = pxButtonCreate(usX, usY, xCross, xStatusBarInstance);
+	xCloseButton = pxButtonCreateFromImage(usX, usY, xCross, xStatusBarInstance);
 	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);
 
 	usY = (usStatusBarGetH() - pxDrawHDL()->usFontGetH(xFnt)) / 2;

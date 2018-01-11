@@ -34,6 +34,7 @@ xWindow * pxWindowCreate(int eWnd) {
 	xWindow *pxW;
 
 	pxW = malloc(sizeof(xWidget));
+	memset(pxW, 0, sizeof(xWidget)); //TODO: add check logic!
 
 	if (bWidgetInit(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), pxInterfaceGet(), true)) {
 
@@ -75,28 +76,28 @@ void vWindowSetHeader(xWidget * pxW, char const* strH) {
 	vInterfaceUpdateWindow();
 }
 
-void vWindowSetOnCloseRequestHandler(xWidget * pxW, bool(*pxCallback)(xWidget *)) {
+void vWindowSetOnCloseRequestHandler(xWidget * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnCloseRequest = pxCallback;
 }
 
-void vWindowSetOnCloseHandler(xWidget * pxW, bool(*pxCallback)(xWidget *)) {
+void vWindowSetOnCloseHandler(xWidget * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnClose = pxCallback;
 }
 
-void vWindowSetOnOpenHandler(xWidget * pxW, bool(*pxCallback)(xWidget *)) {
+void vWindowSetOnOpenHandler(xWidget * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnOpen = pxCallback;
 }
 
-void vWindowSetOnOpenRequestHandler(xWidget * pxW, bool(*pxCallback)(xWidget *)) {
+void vWindowSetOnOpenRequestHandler(xWidget * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;

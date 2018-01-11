@@ -25,7 +25,7 @@
 #include "emGUI/Widgets/Button.h"
 #include "emGUI/Widgets/StatusBar.h"
 #include "emGUI/Widgets/Window.h"
-#include "emGUI/Widgets/MenuButton.h"
+#include "emGUI/Widgets/Button.h"
 #include "emGUI/Widgets/Interface.h"
 //#include "Widgets/ProgressBar.h"
 
@@ -43,7 +43,7 @@
 
 	static xLabel         *xMessage;
 	//static xProgressBar   *xPBar;
-	static xMenuButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS]; // y(ok)/n/c Максимум в диалоге видно 4 кнопки.
+	static xButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS]; // y(ok)/n/c Максимум в диалоге видно 4 кнопки.
 
 	//автонумерация для автоматических диалогов
 	uint16_t usDlgID = EMGUI_MODAL_AUTO + 1;
@@ -159,7 +159,8 @@
 		usX = 0;
 
 		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++) {
-			xButtons[c] = pxMenuButtonCreate(usX, usY, pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain, "", prvButtonHandler, xThisWnd);
+			xButtons[c] = pxButtonCreateFromImageWithText(usX, usY, pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain, "", xThisWnd);
+			vButtonSetOnClickHandler(xButtons[c], prvButtonHandler);
 			usX += EMGUI_MODAL_DLG_BTN_SPACING;
 			vWidgetHide(xButtons[c]);
 		}
@@ -191,7 +192,7 @@
 
 		char * sBtns = xDlg->sDialogConfig;
 
-		xMenuButton * xBtn;
+		xButton * xBtn;
 
 		uint16_t betweenBtnsX,
 			usX, usY;
@@ -214,9 +215,8 @@
 			bWidgetMoveTo(xBtn, usX, usY);
 			vWidgetShow(xBtn);
 
-			pxMenuButtonSetMainPic(xBtn, xPicSet.xPicMain);
-			//pxMenuButtonSetPushPic(xBtn, xPicSet.xPicMainPress);
-			pxMenuButtonSetLabelText(xBtn, xPicSet.strLabel);
+			bWidgetSetBgPicture(xBtn, xPicSet.xPicMain);
+			vButtonSetText(xBtn, xPicSet.strLabel);
 
 			usX += betweenBtnsX + usWidgetGetW(xBtn);
 		}
