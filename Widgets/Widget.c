@@ -85,8 +85,8 @@ void vWidgetInvalidate(xWidget *pxW) {
 }
 
 static void prvInvalidateChilds(xWidget *pxW) {
-	if (pxW && pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	if (pxW && pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			vWidgetInvalidate(pxWidChild);
 			pxWidChild = pxWidChild->pxNextSibling;
@@ -135,8 +135,8 @@ void vWidgetDraw(xWidget *pxW) {
 		return;
 
 	//Проверка ближайших детей на предмет установленного флага bWidgetInvalidateParent
-	if (pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			if (pxWidChild->bInvalidateParent) {
 				pxWidChild->bInvalidateParent = false;
@@ -158,8 +158,8 @@ void vWidgetDraw(xWidget *pxW) {
 	else
 		bRedrawed = bWidgetDraw(pxW);
 
-	if (pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			vWidgetDraw(pxWidChild);
 			pxWidChild = pxWidChild->pxNextSibling;
@@ -182,10 +182,10 @@ bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild) {
 
 	//TODO: check for duplicates via pointer address
 	//TODO: check for duplicates in children to prevent recursion
-	if (!pxWidParent->pxChild)
-		pxWidParent->pxChild = pxWidChild;
+	if (!pxWidParent->pxFirstChild)
+		pxWidParent->pxFirstChild = pxWidChild;
 	else {
-		pxW = pxWidParent->pxChild;
+		pxW = pxWidParent->pxFirstChild;
 		while (pxW) { //iterate through the list of children
 			pxWidLast = pxW;
 			pxW = pxW->pxNextSibling;
@@ -251,8 +251,8 @@ bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
 		  MDEBUG("Widget release @ %x\n", pxW);*/
 	}
 
-	if (pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			if (bWidgetCheckTouchScreenEvent(pxWidChild, pxTouchScreenEv))
 				return true;
@@ -390,8 +390,8 @@ void prvMoveDXDY(xWidget *pxW, int16_t sDX, int16_t sDY) {
 	pxW->usX1 += sDX;
 	pxW->usY1 += sDY;
 
-	if (pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			prvMoveDXDY(pxWidChild, sDX, sDY);
 			pxWidChild = pxWidChild->pxNextSibling;

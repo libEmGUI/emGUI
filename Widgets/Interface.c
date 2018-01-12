@@ -65,11 +65,11 @@ bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv) {
 
 xWindow * pxInterfaceGetWindow(int eWnd) {
 
-	xWidget *pxN = xInterfaceInstance->pxChild;
+	xWidget *pxN = xInterfaceInstance->pxFirstChild;
 	while (pxN) {
 		if (iWindowGetID(pxN) == eWnd)
 			return pxN;
-		pxN = pxWidgetGetNext(pxN);
+		pxN = pxWidgetGetNextChild(pxN);
 	}
 
 	return NULL;
@@ -132,11 +132,11 @@ void vInterfaceOpenWindow(int eWnd) {
 	//окно закрыто - добавляем его в стек
 	//поиск всех окон в интерфейсе
 	//указатель на первый объект-потомок интерфейса
-	pxN = xInterfaceInstance->pxChild;
+	pxN = xInterfaceInstance->pxFirstChild;
 	while (pxN) {
 
 		if (!(xP = (xWindowProps*)pxWidgetGetProps(pxN, WidgetWindow))) {
-			pxN = pxWidgetGetNext(pxN);
+			pxN = pxWidgetGetNextChild(pxN);
 			continue;
 		}
 
@@ -162,7 +162,7 @@ void vInterfaceOpenWindow(int eWnd) {
 			}
 			break; //только одно окно может быть видимо.
 		}
-		pxN = pxWidgetGetNext(pxN);
+		pxN = pxWidgetGetNextChild(pxN);
 	}
 }
 

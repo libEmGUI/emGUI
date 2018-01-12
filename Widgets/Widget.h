@@ -96,7 +96,7 @@ extern "C" {
 		void* pvProp;
 
 		xWidget *pxParent;
-		xWidget *pxChild;
+		xWidget *pxFirstChild;
 		xWidget *pxNextSibling;
 
 		WidgetEvent pxDrawHandler;
@@ -113,13 +113,13 @@ extern "C" {
 
 	void vWidgetDispose(xWidget *pxW);
 
-	inline xWidget *pxWidgetGetChild(xWidget *pxW) {
+	inline xWidget *pxWidgetGetFirstChild(xWidget *pxW) {
 		if (!pxW)
 			return  NULL;
-		return pxW->pxChild;
+		return pxW->pxFirstChild;
 	}
 
-	inline xWidget *pxWidgetGetNext(xWidget *pxW) {
+	inline xWidget *pxWidgetGetNextChild(xWidget *pxW) {
 		if (!pxW)
 			return  NULL;
 		return pxW->pxNextSibling;
