@@ -33,7 +33,7 @@ extern "C" {
 
 	typedef xWidget xButton;
 
-	xButton * pxButtonCreateSimple(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, const char *text, xWidget *pxWidParent);
+	xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, const char *text, xWidget *pxWidParent);
 	xButton * pxButtonCreateFromImage(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *pxWidParent);
 	xButton * pxButtonCreateFromImageWithText(uint16_t usX, uint16_t usY, xPicture pusPic, const char *text, xWidget *pxWidParent);
 

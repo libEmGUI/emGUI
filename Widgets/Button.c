@@ -28,6 +28,9 @@
 
 typedef struct xButtonProps_struct {
 	bool bEmulatePressure;
+	bool bEmulateRelease;
+	uint16_t uiReleaseBorder;
+	uint16_t uiPressureBorder;
 	xPicture pusPicDisabled;
 	xWidget *xText;       ///< Label widget for Pictured button with text
 } xButtonProps;
@@ -43,21 +46,29 @@ static bool prvButtonDraw(xButton *pxW) {
 
 	xP = (xButtonProps *)pxW->pvProp;
 
-	if (!pxW->bPressed) {
-		if (pxW->pusBgPicture)
-			pxDrawHDL()->bPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
-	}
-	else if (xP->bEmulatePressure) {
+	uint16_t uiRB = xP->uiReleaseBorder;
+	uint16_t uiPB = xP->uiPressureBorder;
 
-		if (pxW->pusBgPicture)
-			pxDrawHDL()->bPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
+	if (pxW->pusBgPicture)
+		pxDrawHDL()->bPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
+	else {
+		if (!pxW->bPressed && xP->bEmulateRelease) {
+			pxDrawHDL()->vVLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usY1 - uiRB, EMGUI_WIDGET_COLOR_WHITE);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usX1 - uiRB, EMGUI_WIDGET_COLOR_WHITE);
 
-		pxDrawHDL()->vVLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usY1 - 2, EMGUI_WIDGET_COLOR_BLACK);
-		pxDrawHDL()->vHLine(pxW->usX0 + 2, pxW->usY0 + 2, pxW->usX1 - 2, EMGUI_WIDGET_COLOR_BLACK);
+			pxDrawHDL()->vVLine(pxW->usX1 - uiRB, pxW->usY0 + uiRB, pxW->usY1 - uiRB, EMGUI_WIDGET_COLOR_BLACK);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiRB, pxW->usY1 - uiRB, pxW->usX1 - uiRB, EMGUI_WIDGET_COLOR_BLACK);
+		}
 
-		pxDrawHDL()->vVLine(pxW->usX1 - 2, pxW->usY0 + 2, pxW->usY1 - 2, EMGUI_WIDGET_COLOR_WHITE);
-		pxDrawHDL()->vHLine(pxW->usX0 + 2, pxW->usY1 - 2, pxW->usX1 - 2, EMGUI_WIDGET_COLOR_WHITE);
+		if (pxW->bPressed && xP->bEmulatePressure) {
 
+			pxDrawHDL()->vVLine(pxW->usX0 + uiPB, pxW->usY0 + uiPB, pxW->usY1 - uiPB, EMGUI_WIDGET_COLOR_BLACK);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiPB, pxW->usY0 + uiPB, pxW->usX1 - uiPB, EMGUI_WIDGET_COLOR_BLACK);
+
+			pxDrawHDL()->vVLine(pxW->usX1 - uiPB, pxW->usY0 + uiPB, pxW->usY1 - uiPB, EMGUI_WIDGET_COLOR_WHITE);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiPB, pxW->usY1 - uiPB, pxW->usX1 - uiPB, EMGUI_WIDGET_COLOR_WHITE);
+
+		}
 	}
 
 	return true;
@@ -69,7 +80,7 @@ static bool bButtonCheckTSRoutine(xButton *pxW, xTouchEvent *pxTouchScreenEv) {
 	if (!xP)
 		return false;
 	
-	if (xP->bEmulatePressure)
+	if (xP->bEmulatePressure || xP->bEmulateRelease)
 		vWidgetInvalidate(pxW);
 
 	return (pxTouchScreenEv->eventTouchScreen == popTs) ? false : true;
@@ -127,7 +138,6 @@ static bool prvInit(xWidget * pxW) {
 	pxW->pxDrawHandler = prvButtonDraw;
 	pxW->pxCheckTSRoutine = bButtonCheckTSRoutine;
 
-	xP->bEmulatePressure = true;
 	pxW->bClickable = true;
 
 	return true;
@@ -145,7 +155,7 @@ void vButtonSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback) {
 		vWidgetSetOnClickHandler(xP->xText, pxCallback);
 }
 
-xButton * pxButtonCreateSimple(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, const char *text, xWidget *pxWidParent) {
+xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, const char *text, xWidget *pxWidParent) {
 	xButton * pxW = prvAlloc();
 
 	if (pxW && bWidgetInit(pxW, usX, usY, usW, usH, pxWidParent, true)) {
@@ -153,8 +163,13 @@ xButton * pxButtonCreateSimple(uint16_t usX, uint16_t usY, uint16_t usW, uint16_
 		prvInit(pxW);
 
 		xButtonProps *xP = pxWidgetGetProps(pxW, WidgetButton);
+		xP->bEmulateRelease = true;
+		xP->bEmulatePressure = true;
 
-		xP->xText = pxLabelCreate(usX, usY, usW, usH, text, pxDrawHDL()->xGetDefaultFont(), 0, pxW);
+		xP->uiPressureBorder = 2;
+
+		xP->xText = pxLabelCreate(0, 1, usW, usH, text, pxDrawHDL()->xGetDefaultFont(), 0, pxW);
+		vWidgetSetTransparency(xP->xText, true);
 
 		vLabelSetTextAlign(xP->xText, LABEL_ALIGN_CENTER);
 		vLabelSetVerticalAlign(xP->xText, LABEL_ALIGN_MIDDLE);
@@ -186,12 +201,14 @@ xButton * pxButtonCreateFromImage(uint16_t usX, uint16_t usY, xPicture pusPic, x
 }
 
 xButton * pxButtonCreateFromImageWithText(uint16_t usX, uint16_t usY, xPicture pusPic, const char *text, xWidget *pxWidParent) {
-	xButton *pxW = pxButtonCreateSimple(usX, usY, 1, 1, text, pxWidParent);
+	xButton *pxW = pxButtonCreateFromText(usX, usY, 1, 1, text, pxWidParent);
 
 	if(!pxW)
 		return NULL;
 
 	xButtonProps *xP = pxWidgetGetProps(pxW, WidgetButton);
+	xP->bEmulateRelease = false;
+	xP->bEmulatePressure = false;
 
 	if (!xP) {
 		prvDispose(pxW);
