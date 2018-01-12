@@ -43,8 +43,6 @@ static bool prvCloseClickHandler(xWidget* pxW) {
 
 bool bStatusBarCreate(uint16_t usColor) {
 
-	xPicture xCross = pxDrawHDL()->xGetPicture("SB_CROSS.pic"); //TODO: Check for null?
-
 	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
 	xStatusBarInstance = pxWidgetCreate(0, 0, usInterfaceGetW(), EMGUI_STATUS_BAR_HEIGHT, pxInterfaceGet(), true);
@@ -53,10 +51,12 @@ bool bStatusBarCreate(uint16_t usColor) {
 
 	uint16_t usX, usY, usW;
 
-	usY = (EMGUI_STATUS_BAR_HEIGHT - pxDrawHDL()->usGetPictureH(xCross)) / 2;
-	usX = EMGUI_LCD_WIDTH - pxDrawHDL()->usGetPictureW(xCross) - usY;
+	usY = 2;
+	usW = usWidgetGetH(xStatusBarInstance) - usY * 2;
+	usX = usWidgetGetW(xStatusBarInstance) - usWidgetGetH(xStatusBarInstance) - usY;
 
-	xCloseButton = pxButtonCreateFromImage(usX, usY, xCross, xStatusBarInstance);
+	xCloseButton = pxButtonCreateFromText(usX, usY, usW, usW, "X", xStatusBarInstance);
+	vWidgetSetTransparency(xCloseButton, true);
 	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);
 
 	usY = (usStatusBarGetH() - pxDrawHDL()->usFontGetH(xFnt)) / 2;
