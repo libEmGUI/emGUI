@@ -35,12 +35,13 @@ extern "C" {
 	typedef struct xWindowProps_t {
 		int eId;
 		xWindow *xBackWindow;
-		char*   strHeader;
-		bool    bFullScreen;
-		bool(*pxOnCloseRequest)       (xWidget *);
-		bool(*pxOnClose)              (xWidget *);
-		bool(*pxOnOpenRequest)        (xWidget *);
-		bool(*pxOnOpen)               (xWidget *);
+		char* strHeader;
+		bool bFullScreen;
+		bool bModal;
+		WidgetEvent pxOnCloseRequest;
+		WidgetEvent pxOnClose;
+		WidgetEvent pxOnOpenRequest;
+		WidgetEvent pxOnOpen;
 	} xWindowProps;
 
 	xWindow * pxWindowCreate(int eWnd);
