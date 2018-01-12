@@ -114,10 +114,14 @@ extern "C" {
 	void vWidgetDispose(xWidget *pxW);
 
 	inline xWidget *pxWidgetGetChild(xWidget *pxW) {
+		if (!pxW)
+			return  NULL;
 		return pxW->pxChild;
 	}
 
 	inline xWidget *pxWidgetGetNext(xWidget *pxW) {
+		if (!pxW)
+			return  NULL;
 		return pxW->pxNextSibling;
 	}
 
@@ -154,14 +158,20 @@ extern "C" {
 
 	//Getters
 	inline uint16_t usWidgetGetW(xWidget *pxW) {
+		if (!pxW)
+			return  0;
 		return pxW->usX1 - pxW->usX0 + 1;
 	}
 
 	inline uint16_t usWidgetGetH(xWidget *pxW) {
+		if (!pxW)
+			return  0;
 		return pxW->usY1 - pxW->usY0 + 1;
 	}
 
 	inline uint16_t usWidgetGetX0(xWidget *pxW, bool bAbsolute) {
+		if (!pxW)
+			return  0;
 		if (!pxW->pxParent)
 			return pxW->usX0;
 
@@ -172,6 +182,8 @@ extern "C" {
 	}
 
 	inline uint16_t usWidgetGetY0(xWidget *pxW, bool bAbsolute) {
+		if (!pxW)
+			return  0;
 		if (!pxW->pxParent)
 			return pxW->usY0;
 
@@ -182,6 +194,8 @@ extern "C" {
 	}
 
 	inline uint16_t usWidgetGetX1(xWidget *pxW, bool bAbsolute) {
+		if (!pxW)
+			return  0;
 		if (!pxW->pxParent)
 			return pxW->usX1;
 
@@ -192,6 +206,8 @@ extern "C" {
 	}
 
 	inline uint16_t usWidgetGetY1(xWidget *pxW, bool bAbsolute) {
+		if (!pxW)
+			return  0;
 		if (!pxW->pxParent)
 			return pxW->usY1;
 
