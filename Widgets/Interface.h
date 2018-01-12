@@ -59,13 +59,13 @@ extern "C" {
 	}
 	void vInterfaceInvalidate();
 	bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv);
-	void vInterfaceDebug(bool bDebug);
-	bool bInterfaceGetDebug();
+
 	void vInterfaceOpenWindow(int eWnd);
 	void vInterfaceCloseActiveWindow();
 	void vInterfaceCloseWindow(int eWnd);
 	void vInterfaceUpdateWindow();
-	xWindow * pxInterfaceIsWindowActive(int eWnd);
+	bool bInterfaceIsWindowActive(int eWnd);
+	xWindow * pxInterfaceGetWindow(int eWnd);
 
 #ifdef __cplusplus
 }
