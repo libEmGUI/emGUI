@@ -53,7 +53,7 @@ bool bStatusBarCreate(uint16_t usColor) {
 
 	usY = 2;
 	usW = usWidgetGetH(xStatusBarInstance) - usY * 2;
-	usX = usWidgetGetW(xStatusBarInstance) - usWidgetGetH(xStatusBarInstance) - usY;
+	usX = usWidgetGetW(xStatusBarInstance) - usWidgetGetH(xStatusBarInstance);
 
 	xCloseButton = pxButtonCreateFromText(usX, usY, usW, usW, "X", xStatusBarInstance);
 	vWidgetSetTransparency(xCloseButton, true);
