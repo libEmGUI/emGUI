@@ -29,34 +29,49 @@
 
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
+static bool prvDispose(xWidget * pxW) {
+	xWindowProps *xP;
+
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return false;
+
+	free(xP);
+	return true;
+}
+
 xWindow * pxWindowCreate(int eWnd) {
 	xWindowProps *xP;
 	xWindow *pxW;
 
 	pxW = malloc(sizeof(xWidget));
+
+	if (!pxW)
+		return NULL;
+
 	memset(pxW, 0, sizeof(xWidget)); //TODO: add check logic!
 
 	if (bWidgetInit(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), pxInterfaceGet(), true)) {
+
+		pxW->eType = WidgetWindow;
+		pxW->pxOnDispose = prvDispose;
 
 		vWidgetSetBgColor(pxW, 65535, false); //белый фон
 		vWidgetSetVisible(pxW, false);
 
 		xP = malloc(sizeof(xWindowProps));
 
-		if (!xP)
-			return NULL;
+		memset(xP, 0, sizeof(xWindowProps));
 
-		xP->xBackWindow = NULL;
-		xP->pxOnCloseRequest = NULL;
-		xP->pxOnClose = NULL;
-		xP->pxOnOpenRequest = NULL;
-		xP->pxOnOpen = NULL;
-		xP->bFullScreen = false;
+		if (!xP) {
+			free(pxW);
+			return NULL;
+		}
+
+		pxW->pvProp = xP;
+
 		xP->eId = eWnd;
 		xP->strHeader = (char*)malloc(EMGUI_WINDOW_HEADER_LENGTH + 1);
 		xP->strHeader[0] = '\0';
-		pxW->pvProp = xP;
-		pxW->eType = WidgetWindow;
 
 		return pxW;
 	}

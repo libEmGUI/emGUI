@@ -44,10 +44,10 @@ extern "C" {
 	} xWindowProps;
 
 	xWindow * pxWindowCreate(int eWnd);
-	void vWindowSetOnOpenHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
-	void vWindowSetOnOpenRequestHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
-	void vWindowSetOnCloseHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
-	void vWindowSetOnCloseRequestHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
+	void vWindowSetOnOpenHandler(xWidget * pxW, WidgetEvent pxCallback);
+	void vWindowSetOnOpenRequestHandler(xWidget * pxW, WidgetEvent pxCallback);
+	void vWindowSetOnCloseHandler(xWidget * pxW, WidgetEvent  pxCallback);
+	void vWindowSetOnCloseRequestHandler(xWidget * pxW, WidgetEvent pxCallback);
 	void vWindowSetHeader(xWidget * pxW, char const* strH);
 	xWindow * pxWindowGetBack(xWidget *pxW);
 	void vWindowSetFullScreen(xWidget *pxW, bool bFS);
