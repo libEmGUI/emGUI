@@ -128,7 +128,10 @@ extern "C" {
 	bool bWidgetInit(xWidget *pxW, uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, xWidget *pxWidParent, bool bUseWH);
 	void vWidgetInvalidate(xWidget *pxW);
 	void vWidgetDraw(xWidget *pxW);
+
 	bool bWidgetAdd(xWidget *pxW, xWidget *pxWidChild);
+	void vWidgetRemove(xWidget * pxW);
+	
 	bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv);
 
 	bool bWidgetMoveTo(xWidget *pxW, uint16_t usX0, uint16_t usY0);

@@ -47,6 +47,8 @@ void vWidgetDispose(xWidget *pxW) {
 	if (!pxW || !pxW->pxOnDispose)
 		return;
 
+	vWidgetRemove(pxW);
+
 	pxW->pxOnDispose(pxW);
 	
 	free(pxW);
@@ -193,6 +195,29 @@ bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild) {
 	}
 
 	return true;
+}
+
+void vWidgetRemove(xWidget * pxW) {
+	if (!pxW)
+		return;
+
+	xWidget * pxChild = pxW->pxParent->pxFirstChild;
+
+	while (pxChild) {
+
+		xWidget *pxNext = pxWidgetGetNextChild(pxChild);
+		xWidget *pxPrev = NULL;
+
+		if (pxChild == pxW) { //first element
+			if (!pxPrev)
+				pxW->pxFirstChild = pxNext;
+			else
+				pxPrev->pxNextSibling = pxNext;
+		}
+
+		pxPrev = pxChild;
+		pxChild = pxNext;
+	}
 }
 
 bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
