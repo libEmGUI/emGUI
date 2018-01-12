@@ -51,6 +51,7 @@ extern "C" {
 	void vWindowSetHeader(xWidget * pxW, char const* strH);
 	xWindow * pxWindowGetBack(xWidget *pxW);
 	void vWindowSetFullScreen(xWidget *pxW, bool bFS);
+	int iWindowGetID(xWidget * pxW);
 
 #ifdef __cplusplus
 }

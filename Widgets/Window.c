@@ -39,6 +39,15 @@ static bool prvDispose(xWidget * pxW) {
 	return true;
 }
 
+int iWindowGetID(xWidget * pxW) {
+	xWindowProps *xP;
+
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return 0;
+
+	return xP->eId;
+}
+
 xWindow * pxWindowCreate(int eWnd) {
 	xWindowProps *xP;
 	xWindow *pxW;
