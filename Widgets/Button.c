@@ -32,7 +32,7 @@ typedef struct xButtonProps_struct {
 	uint16_t uiReleaseBorder;
 	uint16_t uiPressureBorder;
 	xPicture pusPicDisabled;
-	xWidget *xText;       ///< Label widget for Pictured button with text
+	xWidget *xText;       ///< Label widget for Pictured button with text and text-only buttons
 } xButtonProps;
 
 static bool prvButtonDraw(xButton *pxW) {
@@ -94,7 +94,6 @@ static bool prvDispose(xWidget *pxW) {
 
 	vWidgetDispose(xP->xText);
 	free(xP);
-	free(pxW);
 	return true; //means nothing
 }
 
