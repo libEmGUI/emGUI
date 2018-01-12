@@ -27,7 +27,14 @@
 xInterface *xInterfaceInstance;
 xTouchEventType eTouchState = popTs;
 
+typedef struct {
+	xWindow xPrevious;
+	xWindow xCurrent;
+}xWindowList_t;
+
 xWindow * xActiveWindow = NULL;
+
+xWindowList_t *xWindowList = NULL;
 
 xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *)) {
 
