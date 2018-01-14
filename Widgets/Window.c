@@ -29,7 +29,7 @@
 
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
-static bool prvDispose(xWidget * pxW) {
+static bool prvDispose(xWindow * pxW) {
 	xWindowProps *xP;
 
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
@@ -38,7 +38,7 @@ static bool prvDispose(xWidget * pxW) {
 	return true;
 }
 
-int iWindowGetID(xWidget * pxW) {
+int iWindowGetID(xWindow * pxW) {
 	xWindowProps *xP;
 
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
@@ -68,12 +68,12 @@ xWindow * pxWindowCreate(int eWnd) {
 
 		xP = malloc(sizeof(xWindowProps));
 
-		memset(xP, 0, sizeof(xWindowProps));
-
 		if (!xP) {
 			free(pxW);
 			return NULL;
 		}
+
+		memset(xP, 0, sizeof(xWindowProps));
 
 		pxW->pvProp = xP;
 
@@ -89,7 +89,7 @@ xWindow * pxWindowCreate(int eWnd) {
 	}
 }
 
-void vWindowSetHeader(xWidget * pxW, char const* strH) {
+void vWindowSetHeader(xWindow * pxW, char const* strH) {
 	xWindowProps *xP;
 	int iLen = MIN(strlen(strH), EMGUI_WINDOW_HEADER_LENGTH);
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
@@ -99,42 +99,42 @@ void vWindowSetHeader(xWidget * pxW, char const* strH) {
 	vInterfaceUpdateWindow();
 }
 
-void vWindowSetOnCloseRequestHandler(xWidget * pxW, WidgetEvent pxCallback) {
+void vWindowSetOnCloseRequestHandler(xWindow * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnCloseRequest = pxCallback;
 }
 
-void vWindowSetOnCloseHandler(xWidget * pxW, WidgetEvent pxCallback) {
+void vWindowSetOnCloseHandler(xWindow * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnClose = pxCallback;
 }
 
-void vWindowSetOnOpenHandler(xWidget * pxW, WidgetEvent pxCallback) {
+void vWindowSetOnOpenHandler(xWindow * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnOpen = pxCallback;
 }
 
-void vWindowSetOnOpenRequestHandler(xWidget * pxW, WidgetEvent pxCallback) {
+void vWindowSetOnOpenRequestHandler(xWindow * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnOpenRequest = pxCallback;
 }
 
-xWindow * pxWindowGetBack(xWidget *pxW) {
+xWindow * pxWindowGetBack(xWindow *pxW) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return NULL;
 	return xP->xBackWindow;
 }
 
-void vWindowSetFullScreen(xWidget *pxW, bool bFS) {
+void vWindowSetFullScreen(xWindow *pxW, bool bFS) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;

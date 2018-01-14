@@ -45,14 +45,14 @@ extern "C" {
 	} xWindowProps;
 
 	xWindow * pxWindowCreate(int eWnd);
-	void vWindowSetOnOpenHandler(xWidget * pxW, WidgetEvent pxCallback);
-	void vWindowSetOnOpenRequestHandler(xWidget * pxW, WidgetEvent pxCallback);
-	void vWindowSetOnCloseHandler(xWidget * pxW, WidgetEvent  pxCallback);
-	void vWindowSetOnCloseRequestHandler(xWidget * pxW, WidgetEvent pxCallback);
-	void vWindowSetHeader(xWidget * pxW, char const* strH);
-	xWindow * pxWindowGetBack(xWidget *pxW);
-	void vWindowSetFullScreen(xWidget *pxW, bool bFS);
-	int iWindowGetID(xWidget * pxW);
+	void vWindowSetOnOpenHandler(xWindow * pxW, WidgetEvent pxCallback);
+	void vWindowSetOnOpenRequestHandler(xWindow * pxW, WidgetEvent pxCallback);
+	void vWindowSetOnCloseHandler(xWindow * pxW, WidgetEvent  pxCallback);
+	void vWindowSetOnCloseRequestHandler(xWindow * pxW, WidgetEvent pxCallback);
+	void vWindowSetHeader(xWindow * pxW, char const* strH);
+	xWindow * pxWindowGetBack(xWindow *pxW);
+	void vWindowSetFullScreen(xWindow *pxW, bool bFS);
+	int iWindowGetID(xWindow * pxW);
 
 #ifdef __cplusplus
 }
