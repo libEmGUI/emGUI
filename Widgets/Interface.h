@@ -60,6 +60,8 @@ extern "C" {
 	void vInterfaceInvalidate();
 	bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv);
 
+	xStatusBar *pxInterfaceGetStatusBar();
+
 	void vInterfaceOpenWindow(int eWnd);
 	void vInterfaceCloseActiveWindow();
 	void vInterfaceCloseWindow(int eWnd);

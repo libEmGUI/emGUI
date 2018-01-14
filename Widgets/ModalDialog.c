@@ -140,7 +140,7 @@
 		vWindowSetOnCloseHandler(xThisWnd, prvOnCloseHandler);
 		vWindowSetOnCloseRequestHandler(xThisWnd, prvOnCloseRequestHandler);
 
-		usY = (usInterfaceGetWindowH() * 4) / 10 - usStatusBarGetH();
+		usY = (usInterfaceGetWindowH() * 4) / 10 - usWidgetGetH(pxInterfaceGetStatusBar());
 
 		xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 

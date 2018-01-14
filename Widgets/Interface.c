@@ -24,25 +24,26 @@
 #include <stdio.h>
 #include "emGUI/Draw/Draw.h"
 
-xInterface *xInterfaceInstance;
-xTouchEventType eTouchState = popTs;
-
 typedef struct {
 	xWindow xPrevious;
 	xWindow xCurrent;
 }xWindowList_t;
 
-xWindow * xActiveWindow = NULL;
+static xInterface *xInterfaceInstance = NULL;
+static xStatusBar *xStatusBarInstance = NULL;
+static xTouchEventType eTouchState = popTs;
 
-xWindowList_t *xWindowList = NULL;
+static xWindow * xActiveWindow = NULL;
+
+static xWindowList_t *xWindowList = NULL;
 
 xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *)) {
-
-	xInterfaceInstance = pxWidgetCreate(0, 0, EMGUI_LCD_WIDTH, EMGUI_LCD_HEIGHT, NULL, true);
-	bStatusBarCreate(EMGUI_COLOR_STATUS_BAR_BG);
-	if (pxOnCreateHandler)
-		pxOnCreateHandler(xInterfaceInstance);
-
+	if (!xInterfaceInstance) {
+		xInterfaceInstance = pxWidgetCreate(0, 0, EMGUI_LCD_WIDTH, EMGUI_LCD_HEIGHT, NULL, true);
+		xStatusBarInstance = xStatusBarCreate(EMGUI_COLOR_STATUS_BAR_BG);
+		if (pxOnCreateHandler)
+			pxOnCreateHandler(xInterfaceInstance);
+	}
 	return xInterfaceInstance;
 }
 
@@ -230,18 +231,24 @@ void vInterfaceCloseWindow(int eWnd) {
 	}
 }
 
+xStatusBar *pxInterfaceGetStatusBar() {
+	return xStatusBarInstance;
+}
+
 void vInterfaceUpdateWindow() {
 
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(xActiveWindow, WidgetWindow)))
 		return;
 
+	xStatusBar *pxW = pxInterfaceGetStatusBar();
+
 	if (xP->bFullScreen) {
-		vWidgetHide(pxStatusBarGet());
+		vWidgetHide(pxW);
 	}
 	else {
-		vWidgetShow(pxStatusBarGet());
+		vWidgetShow(pxW);
 	}
-	vStatusBarSetWindowHeader(xP->strHeader);
+	vStatusBarSetWindowHeader(pxW, xP->strHeader);
 
 }
