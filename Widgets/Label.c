@@ -314,7 +314,7 @@ char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 	char *pcLine;
 	uint16_t  usMaxLength;
 
-	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)))
+	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)) || !pcStr)
 		return NULL;
 
 	pcLine = xP->pcStr;
