@@ -23,7 +23,6 @@
 
 #include "emGUI/Widgets/Label.h"
 #include "emGUI/Widgets/Button.h"
-#include "emGUI/Widgets/StatusBar.h"
 #include "emGUI/Widgets/Window.h"
 #include "emGUI/Widgets/Button.h"
 #include "emGUI/Widgets/Interface.h"
@@ -140,7 +139,7 @@
 		vWindowSetOnCloseHandler(xThisWnd, prvOnCloseHandler);
 		vWindowSetOnCloseRequestHandler(xThisWnd, prvOnCloseRequestHandler);
 
-		usY = (usInterfaceGetWindowH() * 4) / 10 - usWidgetGetH(pxInterfaceGetStatusBar());
+		usY = (usInterfaceGetWindowH() * 4) / 10;
 
 		xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
