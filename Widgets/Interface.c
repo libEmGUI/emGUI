@@ -22,20 +22,73 @@
 
 #include "emGUI/Widgets/Interface.h"
 #include <stdio.h>
+#include <malloc.h>
 #include "emGUI/Draw/Draw.h"
 
-typedef struct {
-	xWindow xPrevious;
-	xWindow xCurrent;
-}xWindowList_t;
+typedef struct xWindowListItem_t {
+	struct xWindowListItem_t *xPrev;
+	xWindow *xWnd;
+} xWindowListItem;
 
 static xInterface *xInterfaceInstance = NULL;
 static xStatusBar *xStatusBarInstance = NULL;
 static xTouchEventType eTouchState = popTs;
 
-static xWindow * xActiveWindow = NULL;
+static xWindowListItem *xActiveWindow = NULL;
 
-static xWindowList_t *xWindowList = NULL;
+static xWindowListItem* prvWindowListFind(xWindow *pxW) {
+	xWindowListItem *xL = xActiveWindow;
+	if (!pxW)
+		return NULL;
+	
+	while (xL) {
+		if (xL->xWnd == pxW)
+			return xL;
+		xL = xL->xPrev;
+	}
+
+	return xL;
+}
+
+static void prvWindowListAppend(xWindow *pxW) {
+	xWindowListItem *xL = xActiveWindow;
+	if (!pxW)
+		return;
+
+	xWindowListItem* xLNew = malloc(sizeof(xWindowListItem));
+
+	if (!xLNew)
+		return;
+
+	xLNew->xPrev = xActiveWindow;
+	xLNew->xWnd = pxW;
+
+	xActiveWindow = xLNew;
+	return;
+}
+
+static void prvWindowListDelete(xWindow *pxW) {
+	xWindowListItem *xL = xActiveWindow;
+	xWindowListItem *xLPrev = NULL;
+	if (!pxW)
+		return;
+
+	while (xL) {
+		if (xL->xWnd == pxW ) {
+			if(!xLPrev)
+				xActiveWindow = xL->xPrev;
+			else {
+				xLPrev->xPrev = xL->xPrev;
+			}
+			free(xL);
+			break;
+		}
+		xLPrev = xL;
+		xL = xL->xPrev;
+	}
+
+	return;
+}
 
 xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *)) {
 	if (!xInterfaceInstance) {
@@ -77,158 +130,77 @@ xWindow * pxInterfaceGetWindow(int eWnd) {
 }
 
 bool bInterfaceIsWindowActive(int eWnd) {
-	return iWindowGetID(xActiveWindow) == eWnd;
-}
-
-inline void prvDelWndFromStack(xWindow *pxN, xWindow *pxNext) {
-
-	xWidget * pxPrev; //previous window in the stack
-	xWindowProps *xP;
-
-	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxN, WidgetWindow)))
-		return; //error! TODO: handler?
-
-	pxPrev = xP->xBackWindow;
-
-	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxNext, WidgetWindow)))
-		return; //error! TODO: handler?
-
-	xP->xBackWindow = pxPrev;
+	if (!xActiveWindow)
+		return false;
+	return iWindowGetID(xActiveWindow->xWnd) == eWnd;
 }
 
 void vInterfaceOpenWindow(int eWnd) {
-	xWidget * pxN,    // current window in the stack
-		*pxNext = NULL; //next window in the stack
-	xWindowProps *xP;
+	xWindow * pxWnd;
+	xWindowListItem * pxActivePrev;
 
-	// Если окно уже активно, то нечего его открывать
-	// TODO: нужно ли генерировать события в этом случае??? openRequest???
+	pxWnd = pxInterfaceGetWindow(eWnd);
 
+	if (!pxWnd) //window is not created yet
+		return;
 
+	// If window is already opened, just update its info
+	// TODO: is that really needed?
 	if (bInterfaceIsWindowActive(eWnd)) {
+		vWidgetShow(pxWnd);
 		vInterfaceUpdateWindow();
 		return;
 	}
 
-	// window is already opened
-	if ((pxN = pxInterfaceGetWindow(eWnd))) {
-		//поднять окошко из стека
+	// window is already opened, but is not active at the moment
+	if (prvWindowListFind(pxWnd)) {
+		// bring it on top of the list.
 
-		prvDelWndFromStack(pxN, pxNext);
+		prvWindowListDelete(pxWnd);
+		prvWindowListAppend(pxWnd);
 
-		//Кладем окно в вершину стека (делаем его Active)
-		if (!(xP = (xWindowProps*)pxWidgetGetProps(pxN, WidgetWindow)))
-			return; //ошибка! TODO: обработчик
+		if(xActiveWindow)
+			vWidgetHide(xActiveWindow->xWnd);
 
-		xP->xBackWindow = xActiveWindow;
+		vWidgetShow(pxWnd);
 
-		vWidgetHide(xActiveWindow);
-		vWidgetShow(pxN);
-
-		xActiveWindow = pxN;
 		vInterfaceUpdateWindow();
 		return;
 	}
 
-	//окно закрыто - добавляем его в стек
-	//поиск всех окон в интерфейсе
-	//указатель на первый объект-потомок интерфейса
-	pxN = xInterfaceInstance->pxFirstChild;
-	while (pxN) {
-
-		if (!(xP = (xWindowProps*)pxWidgetGetProps(pxN, WidgetWindow))) {
-			pxN = pxWidgetGetNextChild(pxN);
-			continue;
-		}
-
-		if (xP->eId == eWnd) {
-			//проверка что мы открываем окно, которое не явл. активным
-			if (pxN != xActiveWindow) {
-				if (xP->pxOnOpenRequest)
-					if (!xP->pxOnOpenRequest(pxN))
-						//отменяем открытие, если обработчик вернул false
-						break;
-
-				xP->xBackWindow = xActiveWindow;
-
-				vWidgetHide(xActiveWindow);
-				xActiveWindow = pxN;
-				if (xP->pxOnOpen)
-					xP->pxOnOpen(pxN);
-				//Проверка не открылся ли диалог или окно в обработчике onOpen
-				if (xActiveWindow == pxN) {
-					vWidgetShow(xActiveWindow);
-					vInterfaceUpdateWindow();
-				}
-			}
-			break; //только одно окно может быть видимо.
-		}
-		pxN = pxWidgetGetNextChild(pxN);
+	// Window is closed, check if we can open it
+	if (!bWindowOpen(pxWnd)) { // if we unable to open window,
+		return;
 	}
+
+	if(xActiveWindow)
+		vWidgetHide(xActiveWindow->xWnd);
+
+	prvWindowListAppend(pxWnd);
+	vInterfaceUpdateWindow();
 }
 
 void vInterfaceCloseActiveWindow() {
-	xWindowProps *xP;
-
-	//ненормальная ситуация
-	//TODO: открыть окно по умолчанию
-	if (!xActiveWindow)
-		return;
-
-	if (!(xP = (xWindowProps*)pxWidgetGetProps(xActiveWindow, WidgetWindow)))
-		return;
-
-	//проверяем возможно ли закрыть окно в данный момент
-	if (xP->pxOnCloseRequest)
-		if (!xP->pxOnCloseRequest(xActiveWindow))
-			return;
-
-	if (xP->xBackWindow) {
-
-		vWidgetHide(xActiveWindow);
-		xActiveWindow = xP->xBackWindow;
-		xP->xBackWindow = NULL;
-		vWidgetShow(xActiveWindow);
-
-		if (xP->pxOnClose)
-			xP->pxOnClose(xActiveWindow);
-		vInterfaceUpdateWindow();
-	} /*else { //TODO: Should we issue OnClose when there's last window on display?
-		if (xP->pxOnClose)
-			xP->pxOnClose(xActiveWindow);
-	}*/
-
+	if(xActiveWindow)
+		vInterfaceCloseWindow(iWindowGetID(xActiveWindow->xWnd));
 }
 
 void vInterfaceCloseWindow(int eWnd) {
-	xWidget * pxN = xActiveWindow,
-		*pxNext = NULL;
-	xWindowProps *xP;
+	xWindow * pxWnd;
+	xWindowListItem * pxPrev;
+	pxWnd = pxInterfaceGetWindow(eWnd);
 
-	if (bInterfaceIsWindowActive(eWnd)) {
-		vInterfaceCloseActiveWindow();
+	if (!pxWnd) //window is not created yet
 		return;
-	}
 
-	if ((pxN = pxInterfaceGetWindow(eWnd))) {
-		if (!(xP = (xWindowProps*)pxWidgetGetProps(pxN, WidgetWindow)))
-			return;
+	if (!bWindowClose(pxWnd))
+		return;
 
-		//check if we can close window 
-		if (xP->pxOnCloseRequest)
-			if (!xP->pxOnCloseRequest(pxN)) {
-				// if we are unable to close the window, we should pop it to the front
-				vInterfaceOpenWindow(eWnd);
-				return;
-			}
+	if(xActiveWindow && xActiveWindow->xPrev && xActiveWindow->xPrev->xWnd)
+		vInterfaceOpenWindow(iWindowGetID(xActiveWindow->xPrev->xWnd));
+	//else open blank
 
-		prvDelWndFromStack(pxN, pxNext);
-
-		// check if we can close window at the moment
-		if (xP->pxOnClose)
-			if (!xP->pxOnClose(pxN))
-				return;
-	}
+	prvWindowListDelete(pxWnd);
 }
 
 xStatusBar *pxInterfaceGetStatusBar() {
@@ -237,18 +209,19 @@ xStatusBar *pxInterfaceGetStatusBar() {
 
 void vInterfaceUpdateWindow() {
 
-	xWindowProps *xP;
-	if (!(xP = (xWindowProps*)pxWidgetGetProps(xActiveWindow, WidgetWindow)))
+	if (!xActiveWindow || !xActiveWindow->xWnd)
 		return;
 
-	xStatusBar *pxW = pxInterfaceGetStatusBar();
+	xStatusBar *pxSB = pxInterfaceGetStatusBar();
 
-	if (xP->bFullScreen) {
-		vWidgetHide(pxW);
+	xWindow *pxW = xActiveWindow->xWnd;
+
+	if (bWindowGetFullScreen(pxW)) {
+		vWidgetHide(pxSB);
 	}
 	else {
-		vWidgetShow(pxW);
+		vWidgetShow(pxSB);
 	}
-	vStatusBarSetWindowHeader(pxW, xP->strHeader);
+	vStatusBarSetWindowHeader(pxSB, pcWindowGetHeader(pxW));
 
 }

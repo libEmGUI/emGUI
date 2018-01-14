@@ -27,6 +27,17 @@
 #include <string.h>
 #include "emGUI/Draw/Draw.h"
 
+typedef struct xWindowProps_t {
+	int eId;
+	char* strHeader;
+	bool bFullScreen;
+	bool bModal;
+	WidgetEvent pxOnCloseRequest;
+	WidgetEvent pxOnClose;
+	WidgetEvent pxOnOpenRequest;
+	WidgetEvent pxOnOpen;
+} xWindowProps;
+
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
 static bool prvDispose(xWindow * pxW) {
@@ -127,13 +138,6 @@ void vWindowSetOnOpenRequestHandler(xWindow * pxW, WidgetEvent pxCallback) {
 	xP->pxOnOpenRequest = pxCallback;
 }
 
-xWindow * pxWindowGetBack(xWindow *pxW) {
-	xWindowProps *xP;
-	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
-		return NULL;
-	return xP->xBackWindow;
-}
-
 void vWindowSetFullScreen(xWindow *pxW, bool bFS) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
@@ -148,4 +152,54 @@ void vWindowSetFullScreen(xWindow *pxW, bool bFS) {
 			xP->bFullScreen = bFS;
 	}
 	vInterfaceUpdateWindow();
+}
+
+bool bWindowClose(xWindow *pxW) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return false;
+
+	if (xP->pxOnCloseRequest)
+		if (!xP->pxOnCloseRequest(pxW))
+			return false;
+
+	vWidgetHide(pxW);
+
+	if (xP->pxOnClose)
+		xP->pxOnClose(pxW);
+
+	return true;
+}
+
+bool bWindowOpen(xWindow *pxW) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return false;
+
+	if (xP->pxOnOpenRequest)
+		if (!xP->pxOnOpenRequest(pxW))
+			return false;
+
+	vWidgetShow(pxW);
+
+	if (xP->pxOnOpen)
+		xP->pxOnOpen(pxW);
+
+	return true;
+}
+
+bool bWindowGetFullScreen(xWindow *pxW) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return false;
+
+	return xP->bFullScreen;
+}
+
+const char* pcWindowGetHeader(xWindow *pxW) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return NULL;
+
+	return xP->strHeader;
 }

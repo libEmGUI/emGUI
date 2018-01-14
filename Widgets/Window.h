@@ -32,27 +32,23 @@ extern "C" {
 
 	typedef xWidget xWindow;
 
-	typedef struct xWindowProps_t {
-		int eId;
-		xWindow *xBackWindow;
-		char* strHeader;
-		bool bFullScreen;
-		bool bModal;
-		WidgetEvent pxOnCloseRequest;
-		WidgetEvent pxOnClose;
-		WidgetEvent pxOnOpenRequest;
-		WidgetEvent pxOnOpen;
-	} xWindowProps;
-
 	xWindow * pxWindowCreate(int eWnd);
 	void vWindowSetOnOpenHandler(xWindow * pxW, WidgetEvent pxCallback);
 	void vWindowSetOnOpenRequestHandler(xWindow * pxW, WidgetEvent pxCallback);
 	void vWindowSetOnCloseHandler(xWindow * pxW, WidgetEvent  pxCallback);
 	void vWindowSetOnCloseRequestHandler(xWindow * pxW, WidgetEvent pxCallback);
 	void vWindowSetHeader(xWindow * pxW, char const* strH);
-	xWindow * pxWindowGetBack(xWindow *pxW);
 	void vWindowSetFullScreen(xWindow *pxW, bool bFS);
+
+	bool bWindowGetFullScreen(xWindow *pxW);
+	const char* pcWindowGetHeader(xWindow *pxW);
+
 	int iWindowGetID(xWindow * pxW);
+
+	bool bWindowClose(xWindow *pxW);
+	bool bWindowOpen(xWindow *pxW);
+
+	
 
 #ifdef __cplusplus
 }
