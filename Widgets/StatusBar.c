@@ -22,12 +22,10 @@
  */
 
 
-
 typedef struct xStatusBarProps_struct {
 	xButton             *xCloseButton;
 	xLabel              *xWndHeader;
 } xStatusBarProps;
-
 
 
  /**
@@ -65,14 +63,14 @@ xStatusBar* xStatusBarCreate(uint16_t usColor) {
 		return NULL;
 	}
 
-	xP = malloc(sizeof(xWindowProps));
+	xP = malloc(sizeof(xStatusBarProps));
 
 	if (!xP) {
 		free(pxW);
 		return NULL;
 	}
 
-	memset(xP, 0, sizeof(xWindowProps));
+	memset(xP, 0, sizeof(xStatusBarProps));
 
 	pxW->pvProp = xP;
 
