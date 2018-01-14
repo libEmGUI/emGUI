@@ -50,7 +50,8 @@ void vWidgetDispose(xWidget *pxW) {
 	vWidgetRemove(pxW);
 
 	pxW->pxOnDispose(pxW);
-	
+	if (pxW->pvProp)
+		free(pxW->pvProp);
 	free(pxW);
 }
 

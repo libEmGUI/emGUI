@@ -35,7 +35,6 @@ static bool prvDispose(xWidget * pxW) {
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return false;
 
-	free(xP);
 	return true;
 }
 

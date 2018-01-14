@@ -93,7 +93,6 @@ static bool prvDispose(xWidget *pxW) {
 		return false;
 
 	vWidgetDispose(xP->xText);
-	free(xP);
 	return true; //means nothing
 }
 
