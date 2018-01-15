@@ -1,6 +1,8 @@
 #ifndef EMGUI_H
 #define EMGUI_H
 
+#define EMGUI_VERSION 2.0.0
+
 #include "options/opts.h"
 #include "Draw/Draw.h"
 #include "Widgets/Widget.h"
