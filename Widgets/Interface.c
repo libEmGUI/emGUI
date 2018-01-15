@@ -138,6 +138,8 @@ bool bInterfaceIsWindowActive(int eWnd) {
 void vInterfaceOpenWindow(int eWnd) {
 	xWindow * pxWnd;
 	xWindowListItem * pxActivePrev;
+	xWindow * pxPopped;
+	//xWindowListItem * pxActiveNew;
 
 	pxWnd = pxInterfaceGetWindow(eWnd);
 
@@ -168,15 +170,28 @@ void vInterfaceOpenWindow(int eWnd) {
 		return;
 	}
 
+	pxActivePrev = xActiveWindow;
 	// Window is closed, check if we can open it
 	if (!bWindowOpen(pxWnd)) { // if we unable to open window,
 		return;
 	}
 
-	if(xActiveWindow)
-		vWidgetHide(xActiveWindow->xWnd);
+	if (xActiveWindow != pxActivePrev && xActiveWindow) { // some window was popped in onOpen callbacks
+		pxPopped = xActiveWindow->xWnd;
+		prvWindowListAppend(pxWnd);
 
-	prvWindowListAppend(pxWnd);
+		vWidgetShow(pxPopped); // restore popped window
+		vWidgetHide(pxWnd);
+
+		prvWindowListDelete(pxPopped); // put popped on top of the stack
+		prvWindowListAppend(pxPopped);
+	}
+	else {
+		if (xActiveWindow)
+			vWidgetHide(xActiveWindow->xWnd);
+
+		prvWindowListAppend(pxWnd);
+	}
 	vInterfaceUpdateWindow();
 }
 
@@ -190,7 +205,7 @@ void vInterfaceCloseWindow(int eWnd) {
 	xWindowListItem * pxPrev;
 	pxWnd = pxInterfaceGetWindow(eWnd);
 
-	if (!pxWnd) //window is not created yet
+	if (!pxWnd) // window is not created yet
 		return;
 
 	if (!bWindowClose(pxWnd))
@@ -198,7 +213,7 @@ void vInterfaceCloseWindow(int eWnd) {
 
 	if(xActiveWindow && xActiveWindow->xPrev && xActiveWindow->xPrev->xWnd)
 		vInterfaceOpenWindow(iWindowGetID(xActiveWindow->xPrev->xWnd));
-	//else open blank
+	// TODO: else open blank?
 
 	prvWindowListDelete(pxWnd);
 }
