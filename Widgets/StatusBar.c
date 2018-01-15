@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <malloc.h>
 
-#include "emGUI/Widgets/Interface.h"
+#include "emGUI/Widgets/WindowManager.h"
 #include "emGUI/Widgets/Button.h"
 #include "emGUI/Widgets/Label.h"
 
@@ -34,7 +34,7 @@ typedef struct xStatusBarProps_struct {
   * @returns true - event is handled
   */
 static bool prvCloseClickHandler(xWidget* pxW) {
-	vInterfaceCloseActiveWindow();
+	vWindowManagerCloseActiveWindow();
 	return true;
 }
 
@@ -56,7 +56,7 @@ xStatusBar* xStatusBarCreate(uint16_t usColor) {
 
 	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
-	pxW = (xStatusBar *) pxWidgetCreate(0, 0, usInterfaceGetW(), EMGUI_STATUS_BAR_HEIGHT, pxInterfaceGet(), true);
+	pxW = (xStatusBar *) pxWidgetCreate(0, 0, usWindowManagerGetW(), EMGUI_STATUS_BAR_HEIGHT, pxWindowManagerGet(), true);
 
 	if(!pxW){
 		vWidgetDispose(pxW);

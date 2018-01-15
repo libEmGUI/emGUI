@@ -21,7 +21,7 @@
 */
 
 #include "emGUI/Widgets/Window.h"
-#include "emGUI/Widgets/Interface.h"
+#include "emGUI/Widgets/WindowManager.h"
 #include "emGUI/Widgets/StatusBar.h"
 #include <malloc.h>
 #include <string.h>
@@ -69,7 +69,7 @@ xWindow * pxWindowCreate(int eWnd) {
 
 	memset(pxW, 0, sizeof(xWidget)); //TODO: add check logic!
 
-	if (bWidgetInit(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), pxInterfaceGet(), true)) {
+	if (bWidgetInit(pxW, usWindowManagerGetWindowX(), usWindowManagerGetWindowY(), usWindowManagerGetWindowW(), usWindowManagerGetWindowH(), pxWindowManagerGet(), true)) {
 
 		pxW->eType = WidgetWindow;
 		pxW->pxOnDispose = prvDispose;
@@ -107,7 +107,7 @@ void vWindowSetHeader(xWindow * pxW, char const* strH) {
 		return;
 	memcpy(xP->strHeader, strH, iLen + 1);
 	xP->strHeader[iLen] = '\0';
-	vInterfaceUpdateWindow();
+	vWindowManagerUpdateWindow();
 }
 
 void vWindowSetOnCloseRequestHandler(xWindow * pxW, WidgetEvent pxCallback) {
@@ -148,10 +148,10 @@ void vWindowSetFullScreen(xWindow *pxW, bool bFS) {
 			xP->bFullScreen = bFS;
 	}
 	else {
-		if (bWidgetSetCoords(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), true))
+		if (bWidgetSetCoords(pxW, usWindowManagerGetWindowX(), usWindowManagerGetWindowY(), usWindowManagerGetWindowW(), usWindowManagerGetWindowH(), true))
 			xP->bFullScreen = bFS;
 	}
-	vInterfaceUpdateWindow();
+	vWindowManagerUpdateWindow();
 }
 
 bool bWindowClose(xWindow *pxW) {

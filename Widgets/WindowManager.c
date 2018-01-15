@@ -20,9 +20,10 @@
 	Created on: 14.11.2012
 */
 
-#include "emGUI/Widgets/Interface.h"
 #include <stdio.h>
 #include <malloc.h>
+
+#include "emGUI/Widgets/WindowManager.h"
 #include "emGUI/Draw/Draw.h"
 
 typedef struct xWindowListItem_t {
@@ -30,7 +31,7 @@ typedef struct xWindowListItem_t {
 	xWindow *xWnd;
 } xWindowListItem;
 
-static xInterface *xInterfaceInstance = NULL;
+static xWindowManager *xWindowManagerInstance = NULL;
 static xStatusBar *xStatusBarInstance = NULL;
 static xTouchEventType eTouchState = popTs;
 
@@ -90,36 +91,36 @@ static void prvWindowListDelete(xWindow *pxW) {
 	return;
 }
 
-xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *)) {
-	if (!xInterfaceInstance) {
-		xInterfaceInstance = pxWidgetCreate(0, 0, EMGUI_LCD_WIDTH, EMGUI_LCD_HEIGHT, NULL, true);
+xWindowManager * pxWindowManagerCreate(bool(*pxOnCreateHandler)(xWidget *)) {
+	if (!xWindowManagerInstance) {
+		xWindowManagerInstance = pxWidgetCreate(0, 0, EMGUI_LCD_WIDTH, EMGUI_LCD_HEIGHT, NULL, true);
 		xStatusBarInstance = xStatusBarCreate(EMGUI_COLOR_STATUS_BAR_BG);
 		if (pxOnCreateHandler)
-			pxOnCreateHandler(xInterfaceInstance);
+			pxOnCreateHandler(xWindowManagerInstance);
 	}
-	return xInterfaceInstance;
+	return xWindowManagerInstance;
 }
 
-void vInterfaceDraw() {
-	vWidgetDraw(xInterfaceInstance);
+void vWindowManagerDraw() {
+	vWidgetDraw(xWindowManagerInstance);
 }
 
-xInterface *pxInterfaceGet() {
-	return xInterfaceInstance;
+xWindowManager *pxWindowManagerGet() {
+	return xWindowManagerInstance;
 }
 
-void vInterfaceInvalidate() {
-	if( xInterfaceInstance )
-		vWidgetInvalidate(xInterfaceInstance);
+void vWindowManagerInvalidate() {
+	if( xWindowManagerInstance )
+		vWidgetInvalidate(xWindowManagerInstance);
 }
 
-bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv) {
-	return bWidgetCheckTouchScreenEvent(xInterfaceInstance, pxTouchScreenEv);
+bool bWindowManagerCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv) {
+	return bWidgetCheckTouchScreenEvent(xWindowManagerInstance, pxTouchScreenEv);
 }
 
-xWindow * pxInterfaceGetWindow(int eWnd) {
+xWindow * pxWindowManagerGetWindow(int eWnd) {
 
-	xWidget *pxN = xInterfaceInstance->pxFirstChild;
+	xWidget *pxN = xWindowManagerInstance->pxFirstChild;
 	while (pxN) {
 		if (iWindowGetID(pxN) == eWnd)
 			return pxN;
@@ -129,28 +130,28 @@ xWindow * pxInterfaceGetWindow(int eWnd) {
 	return NULL;
 }
 
-bool bInterfaceIsWindowActive(int eWnd) {
+bool bWindowManagerIsWindowActive(int eWnd) {
 	if (!xActiveWindow)
 		return false;
 	return iWindowGetID(xActiveWindow->xWnd) == eWnd;
 }
 
-void vInterfaceOpenWindow(int eWnd) {
+void vWindowManagerOpenWindow(int eWnd) {
 	xWindow * pxWnd;
 	xWindowListItem * pxActivePrev;
 	xWindow * pxPopped;
 	//xWindowListItem * pxActiveNew;
 
-	pxWnd = pxInterfaceGetWindow(eWnd);
+	pxWnd = pxWindowManagerGetWindow(eWnd);
 
 	if (!pxWnd) //window is not created yet
 		return;
 
 	// If window is already opened, just update its info
 	// TODO: is that really needed?
-	if (bInterfaceIsWindowActive(eWnd)) {
+	if (bWindowManagerIsWindowActive(eWnd)) {
 		vWidgetShow(pxWnd);
-		vInterfaceUpdateWindow();
+		vWindowManagerUpdateWindow();
 		return;
 	}
 
@@ -166,7 +167,7 @@ void vInterfaceOpenWindow(int eWnd) {
 
 		vWidgetShow(pxWnd);
 
-		vInterfaceUpdateWindow();
+		vWindowManagerUpdateWindow();
 		return;
 	}
 
@@ -192,18 +193,18 @@ void vInterfaceOpenWindow(int eWnd) {
 
 		prvWindowListAppend(pxWnd);
 	}
-	vInterfaceUpdateWindow();
+	vWindowManagerUpdateWindow();
 }
 
-void vInterfaceCloseActiveWindow() {
+void vWindowManagerCloseActiveWindow() {
 	if(xActiveWindow)
-		vInterfaceCloseWindow(iWindowGetID(xActiveWindow->xWnd));
+		vWindowManagerCloseWindow(iWindowGetID(xActiveWindow->xWnd));
 }
 
-void vInterfaceCloseWindow(int eWnd) {
+void vWindowManagerCloseWindow(int eWnd) {
 	xWindow * pxWnd;
 	xWindowListItem * pxPrev;
-	pxWnd = pxInterfaceGetWindow(eWnd);
+	pxWnd = pxWindowManagerGetWindow(eWnd);
 
 	if (!pxWnd) // window is not created yet
 		return;
@@ -212,22 +213,22 @@ void vInterfaceCloseWindow(int eWnd) {
 		return;
 
 	if(xActiveWindow && xActiveWindow->xPrev && xActiveWindow->xPrev->xWnd)
-		vInterfaceOpenWindow(iWindowGetID(xActiveWindow->xPrev->xWnd));
+		vWindowManagerOpenWindow(iWindowGetID(xActiveWindow->xPrev->xWnd));
 	// TODO: else open blank?
 
 	prvWindowListDelete(pxWnd);
 }
 
-xStatusBar *pxInterfaceGetStatusBar() {
+xStatusBar *pxWindowManagerGetStatusBar() {
 	return xStatusBarInstance;
 }
 
-void vInterfaceUpdateWindow() {
+void vWindowManagerUpdateWindow() {
 
 	if (!xActiveWindow || !xActiveWindow->xWnd)
 		return;
 
-	xStatusBar *pxSB = pxInterfaceGetStatusBar();
+	xStatusBar *pxSB = pxWindowManagerGetStatusBar();
 
 	xWindow *pxW = xActiveWindow->xWnd;
 

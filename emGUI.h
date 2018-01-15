@@ -4,7 +4,7 @@
 #include "options/opts.h"
 #include "Draw/Draw.h"
 #include "Widgets/Widget.h"
-#include "Widgets/Interface.h"
+#include "Widgets/WindowManager.h"
 #include "Widgets/Button.h"
 #include "Widgets/Label.h"
 #include "Widgets/StatusBar.h"

@@ -25,7 +25,7 @@
 #include "emGUI/Widgets/Button.h"
 #include "emGUI/Widgets/Window.h"
 #include "emGUI/Widgets/Button.h"
-#include "emGUI/Widgets/Interface.h"
+#include "emGUI/Widgets/WindowManager.h"
 //#include "Widgets/ProgressBar.h"
 
 #include "emGUI/Draw/Draw.h"
@@ -139,7 +139,7 @@
 		vWindowSetOnCloseHandler(xThisWnd, prvOnCloseHandler);
 		vWindowSetOnCloseRequestHandler(xThisWnd, prvOnCloseRequestHandler);
 
-		usY = (usInterfaceGetWindowH() * 4) / 10;
+		usY = (usWindowManagerGetWindowH() * 4) / 10;
 
 		xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
@@ -154,7 +154,7 @@
 		//vProgressBarSetProcExec(xPBar, 55);
 
 		//TODO: get rid of picture dimensions check on create and position buttons on show!
-		usY = (usInterfaceGetWindowH() / 2 + pxDrawHDL()->usGetPictureH(pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain) / 3);
+		usY = (usWindowManagerGetWindowH() / 2 + pxDrawHDL()->usGetPictureH(pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain) / 3);
 		usX = 0;
 
 		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++) {
@@ -181,7 +181,7 @@
 
 		if (!xDlg) {
 			//return;
-			vInterfaceCloseWindow(EMGUI_MODAL_WINDOW_ID);
+			vWindowManagerCloseWindow(EMGUI_MODAL_WINDOW_ID);
 			return;
 			//TODO: выставить кол-во активных диалогов в 0
 		}
@@ -198,7 +198,7 @@
 
 		prvResetDlgWnd();
 
-		betweenBtnsX = (usInterfaceGetW() - cBtnCnt * usWidgetGetW(xButtons[0])) / (cBtnCnt + 1);
+		betweenBtnsX = (usWindowManagerGetW() - cBtnCnt * usWidgetGetW(xButtons[0])) / (cBtnCnt + 1);
 		usY = usWidgetGetY0(xButtons[0], false);
 		usX = betweenBtnsX;
 
@@ -286,7 +286,7 @@
 
 		/*/Проверка ограничения макс. количества открытых диалогов
 		if(cDialogCount >= MODAL_DIALOG_MAX_COUNT){
-		  vInterfaceOpenWindow(EMGUI_MODAL_WINDOW_ID);
+		  vWindowManagerOpenWindow(EMGUI_MODAL_WINDOW_ID);
 		  return -1;
 		}*/
 
@@ -294,7 +294,7 @@
 		if ((xDlg = prvDlgIsActive(iDlgId))) {
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			prvDlgShowActive();
-			vInterfaceOpenWindow(EMGUI_MODAL_WINDOW_ID);
+			vWindowManagerOpenWindow(EMGUI_MODAL_WINDOW_ID);
 			return -1;
 		}
 
@@ -334,7 +334,7 @@
 
 		prvDlgShowActive();
 
-		vInterfaceOpenWindow(EMGUI_MODAL_WINDOW_ID);
+		vWindowManagerOpenWindow(EMGUI_MODAL_WINDOW_ID);
 		vWidgetInvalidate(xThisWnd);
 
 		return xDlg->usDlgID;
