@@ -39,7 +39,6 @@ extern "C" {
 
 	typedef bool(*ModalDialogHandler)(char cButton, void* pxContext);
 
-	//xWidget * pxModalDialogWindowCreate();
 	int iModalDialogOpen(int iDlgId, char const * sBtns, char const * sHdr, char const* sMsg);
 	void vModalDialogClose(int iDlgID, bool bFireDefault);
 	void vModalDialogSetHandler(int iDlgID, void *pvCtx, ModalDialogHandler pxHandler);

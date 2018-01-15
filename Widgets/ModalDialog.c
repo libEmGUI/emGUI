@@ -46,9 +46,9 @@
 
 	static xLabel         *xMessage = NULL;
 	//static xProgressBar   *xPBar;
-	static xButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS] = { 0 }; // y(ok)/n/c Максимум в диалоге видно 4 кнопки.
+	static xButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS] = { 0 }; // y/n/c maximum visible is 4 buttons
 
-	//автонумерация для автоматических диалогов
+	//auto-increment counter for auto dialogs (id = 0)
 	static uint16_t usDlgID = EMGUI_MODAL_AUTO + 1;
 
 	typedef struct xModalDialog_t xModalDialog;
@@ -117,12 +117,12 @@
 	}
 
 	static bool prvButtonHandler(xWidget *pxW) {
-		//диалог в обработчике может открыть еще один диалог.
-		//при этом ID актовного изменяется. Для сохранения используем
-		//эту переменную.
+		
 		if (!xMDActive)
 			return false;
 
+		// dialog can open another dialog in its handler.
+		// xMDActive is changed in that case. store previous value
 		int usDlgId = xMDActive->usDlgID;
 
 		char cButton = 0;
@@ -143,7 +143,7 @@
 
 	static xWidget * pxModalDialogWindowCreate() {
 
-		// X0, Y0 - координаты расположения виджетов
+		// X0, Y0 - widget placement coords
 		uint16_t usX, usY;
 
 		if (xThisWnd)
@@ -200,7 +200,7 @@
 			//return;
 			vWindowManagerCloseWindow(EMGUI_MODAL_WINDOW_ID);
 			return;
-			//TODO: выставить кол-во активных диалогов в 0
+			//TODO: set active dialog count to 0?
 		}
 		else if(bBringWindowBack && !bWindowManagerIsWindowActive(EMGUI_MODAL_WINDOW_ID))
 			vWindowManagerOpenWindow(EMGUI_MODAL_WINDOW_ID);
@@ -275,7 +275,7 @@
 
 	static xModalDialog *prvDelDlgFromStack(xModalDialog *pxN, xModalDialog *pxNext) {
 
-		xModalDialog * pxPrev; //пред. диалог в стеке
+		xModalDialog * pxPrev; // prev dialog in the stack
 		pxPrev = pxN->pxPrev;
 		pxNext->pxPrev = pxPrev;
 
@@ -319,13 +319,13 @@
 
 		pxModalDialogWindowCreate();
 
-		/*/Проверка ограничения макс. количества открытых диалогов
+		/*/ check max dialog count
 		if(cDialogCount >= MODAL_DIALOG_MAX_COUNT){
 		  vWindowManagerOpenWindow(EMGUI_MODAL_WINDOW_ID);
 		  return -1;
 		}*/
 
-		//Если такой диалог уже активен - Сбросить его обработчики и конфигурацию.
+		// if dialog with that ID is already opened, just refresh its data
 		if ((xDlg = prvDlgIsActive(iDlgId))) {
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			prvDlgShowActive(false);
@@ -333,7 +333,7 @@
 			return -1;
 		}
 
-		//Диалог есть где-то в стеке, его надо поднять
+		// dialog is in the background, pop it to the front
 		if ((xDlg = prvDlgIsOpened(iDlgId, &xDlgNext))) {
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			prvDelDlgFromStack(xDlg, xDlgNext);
@@ -341,14 +341,13 @@
 		else {
 			size_t strLen = 0;
 
-			//Диалога в стеке нет, создаем новую структуру
+			// this is a new dialog, create it
 			xDlg = malloc(sizeof(xModalDialog));
 			memset(xDlg, 0, sizeof(xModalDialog));
 			//cDialogCount ++;
 			
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
-			//Выставляем идентификатор диалога, по которому
-			//будет возможность дальнейшей работы с этим диалогом.
+			// set dialog ID to make it possible set handlers, etc...
 			if (iDlgId)
 				xDlg->usDlgID = iDlgId;
 			else {
@@ -357,7 +356,7 @@
 			}
 		}
 
-		//делаем диалог активным
+		// make dialog active
 		xDlg->pxPrev = xMDActive;
 		xMDActive = xDlg;
 
@@ -428,22 +427,22 @@
 
 		xDlg = prvDlgIsOpened(iDlgID, &xDlgNext);
 
-		//такой диалог не был в стеке
+		// this dialog wasn't in the list
 		if (!xDlg)
 			return;
 
-		//если диалог нельзя закрывать
+		// we cannot close this dialog
 		if (!xDlg->bCanClose)
 			return;
 
-		//если диалог активный, то ставим активным предыдущий.
+		// this dialog is active! pop previous dialog
 		if (prvDlgIsActive(iDlgID)) {
 			xMDActive = xMDActive->pxPrev;
 		}
 		else
 			prvDelDlgFromStack(xDlg, xDlgNext);
 
-		//генерируем событие по умолчанию, если надо и оно есть.
+		// fire default event
 		if (bFireDefault) {
 			if (xDlg->pxDefaultHandler)
 				xDlg->pxDefaultHandler(0, xDlg->pvCtx);

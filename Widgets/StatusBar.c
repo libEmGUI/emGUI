@@ -2,9 +2,8 @@
  * @file   StatusBar.c
  * @author Roman Savrulin (romeo.deepmind@gmail.com)
  * @date   10.11.2012
- * @brief  Реализация виджета статус-бара
+ * @brief  Status bar widnget implementation
  *
- * Это - виджет синглтон
  *
  */
 

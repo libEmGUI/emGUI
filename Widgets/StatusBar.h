@@ -2,9 +2,7 @@
  * @file   StatusBar.h
  * @author Roman Savrulin (romeo.deepmind@gmail.com)
  * @date   10.11.2012
- * @brief  Интерфейс виджета статус-бара
- *
- * Виджет отрисовывает статус-бар интерфейса
+ * @brief  Status Bar Widget interface
  *
  *
  */
