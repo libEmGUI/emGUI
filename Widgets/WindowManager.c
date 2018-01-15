@@ -159,11 +159,11 @@ void vWindowManagerOpenWindow(int eWnd) {
 	if (prvWindowListFind(pxWnd)) {
 		// bring it on top of the list.
 
+		if (xActiveWindow)
+			vWidgetHide(xActiveWindow->xWnd);
+
 		prvWindowListDelete(pxWnd);
 		prvWindowListAppend(pxWnd);
-
-		if(xActiveWindow)
-			vWidgetHide(xActiveWindow->xWnd);
 
 		vWidgetShow(pxWnd);
 
@@ -206,17 +206,22 @@ void vWindowManagerCloseWindow(int eWnd) {
 	xWindowListItem * pxPrev;
 	pxWnd = pxWindowManagerGetWindow(eWnd);
 
+	bool bIsActive = bWindowManagerIsWindowActive(eWnd);
+
 	if (!pxWnd) // window is not created yet
 		return;
 
+	pxPrev = xActiveWindow;
 	if (!bWindowClose(pxWnd))
 		return;
 
-	if(xActiveWindow && xActiveWindow->xPrev && xActiveWindow->xPrev->xWnd)
-		vWindowManagerOpenWindow(iWindowGetID(xActiveWindow->xPrev->xWnd));
-	// TODO: else open blank?
+	if(bIsActive && pxPrev == xActiveWindow) // if no windows was opened during onClose handlers
+		if(xActiveWindow && xActiveWindow->xPrev && xActiveWindow->xPrev->xWnd)
+			vWindowManagerOpenWindow(iWindowGetID(xActiveWindow->xPrev->xWnd)); // open previous
 
 	prvWindowListDelete(pxWnd);
+
+	vWindowManagerUpdateWindow();
 }
 
 xStatusBar *pxWindowManagerGetStatusBar() {
@@ -225,8 +230,11 @@ xStatusBar *pxWindowManagerGetStatusBar() {
 
 void vWindowManagerUpdateWindow() {
 
-	if (!xActiveWindow || !xActiveWindow->xWnd)
+	if (!xActiveWindow || !xActiveWindow->xWnd) {
+		vWidgetSetTransparency(xWindowManagerInstance, false);
 		return;
+	}else
+		vWidgetSetTransparency(xWindowManagerInstance, true);
 
 	xStatusBar *pxSB = pxWindowManagerGetStatusBar();
 

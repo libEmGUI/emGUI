@@ -72,7 +72,7 @@
 
 	xModalDialog *xMDActive = NULL;
 
-	static void prvDlgShowActive();
+	static void prvDlgShowActive(bool);
 
 	static xModalDialog *prvGetNextDlg(xModalDialog *xDlg) {
 		if (!xDlg)
@@ -91,7 +91,7 @@
 	}
 
 	static bool prvOnOpenHandler(xWidget *pxW) {
-		prvDlgShowActive();
+		prvDlgShowActive(false);
 		return true;
 	}
 
@@ -120,9 +120,10 @@
 		//диалог в обработчике может открыть еще один диалог.
 		//при этом ID актовного изменяется. Для сохранения используем
 		//эту переменную.
-		int usDlgId = xMDActive->usDlgID;
 		if (!xMDActive)
 			return false;
+
+		int usDlgId = xMDActive->usDlgID;
 
 		char cButton = 0;
 
@@ -192,7 +193,7 @@
 		}
 	}
 
-	static void prvDlgShowActive() {
+	static void prvDlgShowActive(bool bBringWindowBack) {
 		xModalDialog * xDlg = xMDActive;
 
 		if (!xDlg) {
@@ -201,6 +202,8 @@
 			return;
 			//TODO: выставить кол-во активных диалогов в 0
 		}
+		else if(bBringWindowBack && !bWindowManagerIsWindowActive(EMGUI_MODAL_WINDOW_ID))
+			vWindowManagerOpenWindow(EMGUI_MODAL_WINDOW_ID);
 
 		uint16_t cBtnCnt = (uint16_t)strlen(xDlg->sDialogButtons);
 		xModalDialogPictureSet xPicSet;
@@ -325,7 +328,7 @@
 		//Если такой диалог уже активен - Сбросить его обработчики и конфигурацию.
 		if ((xDlg = prvDlgIsActive(iDlgId))) {
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
-			prvDlgShowActive();
+			prvDlgShowActive(false);
 			vWindowManagerOpenWindow(EMGUI_MODAL_WINDOW_ID);
 			return -1;
 		}
@@ -346,7 +349,7 @@
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			//Выставляем идентификатор диалога, по которому
 			//будет возможность дальнейшей работы с этим диалогом.
-			if (iDlgId != EMGUI_MODAL_AUTO)
+			if (iDlgId)
 				xDlg->usDlgID = iDlgId;
 			else {
 				xDlg->usDlgID = usDlgID;
@@ -358,7 +361,7 @@
 		xDlg->pxPrev = xMDActive;
 		xMDActive = xDlg;
 
-		prvDlgShowActive();
+		prvDlgShowActive(false);
 
 		vWindowManagerOpenWindow(EMGUI_MODAL_WINDOW_ID);
 		vWidgetInvalidate(xThisWnd);
@@ -448,5 +451,5 @@
 		free(xDlg->sHdr);
 		free(xDlg->sMsg);
 		free(xDlg);
-		prvDlgShowActive();
+		prvDlgShowActive(true);
 	}
