@@ -54,17 +54,19 @@
 	typedef struct xModalDialog_t xModalDialog;
 
 	struct xModalDialog_t {
-		void(*pxClickHandlers[MODAL_DIALOG_MAX_BUTTONS])   ();
 
-		void(*pxDefaultHandler)   ();
+		ModalDialogHandler pxDefaultHandler;
 
 		//bool bActive
-		char sDialogConfig[MODAL_DIALOG_MAX_BUTTONS + 1];
+		char sDialogButtons[MODAL_DIALOG_MAX_BUTTONS + 1];
 		uint16_t  usDlgID;
 		char * sHdr;
 		char * sMsg;
 		signed char cProgress;
 		bool bCanClose;
+
+		void * pvCtx;
+
 		xModalDialog * pxPrev;
 	};
 
@@ -121,13 +123,20 @@
 		int usDlgId = xMDActive->usDlgID;
 		if (!xMDActive)
 			return false;
+
+		char cButton = 0;
+
 		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++) {
-			if (xButtons[c] == pxW && xMDActive->pxClickHandlers[c]) {
-				xMDActive->pxClickHandlers[c]();
+			if (xButtons[c] == pxW) {
+				cButton = xMDActive->sDialogButtons[c];
 				break;
 			}
 		}
-		vModalDialogClose(usDlgId, false);
+
+		if (xMDActive->pxDefaultHandler)
+			if (xMDActive->pxDefaultHandler(cButton, xMDActive->pvCtx))
+				vModalDialogClose(usDlgId, false);
+
 		return true;
 	}
 
@@ -193,10 +202,10 @@
 			//TODO: выставить кол-во активных диалогов в 0
 		}
 
-		uint16_t cBtnCnt = (uint16_t)strlen(xDlg->sDialogConfig);
+		uint16_t cBtnCnt = (uint16_t)strlen(xDlg->sDialogButtons);
 		xModalDialogPictureSet xPicSet;
 
-		char * sBtns = xDlg->sDialogConfig;
+		char * sBtns = xDlg->sDialogButtons;
 
 		xButton * xBtn;
 
@@ -282,8 +291,8 @@
 			free(xDlg->sMsg);
 
 		strLen = MIN(strlen(sBtns), MODAL_DIALOG_MAX_BUTTONS) + 1;
-		memcpy(xDlg->sDialogConfig, sBtns, strLen);
-		xDlg->sDialogConfig[strLen - 1] = '\0';
+		memcpy(xDlg->sDialogButtons, sBtns, strLen);
+		xDlg->sDialogButtons[strLen - 1] = '\0';
 
 		strLen = MIN(strlen(sHdr), EMGUI_WINDOW_HEADER_LENGTH) + 1;
 		xDlg->sHdr = malloc(strLen);
@@ -297,9 +306,6 @@
 
 		xDlg->cProgress = -1;
 		xDlg->bCanClose = true;
-
-		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++)
-			xDlg->pxClickHandlers[c] = NULL;
 
 		xDlg->pxDefaultHandler = NULL;
 	}
@@ -360,7 +366,7 @@
 		return xDlg->usDlgID;
 	}
 
-	void vModalDialogSetHandler(int iDlgID, char cHandler, void(*pxHandler)()) {
+	void vModalDialogSetHandler(int iDlgID, void *pvCtx, ModalDialogHandler pxHandler) {
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
@@ -369,13 +375,8 @@
 		if (!(xDlg = prvDlgIsOpened(iDlgID, &xDlgNext)))
 			return;
 
-		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++) {
-			if (xDlg->sDialogConfig[c] == cHandler) {
-				xDlg->pxClickHandlers[c] = pxHandler;
-				return;
-			}
-		}
 		xDlg->pxDefaultHandler = pxHandler;
+		xDlg->pvCtx = pvCtx;
 	}
 
 	void vModalDialogSetCloseable(int iDlgID, bool bCanClose) {
@@ -442,7 +443,7 @@
 		//генерируем событие по умолчанию, если надо и оно есть.
 		if (bFireDefault) {
 			if (xDlg->pxDefaultHandler)
-				xDlg->pxDefaultHandler(NULL);
+				xDlg->pxDefaultHandler(0, xDlg->pvCtx);
 		}
 		free(xDlg->sHdr);
 		free(xDlg->sMsg);
