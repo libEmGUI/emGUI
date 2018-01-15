@@ -40,7 +40,9 @@ typedef struct xWindowProps_t {
 	WidgetEvent pxOnDispose;
 } xWindowProps;
 
+#ifndef MIN
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
+#endif // !MIN
 
 static bool prvDispose(xWindow * pxW) {
 	xWindowProps *xP;
@@ -79,7 +81,7 @@ xWindow * pxWindowCreate(int eWnd) {
 		pxW->eType = WidgetWindow;
 		pxW->pxOnDispose = prvDispose;
 
-		vWidgetSetBgColor(pxW, 65535, false); //белый фон
+		vWidgetSetBgColor(pxW, EMGUI_WIDGET_COLOR_WHITE, false);
 		vWidgetSetVisible(pxW, false);
 
 		xP = malloc(sizeof(xWindowProps));
