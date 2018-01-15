@@ -145,7 +145,7 @@ void vButtonSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	xButtonProps *xP = pxWidgetGetProps(pxW, WidgetButton);
 
 	if (!xP)
-		return false;
+		return;
 
 	vWidgetSetOnClickHandler(pxW, pxCallback);
 

@@ -49,7 +49,7 @@
 	static xButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS] = { 0 }; // y(ok)/n/c Максимум в диалоге видно 4 кнопки.
 
 	//автонумерация для автоматических диалогов
-	uint16_t usDlgID = EMGUI_MODAL_AUTO + 1;
+	static uint16_t usDlgID = EMGUI_MODAL_AUTO + 1;
 
 	typedef struct xModalDialog_t xModalDialog;
 

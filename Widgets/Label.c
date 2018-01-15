@@ -230,6 +230,8 @@ static bool prvDispose(xWidget * pxW) {
 
 	if (xP->usMaxLength && xP->pcStr)
 		free(xP->pcStr);
+
+	return true;
 }
 
 // if usMaxLength = 0, internal label logic uses external pointer to string,
