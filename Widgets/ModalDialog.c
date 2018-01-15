@@ -33,16 +33,20 @@
 #include "emGUI/Widgets/ModalDialog.h"
 #include <stdlib.h>
 
+#ifndef MIN
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#endif
+
 #define MODAL_DIALOG_MAX_BUTTONS    3
 #define MODAL_DIALOG_MAX_COUNT      10
 #define MODAL_DIALOG_MAX_MSG_LENGTH 255
 #define PB_BORDER                   20
 
-	static xWindow *xThisWnd;
+	static xWindow *xThisWnd = NULL;
 
-	static xLabel         *xMessage;
+	static xLabel         *xMessage = NULL;
 	//static xProgressBar   *xPBar;
-	static xButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS]; // y(ok)/n/c Максимум в диалоге видно 4 кнопки.
+	static xButton    *xButtons[MODAL_DIALOG_MAX_BUTTONS] = { 0 }; // y(ok)/n/c Максимум в диалоге видно 4 кнопки.
 
 	//автонумерация для автоматических диалогов
 	uint16_t usDlgID = EMGUI_MODAL_AUTO + 1;
@@ -57,8 +61,8 @@
 		//bool bActive
 		char sDialogConfig[MODAL_DIALOG_MAX_BUTTONS + 1];
 		uint16_t  usDlgID;
-		char const* sHdr;
-		char const* sMsg;
+		char * sHdr;
+		char * sMsg;
 		signed char cProgress;
 		bool bCanClose;
 		xModalDialog * pxPrev;
@@ -127,10 +131,13 @@
 		return true;
 	}
 
-	xWidget * pxModalDialogWindowCreate() {
+	static xWidget * pxModalDialogWindowCreate() {
 
 		// X0, Y0 - координаты расположения виджетов
 		uint16_t usX, usY;
+
+		if (xThisWnd)
+			return xThisWnd;
 
 		xThisWnd = pxWindowCreate(EMGUI_MODAL_WINDOW_ID);
 		vWidgetSetBgColor(xThisWnd, EMGUI_COLOR_PLOT_BACKGROUND, false);
@@ -143,7 +150,7 @@
 
 		xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
-		xMessage = pxLabelCreate(0, 0, usWidgetGetW(xThisWnd), usY, "ModalDialogText", xFnt, MODAL_DIALOG_MAX_MSG_LENGTH, xThisWnd);
+		xMessage = pxLabelCreate(0, 0, usWidgetGetW(xThisWnd), usY, "", xFnt, MODAL_DIALOG_MAX_MSG_LENGTH, xThisWnd);
 		bLabelSetMultiline(xMessage, true);
 		vLabelSetTextAlign(xMessage, LABEL_ALIGN_CENTER);
 		vLabelSetVerticalAlign(xMessage, LABEL_ALIGN_MIDDLE);
@@ -267,12 +274,29 @@
 		if (!xDlg)
 			return;
 
-		xDlg->sHdr = sHdr;
-		xDlg->sMsg = sMsg;
+		size_t strLen = 0;
+
+		if(xDlg->sHdr)
+			free(xDlg->sHdr); // reallocating space for new strings
+		if(xDlg->sMsg)
+			free(xDlg->sMsg);
+
+		strLen = MIN(strlen(sBtns), MODAL_DIALOG_MAX_BUTTONS) + 1;
+		memcpy(xDlg->sDialogConfig, sBtns, strLen);
+		xDlg->sDialogConfig[strLen - 1] = '\0';
+
+		strLen = MIN(strlen(sHdr), EMGUI_WINDOW_HEADER_LENGTH) + 1;
+		xDlg->sHdr = malloc(strLen);
+		memcpy(xDlg->sHdr, sHdr, strLen);
+		xDlg->sHdr[strLen - 1] = '\0';
+
+		strLen = MIN(strlen(sMsg), MODAL_DIALOG_MAX_MSG_LENGTH) + 1;
+		xDlg->sMsg = malloc(strLen);
+		memcpy(xDlg->sMsg, sMsg, strLen);
+		xDlg->sMsg[strLen - 1] = '\0';
+
 		xDlg->cProgress = -1;
 		xDlg->bCanClose = true;
-		memcpy(xDlg->sDialogConfig, sBtns, MODAL_DIALOG_MAX_BUTTONS + 1);
-		xDlg->sDialogConfig[MODAL_DIALOG_MAX_BUTTONS] = '\0';
 
 		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++)
 			xDlg->pxClickHandlers[c] = NULL;
@@ -283,6 +307,8 @@
 	int iModalDialogOpen(int iDlgId, char const * sBtns, char const * sHdr, char const* sMsg) {
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
+
+		pxModalDialogWindowCreate();
 
 		/*/Проверка ограничения макс. количества открытых диалогов
 		if(cDialogCount >= MODAL_DIALOG_MAX_COUNT){
@@ -304,20 +330,14 @@
 			prvDelDlgFromStack(xDlg, xDlgNext);
 		}
 		else {
+			size_t strLen = 0;
+
 			//Диалога в стеке нет, создаем новую структуру
 			xDlg = malloc(sizeof(xModalDialog));
+			memset(xDlg, 0, sizeof(xModalDialog));
 			//cDialogCount ++;
-			memcpy(xDlg->sDialogConfig, sBtns, MODAL_DIALOG_MAX_BUTTONS + 1);
-			xDlg->sDialogConfig[MODAL_DIALOG_MAX_BUTTONS] = '\0';
-			xDlg->sHdr = sHdr;
-			xDlg->sMsg = sMsg;
-			xDlg->cProgress = -1;
-			xDlg->bCanClose = true;
-			xDlg->pxDefaultHandler = NULL;
-
-			for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++)
-				xDlg->pxClickHandlers[c] = NULL;
-
+			
+			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			//Выставляем идентификатор диалога, по которому
 			//будет возможность дальнейшей работы с этим диалогом.
 			if (iDlgId != EMGUI_MODAL_AUTO)
@@ -344,6 +364,8 @@
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
+		pxModalDialogWindowCreate();
+
 		if (!(xDlg = prvDlgIsOpened(iDlgID, &xDlgNext)))
 			return;
 
@@ -360,6 +382,8 @@
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
+		pxModalDialogWindowCreate();
+
 		if (!(xDlg = prvDlgIsOpened(iDlgID, &xDlgNext)))
 			return;
 
@@ -370,6 +394,8 @@
 	void vModalDialogSetProgress(int iDlgID, int iProgress) {
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
+
+		pxModalDialogWindowCreate();
 
 		if (!(xDlg = prvDlgIsOpened(iDlgID, &xDlgNext)))
 			return;
@@ -394,6 +420,8 @@
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
+		pxModalDialogWindowCreate();
+
 		xDlg = prvDlgIsOpened(iDlgID, &xDlgNext);
 
 		//такой диалог не был в стеке
@@ -416,6 +444,8 @@
 			if (xDlg->pxDefaultHandler)
 				xDlg->pxDefaultHandler(NULL);
 		}
+		free(xDlg->sHdr);
+		free(xDlg->sMsg);
 		free(xDlg);
 		prvDlgShowActive();
 	}

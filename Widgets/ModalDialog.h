@@ -37,7 +37,7 @@ extern "C" {
 		const char* strLabel;
 	}xModalDialogPictureSet;
 
-	xWidget * pxModalDialogWindowCreate();
+	//xWidget * pxModalDialogWindowCreate();
 	int iModalDialogOpen(int iDlgId, char const * sBtns, char const * sHdr, char const* sMsg);
 	void vModalDialogClose(int iDlgID, bool bFireDefault);
 	void vModalDialogSetHandler(int iDlgID, char cHandler, void(*pxHandler)());
