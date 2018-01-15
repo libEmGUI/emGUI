@@ -31,11 +31,13 @@ typedef struct xWindowProps_t {
 	int eId;
 	char* strHeader;
 	bool bFullScreen;
-	bool bModal;
+	//bool bModal;
 	WidgetEvent pxOnCloseRequest;
 	WidgetEvent pxOnClose;
 	WidgetEvent pxOnOpenRequest;
 	WidgetEvent pxOnOpen;
+
+	WidgetEvent pxOnDispose;
 } xWindowProps;
 
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -45,6 +47,12 @@ static bool prvDispose(xWindow * pxW) {
 
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return false;
+
+	if (xP->pxOnDispose)
+		xP->pxOnDispose(pxW);
+
+	if (xP->strHeader)
+		free(xP->strHeader);
 
 	return true;
 }
@@ -60,16 +68,13 @@ int iWindowGetID(xWindow * pxW) {
 
 xWindow * pxWindowCreate(int eWnd) {
 	xWindowProps *xP;
-	xWindow *pxW;
 
-	pxW = malloc(sizeof(xWidget));
-
-	if (!pxW)
+	if (pxWindowManagerGetWindow(eWnd)) // window with such id is already created
 		return NULL;
 
-	memset(pxW, 0, sizeof(xWidget)); //TODO: add check logic!
+	xWindow *pxW = pxWidgetCreate(usWindowManagerGetWindowX(), usWindowManagerGetWindowY(), usWindowManagerGetWindowW(), usWindowManagerGetWindowH(), pxWindowManagerGet(), true);
 
-	if (bWidgetInit(pxW, usWindowManagerGetWindowX(), usWindowManagerGetWindowY(), usWindowManagerGetWindowW(), usWindowManagerGetWindowH(), pxWindowManagerGet(), true)) {
+	if (pxW) {
 
 		pxW->eType = WidgetWindow;
 		pxW->pxOnDispose = prvDispose;
@@ -80,7 +85,7 @@ xWindow * pxWindowCreate(int eWnd) {
 		xP = malloc(sizeof(xWindowProps));
 
 		if (!xP) {
-			free(pxW);
+			vWidgetDispose(pxW);
 			return NULL;
 		}
 
@@ -92,12 +97,9 @@ xWindow * pxWindowCreate(int eWnd) {
 		xP->strHeader = (char*)malloc(EMGUI_WINDOW_HEADER_LENGTH + 1);
 		xP->strHeader[0] = '\0';
 
-		return pxW;
 	}
-	else {
-		free(pxW);
-		return NULL;
-	}
+	
+	return pxW;
 }
 
 void vWindowSetHeader(xWindow * pxW, char const* strH) {
