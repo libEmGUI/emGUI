@@ -135,7 +135,7 @@ void vWidgetDraw(xWidget *pxW) {
 	if (pxW->bInvalidateParent && pxW->pxParent)
 		return;
 
-	//Проверка ближайших детей на предмет установленного флага bWidgetInvalidateParent
+	// check childs for bWidgetInvalidateParent flag
 	if (pxW->pxFirstChild) {
 		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
@@ -147,7 +147,7 @@ void vWidgetDraw(xWidget *pxW) {
 		}
 	}
 
-	//анализ флага инвалидации
+	// check invalidation
 	if (pxW->bInvalidate) {
 		prvInvalidateChilds(pxW);
 		pxW->bValid = false;
@@ -167,13 +167,14 @@ void vWidgetDraw(xWidget *pxW) {
 		}
 	}
 
-	//Валидируем виджет
+	// validate widget
 	pxW->bValid = true;
 
-	if (bInterfaceGetDebug() && bRedrawed) {
+#if EMGUI_DEBUG > 0
+	if (bRedrawed) {
 		pxDrawHDL()->vRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, rand(), false);
 	}
-
+#endif
 }
 
 bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild) {
@@ -449,6 +450,81 @@ void vWidgetSetDrawHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	pxW->pxDrawHandler = pxCallback;
 }
 
-bool bInterfaceGetDebug() {
-	return EMGUI_DEBUG;
+uint16_t usWidgetGetW(xWidget *pxW) {
+	if (!pxW)
+		return  0;
+	return pxW->usX1 - pxW->usX0 + 1;
+}
+
+uint16_t usWidgetGetH(xWidget *pxW) {
+	if (!pxW)
+		return  0;
+	return pxW->usY1 - pxW->usY0 + 1;
+}
+
+uint16_t usWidgetGetX0(xWidget *pxW, bool bAbsolute) {
+	if (!pxW)
+		return  0;
+	if (!pxW->pxParent)
+		return pxW->usX0;
+
+	if (bAbsolute)
+		return pxW->usX0;
+	else
+		return pxW->usX0 - pxW->pxParent->usX0;
+}
+
+uint16_t usWidgetGetY0(xWidget *pxW, bool bAbsolute) {
+	if (!pxW)
+		return  0;
+	if (!pxW->pxParent)
+		return pxW->usY0;
+
+	if (bAbsolute)
+		return pxW->usY0;
+	else
+		return pxW->usY0 - pxW->pxParent->usY0;
+}
+
+uint16_t usWidgetGetX1(xWidget *pxW, bool bAbsolute) {
+	if (!pxW)
+		return  0;
+	if (!pxW->pxParent)
+		return pxW->usX1;
+
+	if (bAbsolute)
+		return pxW->usX1;
+	else
+		return pxW->usX1 - pxW->pxParent->usX0;
+}
+
+uint16_t usWidgetGetY1(xWidget *pxW, bool bAbsolute) {
+	if (!pxW)
+		return  0;
+	if (!pxW->pxParent)
+		return pxW->usY1;
+
+	if (bAbsolute)
+		return pxW->usY1;
+	else
+		return pxW->usY1 - pxW->pxParent->usY0;
+}
+
+void * pxWidgetGetProps(xWidget * pxW, eWidgetType eType) {
+	if (!bWidgetIs(pxW, eType))
+		return NULL;
+
+	return pxW->pvProp;
+}
+
+xWidget *pxWidgetGetFirstChild(xWidget *pxW) {
+	if (!pxW)
+		return  NULL;
+	return pxW->pxFirstChild;
+}
+
+xWidget *pxWidgetGetNextChild(xWidget *pxW) {
+	if (!pxW)
+		return  NULL;
+	return pxW->pxNextSibling;
 }
