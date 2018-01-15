@@ -35,7 +35,12 @@ hierarchy for embedding widgets into each other. It also
   * **Picture Mode** - add an icon to the button
   * **Picture+Text Mode** - add an icon + description under the icon
   
-Components that has
+Components that was introduced in 1.0.0, but disabled at the moment due to unresolved dependencies
+
+* **Console** - a window that shows *linux-like boot console* - depends on `freeRTOS queues`
+* **Keyboard** and **KeyboardRow** - depends on generic int types and 320*240 screen resolution
+* **PictureStack** - just a list of pictures. Provides convenient picture storage place. Depends on **C-Array pictures**
+* **ProgressBar** - Acts as standalone widget and as a part of **ModalDialogs**. Depends on generic int types.
   
 ## Windowing system
 
@@ -53,5 +58,7 @@ and allows you to get to the previous opened windows if you close active one.
 
 ## Future plans
 
+* Port disabled widgets
 * **Touchless** interfaces - add some kind of focus marker and add an API to move focus around
+* Add more **Widgets**
 * **C+ bindings** or a separate fork
