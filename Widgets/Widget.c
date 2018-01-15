@@ -33,12 +33,26 @@ xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t u
 	if (!pxW)
 		return NULL;
 
+	memset(pxW, 0, sizeof(xWidget));
+
 	if (bWidgetInit(pxW, usX0, usY0, usX1, usY1, pxWidParent, bUseWH))
 		return pxW;
 	else {
 		free(pxW);
 		return NULL;
 	}
+}
+
+void vWidgetDispose(xWidget *pxW) {
+	if (!pxW || !pxW->pxOnDispose)
+		return;
+
+	vWidgetRemove(pxW);
+
+	pxW->pxOnDispose(pxW);
+	if (pxW->pvProp)
+		free(pxW->pvProp);
+	free(pxW);
 }
 
 bool bWidgetInit(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH) {
@@ -49,30 +63,11 @@ bool bWidgetInit(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint
 
 	pxW->pxParent = pxWidParent;
 
-	pxW->bValid = false;
 	pxW->bInvalidate = true;
-	pxW->bInvalidateParent = false;
-	pxW->bClickable = false;
 	pxW->bVisible = true;
 	pxW->bEnabled = true;
-	pxW->bPressed = false;
-	pxW->bPushEventCaught = false;
 
 	pxW->bTransparent = true;
-	pxW->usBgColor = 0;
-	pxW->pusBgPicture = NULL;
-
-	pxW->pxDrawHandler = NULL;
-	pxW->pxCheckTSRoutine = NULL;
-	pxW->pxOnClick = NULL;
-	pxW->pxOnShow = NULL;
-	pxW->pxOnHide = NULL;
-
-	pxW->pvProp = NULL;
-
-	pxW->pxChild = NULL;
-
-	pxW->pxNextSibling = NULL;
 
 	//TODO: check LCD sizes
 	if (!bWidgetSetCoords(pxW, usX0, usY0, usX1, usY1, bUseWH))
@@ -86,12 +81,13 @@ bool bWidgetInit(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint
 }
 
 void vWidgetInvalidate(xWidget *pxW) {
-	pxW->bInvalidate = true;
+	if(pxW)
+		pxW->bInvalidate = true;
 }
 
 static void prvInvalidateChilds(xWidget *pxW) {
-	if (pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	if (pxW && pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			vWidgetInvalidate(pxWidChild);
 			pxWidChild = pxWidChild->pxNextSibling;
@@ -139,9 +135,9 @@ void vWidgetDraw(xWidget *pxW) {
 	if (pxW->bInvalidateParent && pxW->pxParent)
 		return;
 
-	//Проверка ближайших детей на предмет установленного флага bWidgetInvalidateParent
-	if (pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	// check childs for bWidgetInvalidateParent flag
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			if (pxWidChild->bInvalidateParent) {
 				pxWidChild->bInvalidateParent = false;
@@ -151,7 +147,7 @@ void vWidgetDraw(xWidget *pxW) {
 		}
 	}
 
-	//анализ флага инвалидации
+	// check invalidation
 	if (pxW->bInvalidate) {
 		prvInvalidateChilds(pxW);
 		pxW->bValid = false;
@@ -163,21 +159,22 @@ void vWidgetDraw(xWidget *pxW) {
 	else
 		bRedrawed = bWidgetDraw(pxW);
 
-	if (pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			vWidgetDraw(pxWidChild);
 			pxWidChild = pxWidChild->pxNextSibling;
 		}
 	}
 
-	//Валидируем виджет
+	// validate widget
 	pxW->bValid = true;
 
-	if (bInterfaceGetDebug() && bRedrawed) {
+#if EMGUI_DEBUG > 0
+	if (bRedrawed) {
 		pxDrawHDL()->vRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, rand(), false);
 	}
-
+#endif
 }
 
 bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild) {
@@ -187,10 +184,10 @@ bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild) {
 
 	//TODO: check for duplicates via pointer address
 	//TODO: check for duplicates in children to prevent recursion
-	if (!pxWidParent->pxChild)
-		pxWidParent->pxChild = pxWidChild;
+	if (!pxWidParent->pxFirstChild)
+		pxWidParent->pxFirstChild = pxWidChild;
 	else {
-		pxW = pxWidParent->pxChild;
+		pxW = pxWidParent->pxFirstChild;
 		while (pxW) { //iterate through the list of children
 			pxWidLast = pxW;
 			pxW = pxW->pxNextSibling;
@@ -200,6 +197,29 @@ bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild) {
 	}
 
 	return true;
+}
+
+void vWidgetRemove(xWidget * pxW) {
+	if (!pxW)
+		return;
+
+	xWidget * pxChild = pxW->pxParent->pxFirstChild;
+
+	while (pxChild) {
+
+		xWidget *pxNext = pxWidgetGetNextChild(pxChild);
+		xWidget *pxPrev = NULL;
+
+		if (pxChild == pxW) { //first element
+			if (!pxPrev)
+				pxW->pxFirstChild = pxNext;
+			else
+				pxPrev->pxNextSibling = pxNext;
+		}
+
+		pxPrev = pxChild;
+		pxChild = pxNext;
+	}
 }
 
 bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
@@ -233,8 +253,8 @@ bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
 		  MDEBUG("Widget release @ %x\n", pxW);*/
 	}
 
-	if (pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			if (bWidgetCheckTouchScreenEvent(pxWidChild, pxTouchScreenEv))
 				return true;
@@ -372,8 +392,8 @@ void prvMoveDXDY(xWidget *pxW, int16_t sDX, int16_t sDY) {
 	pxW->usX1 += sDX;
 	pxW->usY1 += sDY;
 
-	if (pxW->pxChild) {
-		xWidget *pxWidChild = pxW->pxChild;
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
 			prvMoveDXDY(pxWidChild, sDX, sDY);
 			pxWidChild = pxWidChild->pxNextSibling;
@@ -407,29 +427,104 @@ bool bWidgetMoveTo(xWidget *pxW, uint16_t usX0, uint16_t usY0) {
 	return true;
 }
 
-void vWidgetSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
+void vWidgetSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	if (!pxW)
 		return;
 	vWidgetSetClickable(pxW, true);
 	pxW->pxOnClick = pxCallback;
 }
-void vWidgetSetOnHideHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
+void vWidgetSetOnHideHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	if (!pxW)
 		return;
 	pxW->pxOnHide = pxCallback;
 }
-void vWidgetSetOnShowHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
+void vWidgetSetOnShowHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	if (!pxW)
 		return;
 	pxW->pxOnShow = pxCallback;
 }
 
-void vWidgetSetDrawHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
+void vWidgetSetDrawHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	if (!pxW)
 		return;
 	pxW->pxDrawHandler = pxCallback;
 }
 
-bool bInterfaceGetDebug() {
-	return EMGUI_DEBUG;
+uint16_t usWidgetGetW(xWidget *pxW) {
+	if (!pxW)
+		return  0;
+	return pxW->usX1 - pxW->usX0 + 1;
+}
+
+uint16_t usWidgetGetH(xWidget *pxW) {
+	if (!pxW)
+		return  0;
+	return pxW->usY1 - pxW->usY0 + 1;
+}
+
+uint16_t usWidgetGetX0(xWidget *pxW, bool bAbsolute) {
+	if (!pxW)
+		return  0;
+	if (!pxW->pxParent)
+		return pxW->usX0;
+
+	if (bAbsolute)
+		return pxW->usX0;
+	else
+		return pxW->usX0 - pxW->pxParent->usX0;
+}
+
+uint16_t usWidgetGetY0(xWidget *pxW, bool bAbsolute) {
+	if (!pxW)
+		return  0;
+	if (!pxW->pxParent)
+		return pxW->usY0;
+
+	if (bAbsolute)
+		return pxW->usY0;
+	else
+		return pxW->usY0 - pxW->pxParent->usY0;
+}
+
+uint16_t usWidgetGetX1(xWidget *pxW, bool bAbsolute) {
+	if (!pxW)
+		return  0;
+	if (!pxW->pxParent)
+		return pxW->usX1;
+
+	if (bAbsolute)
+		return pxW->usX1;
+	else
+		return pxW->usX1 - pxW->pxParent->usX0;
+}
+
+uint16_t usWidgetGetY1(xWidget *pxW, bool bAbsolute) {
+	if (!pxW)
+		return  0;
+	if (!pxW->pxParent)
+		return pxW->usY1;
+
+	if (bAbsolute)
+		return pxW->usY1;
+	else
+		return pxW->usY1 - pxW->pxParent->usY0;
+}
+
+void * pxWidgetGetProps(xWidget * pxW, eWidgetType eType) {
+	if (!bWidgetIs(pxW, eType))
+		return NULL;
+
+	return pxW->pvProp;
+}
+
+xWidget *pxWidgetGetFirstChild(xWidget *pxW) {
+	if (!pxW)
+		return  NULL;
+	return pxW->pxFirstChild;
+}
+
+xWidget *pxWidgetGetNextChild(xWidget *pxW) {
+	if (!pxW)
+		return  NULL;
+	return pxW->pxNextSibling;
 }

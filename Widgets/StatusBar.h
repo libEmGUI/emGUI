@@ -2,9 +2,7 @@
  * @file   StatusBar.h
  * @author Roman Savrulin (romeo.deepmind@gmail.com)
  * @date   10.11.2012
- * @brief  Интерфейс виджета статус-бара
- *
- * Виджет отрисовывает статус-бар интерфейса
+ * @brief  Status Bar Widget interface
  *
  *
  */
@@ -12,9 +10,9 @@
 #ifndef EMGUI_STATUS_BAR_H
 #define EMGUI_STATUS_BAR_H
 
- /** \weakgroup gui-prop-widgets
-  *  @{
-  */
+/** \weakgroup gui-prop-widgets
+*  @{
+*/
 
   /** \addtogroup prop-widget-statusbar Status Bar
    *  @{
@@ -30,54 +28,29 @@ extern "C" {
 	typedef xWidget xStatusBar; ///< тип виджета
 
 	/**
-	* @brief создает виджет
+	* @brief creates Status Bar Widget
 	*
-	* @param usColor - цвет фона
+	* @param usColor - Background color
 	*
-	* @returns true - успешно создан
-	* @returns false - ошибка
+	* @returns pxW - pointer to created instance
+	* @returns NULL - in case of error
 	*/
-	bool          bStatusBarCreate(uint16_t usColor);
+	xStatusBar*         xStatusBarCreate(uint16_t usColor);
 
 	/**
-	* @brief запраивает ширину виджета
-	*
-	* @returns ширина в пикселях
-	*/
-	inline uint16_t usStatusBarGetW() {
-		return EMGUI_LCD_WIDTH;
-	}
-
-	/**
-	  * @brief запраивает высоту виджета
+	  * @brief Sets window header
 	  *
-	  * @returns высота в пикселях
+	  * @param pxW - Status  bar instance pointer
+	  * @param strH - header
 	  */
-	inline uint16_t usStatusBarGetH() {
-		return EMGUI_STATUS_BAR_HEIGHT;
-	}
-
-	/**
-	  * @brief запраивает дескриптор виджета
-	  *
-	  * @returns дескриптор виджета
-	  */
-	xStatusBar    *pxStatusBarGet();
-
-
-	/**
-	  * @brief устанавливает заголовок окна
-	  *
-	  * @param strH - заголовок
-	  */
-	void          vStatusBarSetWindowHeader(const char * strH);
+	void  vStatusBarSetWindowHeader(xStatusBar* pxW, const char * strH);
 
 	/**
 	 *  @}
 	 */
-	 /**
-	  *  @}
-	  */
+/**
+*  @}
+*/
 
 #ifdef __cplusplus
 }

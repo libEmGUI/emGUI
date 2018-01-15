@@ -41,7 +41,6 @@ extern "C" {
 		WidgetButton,
 		WidgetWindow,
 		WidgetStatusBar,
-		WidgetMenuButton,
 		WidgetPlot
 	} eWidgetType;
 
@@ -65,6 +64,8 @@ extern "C" {
 
 
 	typedef struct xWidget_struct xWidget;
+
+	typedef bool(*WidgetEvent)        (xWidget *);
 
 	//The size of each widget is 60 bytes.
 	struct xWidget_struct {
@@ -95,40 +96,39 @@ extern "C" {
 		void* pvProp;
 
 		xWidget *pxParent;
-		xWidget *pxChild;
+		xWidget *pxFirstChild;
 		xWidget *pxNextSibling;
 
-		bool(*pxDrawHandler)   (xWidget *);
+		WidgetEvent pxDrawHandler;
 		bool(*pxCheckTSRoutine)(xWidget *, xTouchEvent *);
-		bool(*pxOnClick)       (xWidget *);
-		bool(*pxOnShow)        (xWidget *);
-		bool(*pxOnHide)        (xWidget *);
+		WidgetEvent pxOnClick;
+		WidgetEvent pxOnShow;
+		WidgetEvent pxOnHide;
+
+		WidgetEvent pxOnDispose;
 
 	};
 
 	xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH);
 
-	inline xWidget *pxWidgetGetChild(xWidget *pxW) {
-		return pxW->pxChild;
-	}
-
-	inline xWidget *pxWidgetGetNext(xWidget *pxW) {
-		return pxW->pxNextSibling;
-	}
+	void vWidgetDispose(xWidget *pxW); //TODO: check, experimental
 
 	bool bWidgetInit(xWidget *pxW, uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, xWidget *pxWidParent, bool bUseWH);
 	void vWidgetInvalidate(xWidget *pxW);
 	void vWidgetDraw(xWidget *pxW);
+
 	bool bWidgetAdd(xWidget *pxW, xWidget *pxWidChild);
+	void vWidgetRemove(xWidget * pxW); //TODO: check, experimental
+	
 	bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv);
 
 	bool bWidgetMoveTo(xWidget *pxW, uint16_t usX0, uint16_t usY0);
-	//Setters
-
-	void vWidgetSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
-	void vWidgetSetOnHideHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
-	void vWidgetSetOnShowHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
-	void vWidgetSetDrawHandler(xWidget *pxW, bool(*pxCallback)(xWidget *));
+	
+	// Setters
+	void vWidgetSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback);
+	void vWidgetSetOnHideHandler(xWidget *pxW, WidgetEvent pxCallback);
+	void vWidgetSetOnShowHandler(xWidget *pxW, WidgetEvent pxCallback);
+	void vWidgetSetDrawHandler(xWidget *pxW, WidgetEvent pxCallback);
 	void vWidgetSetClickable(xWidget *pxW, bool bClickable);
 	void vWidgetSetBgColor(xWidget *pxW, uint16_t usBgColor, bool bTransparent);
 	void vWidgetSetTransparency(xWidget *pxW, bool bTransparent);
@@ -136,8 +136,31 @@ extern "C" {
 	void vWidgetSetVisible(xWidget *pxW, bool bVisible);
 	bool bWidgetSetCoords(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, bool bUseWH);
 
-	//Commands
+	// Commands
 	bool bWidgetDraw(xWidget *pxW);
+
+	// Getters
+	uint16_t usWidgetGetW(xWidget *pxW);
+	uint16_t usWidgetGetH(xWidget *pxW);
+
+	uint16_t usWidgetGetX0(xWidget *pxW, bool bAbsolute);
+	uint16_t usWidgetGetY0(xWidget *pxW, bool bAbsolute);
+	uint16_t usWidgetGetX1(xWidget *pxW, bool bAbsolute);
+	uint16_t usWidgetGetY1(xWidget *pxW, bool bAbsolute);
+
+	xWidget *pxWidgetGetFirstChild(xWidget *pxW);
+	xWidget *pxWidgetGetNextChild(xWidget *pxW);
+
+	void *   pxWidgetGetProps(xWidget * pxW, eWidgetType eType);
+
+	// One-line helpers
+	inline bool bWidgetResize(xWidget *pxW, uint16_t usW, uint16_t usH) {
+		return bWidgetSetCoords(pxW, usWidgetGetX0(pxW, false), usWidgetGetY0(pxW, false), usW, usH, true);
+	}
+
+	inline bool bWidgetIs(xWidget * pxW, eWidgetType eType) {
+		return (pxW && pxW->eType == eType) ? true : false;
+	}
 
 	inline void vWidgetShow(xWidget *pxW) {
 		vWidgetSetVisible(pxW, true);
@@ -147,72 +170,6 @@ extern "C" {
 		vWidgetSetVisible(pxW, false);
 	}
 
-	//Getters
-	inline uint16_t usWidgetGetW(xWidget *pxW) {
-		return pxW->usX1 - pxW->usX0 + 1;
-	}
-
-	inline uint16_t usWidgetGetH(xWidget *pxW) {
-		return pxW->usY1 - pxW->usY0 + 1;
-	}
-
-	inline uint16_t usWidgetGetX0(xWidget *pxW, bool bAbsolute) {
-		if (!pxW->pxParent)
-			return pxW->usX0;
-
-		if (bAbsolute)
-			return pxW->usX0;
-		else
-			return pxW->usX0 - pxW->pxParent->usX0;
-	}
-
-	inline uint16_t usWidgetGetY0(xWidget *pxW, bool bAbsolute) {
-		if (!pxW->pxParent)
-			return pxW->usY0;
-
-		if (bAbsolute)
-			return pxW->usY0;
-		else
-			return pxW->usY0 - pxW->pxParent->usY0;
-	}
-
-	inline uint16_t usWidgetGetX1(xWidget *pxW, bool bAbsolute) {
-		if (!pxW->pxParent)
-			return pxW->usX1;
-
-		if (bAbsolute)
-			return pxW->usX1;
-		else
-			return pxW->usX1 - pxW->pxParent->usX0;
-	}
-
-	inline uint16_t usWidgetGetY1(xWidget *pxW, bool bAbsolute) {
-		if (!pxW->pxParent)
-			return pxW->usY1;
-
-		if (bAbsolute)
-			return pxW->usY1;
-		else
-			return pxW->usY1 - pxW->pxParent->usY0;
-	}
-
-	inline bool bWidgetResize(xWidget *pxW, uint16_t usW, uint16_t usH) {
-		return bWidgetSetCoords(pxW, usWidgetGetX0(pxW, false), usWidgetGetY0(pxW, false), usW, usH, true);
-	}
-
-	inline bool bWidgetIs(xWidget * pxW, eWidgetType eType) {
-		return (pxW && pxW->eType == eType) ? true : false;
-	}
-
-	inline void * pxWidgetGetProps(xWidget * pxW, eWidgetType eType) {
-		if (!bWidgetIs(pxW, eType))
-			return NULL;
-
-		return pxW->pvProp;
-	}
-
-
-	bool bInterfaceGetDebug();
 
 #ifdef __cplusplus
 }

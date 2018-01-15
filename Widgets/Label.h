@@ -23,20 +23,6 @@
 	Created on: 24.12.2012
 */
 
-/*
- *
- *      Проставляет \n по тексту в зависимости от длины строки !!! меняет строку на входе!!!
- *   void vAdaptTextToMultiLine(char *pcText, uint16_t usLabelWidth, xFont xLabelFont);
- *          pcText - указатель нас троку для вывода
- *          usLabelWidth - ширина Label
- *          xLabelFont - шрифт
- *
- *      Делает из Label MultiLine Label и выводит в неё текст !!! строку на входе не меняет!!!
- *   void vSetMultilineText(xWidget *pxW, char *pcText);
- *          pxW - Label-назначение
- *          pcText -
- */
-
 #ifndef EMGUI_LABEL_H
 #define EMGUI_LABEL_H
 
@@ -65,11 +51,11 @@ extern "C" {
 
 	xLabel *    pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, uint16_t usMaxLength, xWidget *pxWidParent);
 	char *      pcLabelSetText(xWidget *pxW, const char * pcStr);
-	void        pcLabelSetTextAdaptWidth(xLabel *pxL, const char * pcStr); // замена текста и адаптированние ширины Label под длину нового текста, работает только под 16 размер
+	void        pcLabelSetTextAdaptWidth(xLabel *pxL, const char * pcStr); // set text and adapt widget width. TODO: should test that!
 	void        vLabelSetTextColor(xWidget *pxW, uint16_t usColor);
 	void        vLabelSetTextAlign(xWidget *pxW, eLabelTextAlign eAlign);
 	void        vLabelSetVerticalAlign(xWidget *pxW, eLabelVerticalAlign eAlign);
-	void        vLabelSetTextExt(xWidget *pxW, char * pStr, int usMaxLength);
+	//void        vLabelSetTextExt(xWidget *pxW, char * pStr, int usMaxLength);
 	char *      pcLabelGetText(xWidget *pxW);
 	bool        bLabelSetMultiline(xWidget *pxW, bool bMultiLine);
 	bool        bLabelDrawNextPage(xLabel *pxL);
@@ -77,7 +63,6 @@ extern "C" {
 	int         iLabelGetMaxLength(xLabel *pxL);
 	bool        bLabelAppendChar(xWidget *pxW, char cChar, bool bSetInvalidate);
 	bool        bLabelBackSpace(xWidget *pxW, bool bSetInvalidate);
-	void        vLabelSetOnClickHandler(xWidget *pxW, bool(*callback)(xWidget*));
 	void        vLabelSetOnEditHandler(xWidget *pxW, void(*callback)(void));
 	void        vLabelSetHaveCursor(xWidget *pxW, bool bLabelHaveCursor);
 	void        vLabelClear(xWidget *pxW, bool bSetInvalidate);

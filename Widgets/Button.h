@@ -33,16 +33,13 @@ extern "C" {
 
 	typedef xWidget xButton;
 
-	typedef struct xButtonProps_struct {
-		bool bEmulatePressure;
-		xPicture pusPicDisabled;
-	} xButtonProps;
+	xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, const char *text, xWidget *pxWidParent);
+	xButton * pxButtonCreateFromImage(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *pxWidParent);
+	xButton * pxButtonCreateFromImageWithText(uint16_t usX, uint16_t usY, xPicture pusPic, const char *text, xWidget *pxWidParent);
 
-	xButton * pxButtonCreate(uint16_t usX, uint16_t usY, xPicture pusPic, xWidget *pxWidParent);
-	bool bButtonSetPushPic(xButton *pxW, xPicture pusPic);												// TODO: don't work
-	inline void bButtonSetOnClickHandler(xWidget *pxW, bool(*pxCallback)(xWidget *)) {
-		vWidgetSetOnClickHandler(pxW, pxCallback);
-	}
+	void vButtonSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback);
+
+	void vButtonSetText(xWidget * pxW, char const* strL);
 
 #ifdef __cplusplus
 }

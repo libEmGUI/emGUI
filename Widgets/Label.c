@@ -63,11 +63,11 @@ static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t
 	uXSeparator = uXBefor;
 
 	while ((uXBefor + pxDrawHDL()->ucFontGetCharW(*pcCharCount, pubFont)) <= uXTo && uMaxLineLen) {
-		if (((*pcCharCount == ' ' || *pcCharCount == '\t') && pcCharCount != pcLine) // и разделитель будет не первый символ
+		if (((*pcCharCount == ' ' || *pcCharCount == '\t') && pcCharCount != pcLine) // delimiter won't be the first symbol
 			|| *pcCharCount == '\n') {
 			pcSeparator = pcCharCount;
-			uXSeparator = uXBefor; // временное хранение, на случай если
-		}                        // придётся отматывать назад до pcSeparator
+			uXSeparator = uXBefor; // temporary storage in case we have to 
+		}                          // rewind to  pcSeparator
 		if (*pcCharCount == '\n')
 			break;
 		if (*pcCharCount == '\t')
@@ -77,7 +77,7 @@ static char* prvCountLine(char *pcLine, uint16_t uXFrom, uint16_t uXTo, uint16_t
 		--uMaxLineLen;
 	}
 
-	if (pcSeparator && uMaxLineLen) // если перенос по разделителю, то необходимо и uXBefor отсчитать назад
+	if (pcSeparator && uMaxLineLen) // if we have to break line by separator, we have to update uXBefor too
 		uXBefor = uXSeparator;
 
 	if (puXLinePosition)
@@ -184,33 +184,36 @@ static bool prvDraw(xWidget *pxW) {
 }
 
 static void prvSetPrvPgPntr(xLabel *pxW) {
-	xLabelProps *xP;
 	char *pcPageCount;
-	if ((xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel))) {
-		xP->pcPrvPage = NULL;
-		pcPageCount = xP->pcStr;
-		while (pcPageCount != xP->pcCrntPage) {
-			xP->pcPrvPage = pcPageCount;
-			pcPageCount = prvCountPage(pcPageCount, pxW->usX0, pxW->usX1 + 1, pxW->usY0, pxW->usY1 + 1, NULL, NULL,
-				xP->xFnt, xP->eTextAlign, xP->eVerticalAlign);
-		}
+	xLabelProps *xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel);
+	if (!xP)
+		return;
+	
+	xP->pcPrvPage = NULL;
+	pcPageCount = xP->pcStr;
+	while (pcPageCount != xP->pcCrntPage) {
+		xP->pcPrvPage = pcPageCount;
+		pcPageCount = prvCountPage(pcPageCount, pxW->usX0, pxW->usX1 + 1, pxW->usY0, pxW->usY1 + 1, NULL, NULL,
+			xP->xFnt, xP->eTextAlign, xP->eVerticalAlign);
 	}
 }
 
-bool bLabelDrawNextPage(xLabel *pxL) {
-	xLabelProps *xP;
-	xP = (xLabelProps *)pxL->pvProp;
+bool bLabelDrawNextPage(xLabel *pxW) {
+	xLabelProps *xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel);
+	if (!xP)
+		return false;
 	if (xP->pcNxtPage) {
 		xP->pcCrntPage = xP->pcNxtPage;
-		vWidgetInvalidate(pxL);
+		vWidgetInvalidate(pxW);
 		return true;
 	}
 	return false;
 }
 
 bool bLabelDrawPrevPage(xLabel *pxW) {
-	xLabelProps *xP;
-	xP = (xLabelProps *)pxW->pvProp;
+	xLabelProps *xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel);
+	if (!xP)
+		return false;
 	prvSetPrvPgPntr(pxW);
 	if (xP->pcPrvPage) {
 		xP->pcCrntPage = xP->pcPrvPage;
@@ -220,16 +223,31 @@ bool bLabelDrawPrevPage(xLabel *pxW) {
 	return false;
 }
 
-//если usMaxLength = 0, то текст в метку устанавливается только сменой указателя на строку,
-//т.е. он не копируется во внутреннее хранилище и под него не выделяется память. Идеально для
-//реализации меток с текстом ReadOnly
+static bool prvDispose(xWidget * pxW) {
+	xLabelProps *xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel);
+	if (!xP)
+		return false;
+
+	if (xP->usMaxLength && xP->pcStr)
+		free(xP->pcStr);
+
+	return true;
+}
+
+// if usMaxLength = 0, internal label logic uses external pointer to string,
+// i.e. cStr contents is not copied to internal storage, 
+// because internal storage is not allocated at all
+//
+// This ideally fits case when string is in read-only segment. But be careful with
+// PROGMEM on ARDUINO and ESP8266!
 xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, uint16_t usMaxLength, xWidget *pxWidParent) {
 	xLabel *pxW;
 	xLabelProps *xP;
 
 	pxW = malloc(sizeof(xWidget));
+	memset(pxW, 0, sizeof(xWidget)); //TODO: add check logic!
 
-	if (!xFnt || !cStr)
+	if (!xFnt || !cStr || !pxW)
 		return NULL;
 
 	if (usH < pxDrawHDL()->usFontGetH(xFnt))
@@ -237,26 +255,35 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 
 	if (bWidgetInit(pxW, usX, usY, usW, usH, pxWidParent, true)) {
 
+		pxW->eType = WidgetLabel;
+		pxW->pxOnDispose = prvDispose;
+
 		vWidgetSetBgColor(pxW, EMGUI_WIDGET_COLOR_WHITE, false);
 
 		xP = malloc(sizeof(xLabelProps));
-		if (!xP)
+		
+		if (!xP) {
+			free(pxW);
 			return NULL;
+		}
+
+		memset(xP, 0, sizeof(xLabelProps));
+		pxW->pvProp = xP;
 
 		usMaxLength = (usMaxLength > EMGUI_LABEL_MAX_LENGTH) ? EMGUI_LABEL_MAX_LENGTH : usMaxLength;
 
-		//Выделяем память для внутр. хранилища
-		if (usMaxLength) {
+		if (0 == usMaxLength) { //use external pointer to const char * directly
+			xP->pcStr = (char *)cStr; ///WARNING!
+		}
+		else { // allocating memory for internal storage
 			//+ 1 //for '\0' char in the end
 			xP->pcStr = malloc(usMaxLength + 1);
 		}
-		else
-			xP->pcStr = (char *)cStr; ///WARNING!
 
-		  //Память не выделилась, строка Read Only
+		//memory is not allocated! Aborting!
 		if (!xP->pcStr) {
-			xP->pcStr = (char *)cStr; ///WARNING!
-			usMaxLength = 0;
+			vWidgetDispose(pxW);
+			return NULL;
 		}
 
 		xP->usMaxLength = usMaxLength;
@@ -267,23 +294,13 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 		xP->usColor = EMGUI_WIDGET_COLOR_BLACK;
 		xP->xFnt = xFnt;
 
-		xP->bHaveCursor = false;
-
 		if (usMaxLength) {
 			memcpy(xP->pcStr, cStr, min(strlen(cStr), usMaxLength) + 1);
 			//Terminating string
 			xP->pcStr[usMaxLength] = '\0';
 		}
 
-		xP->onEditHandler = NULL;
-
-		xP->bIsMultiLine = false;
 		xP->pcCrntPage = xP->pcStr;
-		xP->pcNxtPage = NULL;
-		xP->pcPrvPage = NULL;
-
-		pxW->pvProp = xP;
-		pxW->eType = WidgetLabel;
 		pxW->pxDrawHandler = prvDraw;
 
 		return pxW;
@@ -299,18 +316,14 @@ char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 	char *pcLine;
 	uint16_t  usMaxLength;
 
-	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)))
+	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)) || !pcStr)
 		return NULL;
-
-	//TODO: возможно ли так???
-	/*if(!xP->pcStr)
-	  return NULL;*/
 
 	pcLine = xP->pcStr;
 	usMaxLength = xP->usMaxLength;
 
 
-	//Если возможно копирование во внутр. или внешн. память
+	// if we can copy to usMaxLength
 	if (usMaxLength) {
 		if (!strcmp(pcStr, pcLine))
 			return NULL;
@@ -322,10 +335,7 @@ char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 
 	}
 	else {
-		/*/Не нужно обновлять
-		if(pcLine == pcStr)
-		  return NULL;*/
-		  //если NULL, то просто инвалидируем
+
 		if (pcStr != NULL) {
 			xP->pcStr = (char*)pcStr;
 			xP->pcCrntPage = xP->pcStr;
@@ -377,7 +387,7 @@ void vLabelSetVerticalAlign(xWidget *pxW, eLabelVerticalAlign eAlign) {
 	vWidgetInvalidate(pxW);
 }
 
-void vLabelSetTextExt(xWidget *pxW, char * pStr, int usMaxLength) {
+/*void vLabelSetTextExt(xWidget *pxW, char * pStr, int usMaxLength) {
 	xLabelProps *xP;
 
 	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)))
@@ -403,9 +413,9 @@ void vLabelSetTextExt(xWidget *pxW, char * pStr, int usMaxLength) {
 	xP->pcPrvPage = xP->pcNxtPage = NULL;
 
 	vWidgetInvalidate(pxW);
-}
+}*/
 
-char *      pcLabelGetText(xWidget *pxW) {
+char * pcLabelGetText(xWidget *pxW) {
 	xLabelProps *xP;
 
 	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)))
@@ -426,7 +436,7 @@ bool bLabelSetMultiline(xWidget *pxW, bool bMultiLine) {
 }
 
 
-int         iLabelGetMaxLength(xLabel *pxL) {
+int iLabelGetMaxLength(xLabel *pxL) {
 	xLabelProps *xP;
 
 	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxL, WidgetLabel)))
@@ -462,11 +472,6 @@ bool bLabelBackSpace(xWidget *pxW, bool bSetInvalidate) {
 		}
 	}
 	return false;
-}
-
-void vLabelSetOnClickHandler(xWidget *pxW, bool(*callback)(xWidget*)) {
-	if (pxWidgetGetProps(pxW, WidgetLabel))
-		vWidgetSetOnClickHandler(pxW, callback);
 }
 
 void vLabelSetOnEditHandler(xWidget *pxW, void(*callback)(void)) {

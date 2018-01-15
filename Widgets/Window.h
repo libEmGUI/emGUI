@@ -32,25 +32,23 @@ extern "C" {
 
 	typedef xWidget xWindow;
 
-	typedef struct xWindowProps_t {
-		int eId;
-		xWindow *xBackWindow;
-		char*   strHeader;
-		bool    bFullScreen;
-		bool(*pxOnCloseRequest)       (xWidget *);
-		bool(*pxOnClose)              (xWidget *);
-		bool(*pxOnOpenRequest)        (xWidget *);
-		bool(*pxOnOpen)               (xWidget *);
-	} xWindowProps;
-
 	xWindow * pxWindowCreate(int eWnd);
-	void vWindowSetOnOpenHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
-	void vWindowSetOnOpenRequestHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
-	void vWindowSetOnCloseHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
-	void vWindowSetOnCloseRequestHandler(xWidget * pxW, bool(*pxCallback)(xWidget *));
-	void vWindowSetHeader(xWidget * pxW, char const* strH);
-	xWindow * pxWindowGetBack(xWidget *pxW);
-	void vWindowSetFullScreen(xWidget *pxW, bool bFS);
+	void vWindowSetOnOpenHandler(xWindow * pxW, WidgetEvent pxCallback);
+	void vWindowSetOnOpenRequestHandler(xWindow * pxW, WidgetEvent pxCallback);
+	void vWindowSetOnCloseHandler(xWindow * pxW, WidgetEvent  pxCallback);
+	void vWindowSetOnCloseRequestHandler(xWindow * pxW, WidgetEvent pxCallback);
+	void vWindowSetHeader(xWindow * pxW, char const* strH);
+	void vWindowSetFullScreen(xWindow *pxW, bool bFS);
+
+	bool bWindowGetFullScreen(xWindow *pxW);
+	const char* pcWindowGetHeader(xWindow *pxW);
+
+	int iWindowGetID(xWindow * pxW);
+
+	bool bWindowClose(xWindow *pxW);
+	bool bWindowOpen(xWindow *pxW);
+
+	
 
 #ifdef __cplusplus
 }

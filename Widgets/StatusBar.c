@@ -2,15 +2,15 @@
  * @file   StatusBar.c
  * @author Roman Savrulin (romeo.deepmind@gmail.com)
  * @date   10.11.2012
- * @brief  Реализация виджета статус-бара
+ * @brief  Status bar widnget implementation
  *
- * Это - виджет синглтон
  *
  */
 
 #include <stdint.h>
+#include <malloc.h>
 
-#include "emGUI/Widgets/Interface.h"
+#include "emGUI/Widgets/WindowManager.h"
 #include "emGUI/Widgets/Button.h"
 #include "emGUI/Widgets/Label.h"
 
@@ -21,68 +21,88 @@
  */
 
 
-
 typedef struct xStatusBarProps_struct {
-	uint16_t usColor;          ///< цвет статус-бара
+	xButton             *xCloseButton;
+	xLabel              *xWndHeader;
 } xStatusBarProps;
 
-static xWidget             *xStatusBarInstance; ///< дескриптор виджета
-static xButton             *xCloseButton;       ///< дескриптор крестика
-static xLabel              *xWndHeader;         ///< дескриптор заголовка окна
 
  /**
-  * @brief обработчик щелчка на кнопке крестика
+  * @brief close button handler
   *
-  * @returns true - событие обработано
+  * @returns true - event is handled
   */
 static bool prvCloseClickHandler(xWidget* pxW) {
-	vInterfaceCloseActiveWindow();
+	vWindowManagerCloseActiveWindow();
 	return true;
 }
 
+static void prvDispose(xWidget* pxW) {
+	xStatusBarProps *xP;
+	if (!(xP = (xStatusBarProps *)pxWidgetGetProps(pxW, WidgetStatusBar)))
+		return;
 
-bool bStatusBarCreate(uint16_t usColor) {
+	vWidgetDispose(xP->xCloseButton);
+	vWidgetDispose(xP->xWndHeader);
+}
 
-	xPicture xCross = pxDrawHDL()->xGetPicture("cross"); //TODO: Check for null?
+
+xStatusBar* xStatusBarCreate(uint16_t usColor) {
+
+	xStatusBar * pxW;
+	xStatusBarProps * xP;
+	uint16_t usX, usY, usW;
 
 	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
-	xStatusBarInstance = pxWidgetCreate(0, 0, usInterfaceGetW(), EMGUI_STATUS_BAR_HEIGHT, pxInterfaceGet(), true);
-	xStatusBarInstance->eType = WidgetStatusBar;
-	vWidgetSetBgColor(xStatusBarInstance, usColor, false);
+	pxW = (xStatusBar *) pxWidgetCreate(0, 0, usWindowManagerGetW(), EMGUI_STATUS_BAR_HEIGHT, pxWindowManagerGet(), true);
 
-	uint16_t usX, usY, usW;
+	if(!pxW){
+		vWidgetDispose(pxW);
+		return NULL;
+	}
 
-	usY = (EMGUI_STATUS_BAR_HEIGHT - pxDrawHDL()->usGetPictureH(xCross)) / 2;
-	usX = EMGUI_LCD_WIDTH - pxDrawHDL()->usGetPictureW(xCross) - usY;
+	xP = malloc(sizeof(xStatusBarProps));
 
-	xCloseButton = pxButtonCreate(usX, usY, xCross, xStatusBarInstance);
-	vWidgetSetOnClickHandler(xCloseButton, prvCloseClickHandler);
+	if (!xP) {
+		free(pxW);
+		return NULL;
+	}
 
-	usY = (usStatusBarGetH() - pxDrawHDL()->usFontGetH(xFnt)) / 2;
+	memset(xP, 0, sizeof(xStatusBarProps));
+
+	pxW->pvProp = xP;
+
+	pxW->eType = WidgetStatusBar;
+	vWidgetSetBgColor(pxW, usColor, false);
+
+	usY = 2;
+	usW = usWidgetGetH(pxW) - usY * 2;
+	usX = usWidgetGetW(pxW) - usWidgetGetH(pxW);
+
+	xP->xCloseButton = pxButtonCreateFromText(usX, usY, usW, usW, "X", pxW);
+	vWidgetSetTransparency(xP->xCloseButton, true);
+	vWidgetSetOnClickHandler(xP->xCloseButton, prvCloseClickHandler);
+
+	usY = (usWidgetGetH(pxW) - pxDrawHDL()->usFontGetH(xFnt)) / 2;
 	usW = pxDrawHDL()->usFontGetStrW("Default", xFnt) + 10;
-	usX = usStatusBarGetW() / 2 - usW / 2;
+	usX = usWidgetGetW(pxW) / 2 - usW / 2;
 
-	xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default", xFnt, 100, xStatusBarInstance);
-	vWidgetSetBgColor(xWndHeader, usColor, false);
-	vLabelSetTextColor(xWndHeader, EMGUI_COLOR_MENU_HEADER_TEXT);
-	vLabelSetTextAlign(xWndHeader, LABEL_ALIGN_CENTER);
+	xP->xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default", xFnt, EMGUI_WINDOW_HEADER_LENGTH, pxW);
+	vWidgetSetBgColor(xP->xWndHeader, usColor, false);
+	vLabelSetTextColor(xP->xWndHeader, EMGUI_COLOR_MENU_HEADER_TEXT);
+	vLabelSetTextAlign(xP->xWndHeader, LABEL_ALIGN_CENTER);
 
-
-	//vGuiSendEvent(GuiEventRefreshPb, 0);
-
-	return true;
+	return pxW;
 }
 
-void  vStatusBarSetWindowHeader(const char * strH) {
-	pcLabelSetText(xWndHeader, strH);
+void  vStatusBarSetWindowHeader(xStatusBar* pxW, const char * strH) {
+	xStatusBarProps *xP;
+	if (!(xP = (xStatusBarProps *)pxWidgetGetProps(pxW, WidgetStatusBar)))
+		return;
+
+	pcLabelSetText(xP->xWndHeader, strH);
 }
-
-xWidget *pxStatusBarGet() {
-	return xStatusBarInstance;
-}
-
-
 
 /**
  *  @}

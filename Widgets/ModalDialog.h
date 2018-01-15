@@ -37,10 +37,11 @@ extern "C" {
 		const char* strLabel;
 	}xModalDialogPictureSet;
 
-	xWidget * pxModalDialogWindowCreate();
+	typedef bool(*ModalDialogHandler)(char cButton, void* pxContext);
+
 	int iModalDialogOpen(int iDlgId, char const * sBtns, char const * sHdr, char const* sMsg);
 	void vModalDialogClose(int iDlgID, bool bFireDefault);
-	void vModalDialogSetHandler(int iDlgID, char cHandler, void(*pxHandler)());
+	void vModalDialogSetHandler(int iDlgID, void *pvCtx, ModalDialogHandler pxHandler);
 	void vModalDialogSetProgress(int iDlgID, int iProgress);
 	void vModalDialogSetCloseable(int iDlgID, bool bCanClose);
 

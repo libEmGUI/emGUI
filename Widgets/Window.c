@@ -21,96 +21,128 @@
 */
 
 #include "emGUI/Widgets/Window.h"
-#include "emGUI/Widgets/Interface.h"
+#include "emGUI/Widgets/WindowManager.h"
 #include "emGUI/Widgets/StatusBar.h"
 #include <malloc.h>
 #include <string.h>
 #include "emGUI/Draw/Draw.h"
 
+typedef struct xWindowProps_t {
+	int eId;
+	char* strHeader;
+	bool bFullScreen;
+	//bool bModal;
+	WidgetEvent pxOnCloseRequest;
+	WidgetEvent pxOnClose;
+	WidgetEvent pxOnOpenRequest;
+	WidgetEvent pxOnOpen;
+
+	WidgetEvent pxOnDispose;
+} xWindowProps;
+
+#ifndef MIN
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
+#endif // !MIN
+
+static bool prvDispose(xWindow * pxW) {
+	xWindowProps *xP;
+
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return false;
+
+	if (xP->pxOnDispose)
+		xP->pxOnDispose(pxW);
+
+	if (xP->strHeader)
+		free(xP->strHeader);
+
+	return true;
+}
+
+int iWindowGetID(xWindow * pxW) {
+	xWindowProps *xP;
+
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return 0;
+
+	return xP->eId;
+}
 
 xWindow * pxWindowCreate(int eWnd) {
 	xWindowProps *xP;
-	xWindow *pxW;
 
-	pxW = malloc(sizeof(xWidget));
+	if (pxWindowManagerGetWindow(eWnd)) // window with such id is already created
+		return NULL;
 
-	if (bWidgetInit(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), pxInterfaceGet(), true)) {
+	xWindow *pxW = pxWidgetCreate(usWindowManagerGetWindowX(), usWindowManagerGetWindowY(), usWindowManagerGetWindowW(), usWindowManagerGetWindowH(), pxWindowManagerGet(), true);
 
-		vWidgetSetBgColor(pxW, 65535, false); //белый фон
+	if (pxW) {
+
+		pxW->eType = WidgetWindow;
+		pxW->pxOnDispose = prvDispose;
+
+		vWidgetSetBgColor(pxW, EMGUI_WIDGET_COLOR_WHITE, false);
 		vWidgetSetVisible(pxW, false);
 
 		xP = malloc(sizeof(xWindowProps));
 
-		if (!xP)
+		if (!xP) {
+			vWidgetDispose(pxW);
 			return NULL;
+		}
 
-		xP->xBackWindow = NULL;
-		xP->pxOnCloseRequest = NULL;
-		xP->pxOnClose = NULL;
-		xP->pxOnOpenRequest = NULL;
-		xP->pxOnOpen = NULL;
-		xP->bFullScreen = false;
+		memset(xP, 0, sizeof(xWindowProps));
+
+		pxW->pvProp = xP;
+
 		xP->eId = eWnd;
 		xP->strHeader = (char*)malloc(EMGUI_WINDOW_HEADER_LENGTH + 1);
 		xP->strHeader[0] = '\0';
-		pxW->pvProp = xP;
-		pxW->eType = WidgetWindow;
 
-		return pxW;
 	}
-	else {
-		free(pxW);
-		return NULL;
-	}
+	
+	return pxW;
 }
 
-void vWindowSetHeader(xWidget * pxW, char const* strH) {
+void vWindowSetHeader(xWindow * pxW, char const* strH) {
 	xWindowProps *xP;
 	int iLen = MIN(strlen(strH), EMGUI_WINDOW_HEADER_LENGTH);
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	memcpy(xP->strHeader, strH, iLen + 1);
 	xP->strHeader[iLen] = '\0';
-	vInterfaceUpdateWindow();
+	vWindowManagerUpdateWindow();
 }
 
-void vWindowSetOnCloseRequestHandler(xWidget * pxW, bool(*pxCallback)(xWidget *)) {
+void vWindowSetOnCloseRequestHandler(xWindow * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnCloseRequest = pxCallback;
 }
 
-void vWindowSetOnCloseHandler(xWidget * pxW, bool(*pxCallback)(xWidget *)) {
+void vWindowSetOnCloseHandler(xWindow * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnClose = pxCallback;
 }
 
-void vWindowSetOnOpenHandler(xWidget * pxW, bool(*pxCallback)(xWidget *)) {
+void vWindowSetOnOpenHandler(xWindow * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnOpen = pxCallback;
 }
 
-void vWindowSetOnOpenRequestHandler(xWidget * pxW, bool(*pxCallback)(xWidget *)) {
+void vWindowSetOnOpenRequestHandler(xWindow * pxW, WidgetEvent pxCallback) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
 	xP->pxOnOpenRequest = pxCallback;
 }
 
-xWindow * pxWindowGetBack(xWidget *pxW) {
-	xWindowProps *xP;
-	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
-		return NULL;
-	return xP->xBackWindow;
-}
-
-void vWindowSetFullScreen(xWidget *pxW, bool bFS) {
+void vWindowSetFullScreen(xWindow *pxW, bool bFS) {
 	xWindowProps *xP;
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
 		return;
@@ -120,8 +152,58 @@ void vWindowSetFullScreen(xWidget *pxW, bool bFS) {
 			xP->bFullScreen = bFS;
 	}
 	else {
-		if (bWidgetSetCoords(pxW, usInterfaceGetWindowX(), usInterfaceGetWindowY(), usInterfaceGetWindowW(), usInterfaceGetWindowH(), true))
+		if (bWidgetSetCoords(pxW, usWindowManagerGetWindowX(), usWindowManagerGetWindowY(), usWindowManagerGetWindowW(), usWindowManagerGetWindowH(), true))
 			xP->bFullScreen = bFS;
 	}
-	vInterfaceUpdateWindow();
+	vWindowManagerUpdateWindow();
+}
+
+bool bWindowClose(xWindow *pxW) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return false;
+
+	if (xP->pxOnCloseRequest)
+		if (!xP->pxOnCloseRequest(pxW))
+			return false;
+
+	vWidgetHide(pxW);
+
+	if (xP->pxOnClose)
+		xP->pxOnClose(pxW);
+
+	return true;
+}
+
+bool bWindowOpen(xWindow *pxW) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return false;
+
+	if (xP->pxOnOpenRequest)
+		if (!xP->pxOnOpenRequest(pxW))
+			return false;
+
+	vWidgetShow(pxW);
+
+	if (xP->pxOnOpen)
+		xP->pxOnOpen(pxW);
+
+	return true;
+}
+
+bool bWindowGetFullScreen(xWindow *pxW) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return false;
+
+	return xP->bFullScreen;
+}
+
+const char* pcWindowGetHeader(xWindow *pxW) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return NULL;
+
+	return xP->strHeader;
 }

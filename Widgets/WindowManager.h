@@ -20,55 +20,56 @@
 	Created on: 14.11.2012
 */
 
-#ifndef EMGUI_INTERFACE_H
-#define EMGUI_INTERFACE_H
+#ifndef EMGUI_WINDOW_MANAGER_H
+#define EMGUI_WINDOW_MANAGER_H
 
+#include <stdint.h>
 
 #include "emGUI/Widgets/Widget.h"
 #include "emGUI/Widgets/Window.h"
-#include <stdint.h>
 #include "emGUI/Widgets/StatusBar.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
+	typedef xWidget xWindowManager;
 
-
-	typedef xWidget xInterface;
-
-	xInterface * pxInterfaceCreate(bool(*pxOnCreateHandler)(xWidget *));
-	void vInterfaceDraw();
-	xInterface *pxInterfaceGet();
-	inline uint16_t usInterfaceGetW() {
+	xWindowManager * pxWindowManagerCreate(bool(*pxOnCreateHandler)(xWidget *));
+	void vWindowManagerDraw();
+	xWindowManager *pxWindowManagerGet();
+	inline uint16_t usWindowManagerGetW() {
 		return EMGUI_LCD_WIDTH;
 	}
-	inline uint16_t usInterfaceGetH() {
+	inline uint16_t usWindowManagerGetH() {
 		return EMGUI_LCD_HEIGHT;
 	}
-	inline uint16_t usInterfaceGetWindowH() {
+	inline uint16_t usWindowManagerGetWindowH() {
 		return EMGUI_LCD_HEIGHT - EMGUI_STATUS_BAR_HEIGHT;
 	}
-	inline uint16_t usInterfaceGetWindowW() {
+	inline uint16_t usWindowManagerGetWindowW() {
 		return EMGUI_LCD_WIDTH;
 	}
-	inline uint16_t usInterfaceGetWindowX() {
+	inline uint16_t usWindowManagerGetWindowX() {
 		return 0;
 	}
-	inline uint16_t usInterfaceGetWindowY() {
+	inline uint16_t usWindowManagerGetWindowY() {
 		return EMGUI_STATUS_BAR_HEIGHT;
 	}
-	void vInterfaceInvalidate();
-	bool bInterfaceCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv);
-	void vInterfaceDebug(bool bDebug);
-	bool bInterfaceGetDebug();
-	void vInterfaceOpenWindow(int eWnd);
-	void vInterfaceCloseActiveWindow();
-	void vInterfaceCloseWindow(int eWnd);
-	void vInterfaceUpdateWindow();
-	xWindow * pxInterfaceIsWindowActive(int eWnd);
+	void vWindowManagerInvalidate();
+	bool bWindowManagerCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv);
+
+	xStatusBar *pxWindowManagerGetStatusBar();
+
+	void vWindowManagerOpenWindow(int eWnd);
+	void vWindowManagerCloseActiveWindow();
+	void vWindowManagerCloseWindow(int eWnd);
+	void vWindowManagerUpdateWindow();
+	bool bWindowManagerIsWindowActive(int eWnd);
+	xWindow * pxWindowManagerGetWindow(int eWnd);
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
-#endif	//__INTERFACE_H
+#endif	//__WINDOW_MANAGER_H
