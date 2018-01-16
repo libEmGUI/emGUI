@@ -85,10 +85,10 @@ xStatusBar* xStatusBarCreate(uint16_t usColor) {
 	vWidgetSetOnClickHandler(xP->xCloseButton, prvCloseClickHandler);
 
 	usY = (usWidgetGetH(pxW) - pxDrawHDL()->usFontGetH(xFnt)) / 2;
-	usW = pxDrawHDL()->usFontGetStrW("Default", xFnt) + 10;
+	usW = usWidgetGetW(pxW) * 70 / 100;
 	usX = usWidgetGetW(pxW) / 2 - usW / 2;
 
-	xP->xWndHeader = pxLabelCreate(usX, usY, usW, 0, "Default", xFnt, EMGUI_WINDOW_HEADER_LENGTH, pxW);
+	xP->xWndHeader = pxLabelCreate(usX, usY, usW, 0, "", xFnt, EMGUI_WINDOW_HEADER_LENGTH, pxW);
 	vWidgetSetBgColor(xP->xWndHeader, usColor, false);
 	vLabelSetTextColor(xP->xWndHeader, EMGUI_COLOR_MENU_HEADER_TEXT);
 	vLabelSetTextAlign(xP->xWndHeader, LABEL_ALIGN_CENTER);
