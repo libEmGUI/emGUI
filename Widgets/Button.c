@@ -166,7 +166,7 @@ xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint1
 
 		xP->uiPressureBorder = 2;
 
-		xP->xText = pxLabelCreate(0, 1, usW, usH, text, pxDrawHDL()->xGetDefaultFont(), 0, pxW);
+		xP->xText = pxLabelCreate(0, 1, usW, usH, text, pxDrawHDL()->xGetDefaultFont(), strlen(text), pxW);
 		vWidgetSetTransparency(xP->xText, true);
 
 		vLabelSetTextAlign(xP->xText, LABEL_ALIGN_CENTER);
