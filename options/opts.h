@@ -13,23 +13,23 @@
 #error "Please define EMGUI_XFONT_TYPE"
 #endif
 
-typedef EMGUI_XPICTURE_TYPE xPicture;
-typedef EMGUI_XFONT_TYPE xFont; //TODO: Add GFXFont segmented struct to allow UTF-8 fonts support!
+typedef EMGUI_XPICTURE_TYPE			xPicture;
+typedef EMGUI_XFONT_TYPE			xFont; //TODO: Add GFXFont segmented struct to allow UTF-8 fonts support!
+
+// IDs
 
 #ifndef EMGUI_MODAL_AUTO
-#define EMGUI_MODAL_AUTO 1000
-#endif
-
-#ifndef EMGUI_DEBUG
-#define EMGUI_DEBUG				0
+#define EMGUI_MODAL_AUTO			1000
 #endif
 
 #ifndef EMGUI_MODAL_WINDOW_ID
-#define EMGUI_MODAL_WINDOW_ID 1000
+#define EMGUI_MODAL_WINDOW_ID		1000
 #endif
 
+// Dimensions
+
 #ifndef EMGUI_MODAL_DLG_BTN_SPACING
-#define EMGUI_MODAL_DLG_BTN_SPACING			100
+#define EMGUI_MODAL_DLG_BTN_SPACING	100
 #endif
 
 #ifndef EMGUI_LCD_WIDTH
@@ -37,30 +37,36 @@ typedef EMGUI_XFONT_TYPE xFont; //TODO: Add GFXFont segmented struct to allow UT
 #endif
 
 #ifndef EMGUI_LCD_HEIGHT
-#define EMGUI_LCD_HEIGHT				240
+#define EMGUI_LCD_HEIGHT			240
 #endif
 
 #ifndef EMGUI_STATUS_BAR_HEIGHT
-#define EMGUI_STATUS_BAR_HEIGHT	26
+#define EMGUI_STATUS_BAR_HEIGHT		26
 #endif
 
-#ifndef EMGUI_WIDGET_COLOR_WHITE
-#define EMGUI_WIDGET_COLOR_WHITE		0xFFFF
-#endif
-
-#ifndef EMGUI_WIDGET_COLOR_BLACK
-#define EMGUI_WIDGET_COLOR_BLACK		0
-#endif
+// String limits
 
 #ifndef EMGUI_WINDOW_HEADER_LENGTH
 #define EMGUI_WINDOW_HEADER_LENGTH	25
 #endif
 
 #ifndef EMGUI_LABEL_MAX_LENGTH
-#define EMGUI_LABEL_MAX_LENGTH 1000
+#define EMGUI_LABEL_MAX_LENGTH		1000
+#endif
+
+#ifndef EMGUI_DEBUG
+#define EMGUI_DEBUG					0
 #endif
 
 // GUI COLORS
+
+#ifndef EMGUI_WIDGET_COLOR_WHITE
+#define EMGUI_WIDGET_COLOR_WHITE	0xFFFF
+#endif
+
+#ifndef EMGUI_WIDGET_COLOR_BLACK
+#define EMGUI_WIDGET_COLOR_BLACK	0
+#endif
 
 // RGB565 definition 
 #define EMGUI_COLOR_SEA_5 0x02AC	// Sea colors map from drakest to lightest
@@ -97,7 +103,7 @@ typedef EMGUI_XFONT_TYPE xFont; //TODO: Add GFXFont segmented struct to allow UT
 #define EMGUI_MENU_BUTTON_LABEL_BG_COLOR EMGUI_WIDGET_COLOR_WHITE
 #endif
 
-// PLOT STORY
+// PLOT Colors
 
 #ifndef EMGUI_COLOR_PLOT_BACKGROUND
 #define EMGUI_COLOR_PLOT_BACKGROUND EMGUI_WIDGET_COLOR_WHITE
