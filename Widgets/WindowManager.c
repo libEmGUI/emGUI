@@ -122,7 +122,7 @@ xWindow * pxWindowManagerGetWindow(int eWnd) {
 
 	xWidget *pxN = xWindowManagerInstance->pxFirstChild;
 	while (pxN) {
-		if (iWindowGetID(pxN) == eWnd)
+		if (iWindowGetID(pxN) == eWnd && bWidgetIs(pxN, WidgetWindow))
 			return pxN;
 		pxN = pxWidgetGetNextChild(pxN);
 	}

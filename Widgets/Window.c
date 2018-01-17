@@ -63,7 +63,7 @@ int iWindowGetID(xWindow * pxW) {
 	xWindowProps *xP;
 
 	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
-		return 0;
+		return -1;
 
 	return xP->eId;
 }
