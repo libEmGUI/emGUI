@@ -81,7 +81,8 @@ xStatusBar* xStatusBarCreate(uint16_t usColor) {
 	usX = usWidgetGetW(pxW) - usWidgetGetH(pxW);
 
 	xP->xCloseButton = pxButtonCreateFromText(usX, usY, usW, usW, "X", pxW);
-	vWidgetSetTransparency(xP->xCloseButton, true);
+	vWidgetSetBgColor(xP->xCloseButton, usColor, false);
+	//vWidgetSetTransparency(xP->xCloseButton, true);
 	vWidgetSetOnClickHandler(xP->xCloseButton, prvCloseClickHandler);
 
 	usY = (usWidgetGetH(pxW) - pxDrawHDL()->usFontGetH(xFnt)) / 2;
