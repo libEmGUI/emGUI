@@ -228,13 +228,14 @@ xStatusBar *pxWindowManagerGetStatusBar() {
 
 void vWindowManagerUpdateWindow() {
 
+	xStatusBar *pxSB = pxWindowManagerGetStatusBar();
+
 	if (!xActiveWindow || !xActiveWindow->xWnd) {
+		vStatusBarSetWindowHeader(pxSB, "");
 		vWidgetSetTransparency(xWindowManagerInstance, false);
 		return;
 	}else
 		vWidgetSetTransparency(xWindowManagerInstance, true);
-
-	xStatusBar *pxSB = pxWindowManagerGetStatusBar();
 
 	xWindow *pxW = xActiveWindow->xWnd;
 
