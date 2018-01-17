@@ -33,17 +33,20 @@ typedef struct xStatusBarProps_struct {
   * @returns true - event is handled
   */
 static bool prvCloseClickHandler(xWidget* pxW) {
+	(void)pxW;
 	vWindowManagerCloseActiveWindow();
 	return true;
 }
 
-static void prvDispose(xWidget* pxW) {
+static bool prvDispose(xWidget* pxW) {
 	xStatusBarProps *xP;
 	if (!(xP = (xStatusBarProps *)pxWidgetGetProps(pxW, WidgetStatusBar)))
-		return;
+		return true;
 
 	vWidgetDispose(xP->xCloseButton);
 	vWidgetDispose(xP->xWndHeader);
+
+	return true;
 }
 
 
@@ -61,6 +64,9 @@ xStatusBar* xStatusBarCreate(uint16_t usColor) {
 		vWidgetDispose(pxW);
 		return NULL;
 	}
+
+
+	pxW->pxOnDispose = prvDispose;
 
 	xP = malloc(sizeof(xStatusBarProps));
 

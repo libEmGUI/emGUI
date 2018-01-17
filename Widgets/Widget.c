@@ -292,7 +292,7 @@ void vWidgetSetBgColor(xWidget *pxW, uint16_t usBgColor, bool bTransparent) {
 	if (!pxW)
 		return;
 	pxW->usBgColor = usBgColor;
-	pxW->bTransparent = false;
+	pxW->bTransparent = bTransparent;
 
 	//TODO: handle transparency color???
 	vWidgetInvalidate(pxW);

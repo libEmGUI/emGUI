@@ -91,11 +91,13 @@
 	}
 
 	static bool prvOnOpenHandler(xWidget *pxW) {
+		(void)pxW;
 		prvDlgShowActive(false);
 		return true;
 	}
 
 	static bool prvOnOpenRequestHandler(xWidget *pxW) {
+		(void)pxW;
 		if (xMDActive)
 			return true;
 		else
@@ -103,10 +105,12 @@
 	}
 
 	static bool prvOnCloseHandler(xWidget *pxW) {
+		(void)pxW;
 		return true;
 	}
 
 	static bool prvOnCloseRequestHandler(xWidget *pxW) {
+		(void)pxW;
 		if (xMDActive)
 			vModalDialogClose(xMDActive->usDlgID, true);
 
@@ -339,8 +343,6 @@
 			prvDelDlgFromStack(xDlg, xDlgNext);
 		}
 		else {
-			size_t strLen = 0;
-
 			// this is a new dialog, create it
 			xDlg = malloc(sizeof(xModalDialog));
 			memset(xDlg, 0, sizeof(xModalDialog));

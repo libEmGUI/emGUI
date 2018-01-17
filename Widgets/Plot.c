@@ -81,7 +81,7 @@ static bool prvGetValue(xPlotData_t *pxL, int16_t * psSample, uint32_t uiOffset,
  */
 static bool prvPlot(xPlot *pxW) {
 	int16_t bHaveSample,
-		sSample;
+		sSample = 0;
 
 	if (!pxW)
 		return false;
@@ -270,8 +270,8 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 	uint16_t usYGridSize = usWidgetGetH(pxW) / usYMarkerCount;
 	uint16_t usX,
 		usY,
-		usXText = usWidgetGetX0(pxW, true) + 1,
-		usYText = usWidgetGetY0(pxW, true) + 8, //font height here
+		//usXText = usWidgetGetX0(pxW, true) + 1,
+		//usYText = usWidgetGetY0(pxW, true) + 8, //font height here
 		usX0 = usWidgetGetX0(pxW, true),
 		usX1 = usWidgetGetX1(pxW, true);
 
@@ -306,7 +306,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 		pxDrawHDL()->vHLine(usX0, usY, usX1, EMGUI_COLOR_PLOT_GRIDS);
 	}
 
-	xFont xFnt = pxDrawHDL()->xGetDefaultFont();
+	/*xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
 	uint16_t usYMiddle = prvWidgetMiddleLine(pxW),
 		usMvWidth = usXGridSize / 3,
@@ -314,7 +314,7 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 
 	if (!bPartialDraw || (bPartialDraw && (usXCursor >= usXText) && (usXCursor <= usXText + usTextW))) {
 		//TODO: Add Plot Name update here via Label
-		/*pxDrawHDL()->vPutString(
+		pxDrawHDL()->vPutString(
 			usXText,
 			usYText,
 			xP->pxL->sName,
@@ -322,8 +322,8 @@ static bool prvDrawGrid(xPlot * pxW, uint16_t usXCursor, bool bPartialDraw) {
 			EMGUI_COLOR_MESSAGE_TEXT,
 			EMGUI_COLOR_PLOT_BACKGROUND,
 			true
-		);*/
-	}
+		);
+	}*/
 
 	return true;
 }

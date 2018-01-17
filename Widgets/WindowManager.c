@@ -33,8 +33,6 @@ typedef struct xWindowListItem_t {
 
 static xWindowManager *xWindowManagerInstance = NULL;
 static xStatusBar *xStatusBarInstance = NULL;
-static xTouchEventType eTouchState = popTs;
-
 static xWindowListItem *xActiveWindow = NULL;
 
 static xWindowListItem* prvWindowListFind(xWindow *pxW) {
@@ -52,7 +50,7 @@ static xWindowListItem* prvWindowListFind(xWindow *pxW) {
 }
 
 static void prvWindowListAppend(xWindow *pxW) {
-	xWindowListItem *xL = xActiveWindow;
+	
 	if (!pxW)
 		return;
 
