@@ -46,7 +46,7 @@ static bool prvDraw(xWidget *pxW){
   if(pxW->bValid)
     return FALSE;
 // Draw:
-  bWidgetDraw(pxW);
+  bWidgetDrawHandler(pxW);
 
   u16 usXfrom = pxW->usX0 + 1;
   u16 usXto = pxW->usX0 + ((pxW->usX1 - 1 - pxW->usX0) * xP->usExProc) / 100;

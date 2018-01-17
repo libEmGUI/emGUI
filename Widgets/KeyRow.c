@@ -74,7 +74,7 @@ static bool prvDrawKeyRow(xWidget *pxW){
   if(pxW->bValid)
     return FALSE;
 // Draw:
-  bWidgetDraw(pxW);
+  bWidgetDrawHandler(pxW);
   u16 usX = pxW->usX0;
   for(int i = 0; i != xP->usKeyCount && i*xP->usKeyWidth < EMGUI_LCD_WIDTH ; ++i){
     prvDrawCharKey(usX, pxW->usY0, xP->usKeyWidth, xP->usKeyHeight, xP->pcKeys[i], xP->usKeyLinesColor, pxW->usBgColor);

@@ -376,7 +376,7 @@ static bool prvPlotDraw(xPlot *pxW) {
 	xP->usLastDrawedPosY0 = prvWidgetMiddleLine(pxW);
 	xP->usLastDrawedPosY1 = prvWidgetMiddleLine(pxW);
 
-	bWidgetDraw(pxW);
+	bWidgetDrawHandler(pxW);
 	prvDrawGrid(pxW, 0, false);
 
 	//for fast redrawing without cursor

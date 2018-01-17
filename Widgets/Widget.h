@@ -137,7 +137,7 @@ extern "C" {
 	bool bWidgetSetCoords(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, bool bUseWH);
 
 	// Commands
-	bool bWidgetDraw(xWidget *pxW);
+	bool bWidgetDrawHandler(xWidget *pxW);
 
 	// Getters
 	uint16_t usWidgetGetW(xWidget *pxW);

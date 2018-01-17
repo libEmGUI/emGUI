@@ -173,7 +173,7 @@ static bool prvDraw(xWidget *pxW) {
 	if (pxW->bValid)
 		return false;
 
-	bWidgetDraw(pxW);
+	bWidgetDrawHandler(pxW);
 
 	xP->pcNxtPage = prvCountPage(xP->pcCrntPage, pxW->usX0, pxW->usX1 + 1, pxW->usY0, pxW->usY1 + 1, &uY, &uLineCount,
 		xP->xFnt, xP->eTextAlign, xP->eVerticalAlign);

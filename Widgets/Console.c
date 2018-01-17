@@ -137,7 +137,7 @@ bool prvConsoleDraw(xConsole *pxW){
   
   xP = pxW->pvProp;
   
-  bWidgetDraw(pxW);
+  bWidgetDrawHandler(pxW);
   
   xP->ucCaretX = 0;
   xP->ucCaretY = 0;

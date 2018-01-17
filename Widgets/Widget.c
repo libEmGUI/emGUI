@@ -68,6 +68,7 @@ bool bWidgetInit(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint
 	pxW->bEnabled = true;
 
 	pxW->bTransparent = true;
+	pxW->pxDrawHandler = bWidgetDrawHandler;
 
 	//TODO: check LCD sizes
 	if (!bWidgetSetCoords(pxW, usX0, usY0, usX1, usY1, bUseWH))
@@ -101,7 +102,7 @@ static void prvInvalidateChilds(xWidget *pxW) {
   //Disable chlidren
 }*/
 
-bool bWidgetDraw(xWidget *pxW) {
+bool bWidgetDrawHandler(xWidget *pxW) {
 
 	if (!pxW)
 		return false;
@@ -156,8 +157,6 @@ void vWidgetDraw(xWidget *pxW) {
 
 	if (pxW->pxDrawHandler)
 		bRedrawed = pxW->pxDrawHandler(pxW);
-	else
-		bRedrawed = bWidgetDraw(pxW);
 
 	if (pxW->pxFirstChild) {
 		xWidget *pxWidChild = pxW->pxFirstChild;
