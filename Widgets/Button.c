@@ -54,20 +54,20 @@ static bool prvButtonDraw(xButton *pxW) {
 	else {
 		bWidgetDrawHandler(pxW);
 		if (!pxW->bPressed && xP->bEmulateRelease) {
-			pxDrawHDL()->vVLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usY1 - uiRB, EMGUI_WIDGET_COLOR_WHITE);
-			pxDrawHDL()->vHLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usX1 - uiRB, EMGUI_WIDGET_COLOR_WHITE);
+			pxDrawHDL()->vVLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usY1 - uiRB, EMGUI_COLOR_WHITE);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usX1 - uiRB, EMGUI_COLOR_WHITE);
 
-			pxDrawHDL()->vVLine(pxW->usX1 - uiRB, pxW->usY0 + uiRB, pxW->usY1 - uiRB, EMGUI_WIDGET_COLOR_BLACK);
-			pxDrawHDL()->vHLine(pxW->usX0 + uiRB, pxW->usY1 - uiRB, pxW->usX1 - uiRB, EMGUI_WIDGET_COLOR_BLACK);
+			pxDrawHDL()->vVLine(pxW->usX1 - uiRB, pxW->usY0 + uiRB, pxW->usY1 - uiRB, EMGUI_COLOR_BLACK);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiRB, pxW->usY1 - uiRB, pxW->usX1 - uiRB, EMGUI_COLOR_BLACK);
 		}
 
 		if (pxW->bPressed && xP->bEmulatePressure) {
 
-			pxDrawHDL()->vVLine(pxW->usX0 + uiPB, pxW->usY0 + uiPB, pxW->usY1 - uiPB, EMGUI_WIDGET_COLOR_BLACK);
-			pxDrawHDL()->vHLine(pxW->usX0 + uiPB, pxW->usY0 + uiPB, pxW->usX1 - uiPB, EMGUI_WIDGET_COLOR_BLACK);
+			pxDrawHDL()->vVLine(pxW->usX0 + uiPB, pxW->usY0 + uiPB, pxW->usY1 - uiPB, EMGUI_COLOR_BLACK);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiPB, pxW->usY0 + uiPB, pxW->usX1 - uiPB, EMGUI_COLOR_BLACK);
 
-			pxDrawHDL()->vVLine(pxW->usX1 - uiPB, pxW->usY0 + uiPB, pxW->usY1 - uiPB, EMGUI_WIDGET_COLOR_WHITE);
-			pxDrawHDL()->vHLine(pxW->usX0 + uiPB, pxW->usY1 - uiPB, pxW->usX1 - uiPB, EMGUI_WIDGET_COLOR_WHITE);
+			pxDrawHDL()->vVLine(pxW->usX1 - uiPB, pxW->usY0 + uiPB, pxW->usY1 - uiPB, EMGUI_COLOR_WHITE);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiPB, pxW->usY1 - uiPB, pxW->usX1 - uiPB, EMGUI_COLOR_WHITE);
 
 		}
 	}
@@ -171,7 +171,7 @@ xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint1
 		bWidgetSetCoords(pxW, usX, usY, usW, usWidgetGetH(xP->xText), true);
 		vWidgetSetTransparency(xP->xText, true);
 		vWidgetSetTransparency(pxW, false);
-		vWidgetSetBgColor(pxW, EMGUI_WIDGET_COLOR_WHITE, false);
+		vWidgetSetBgColor(pxW, EMGUI_COLOR_WHITE, false);
 
 		vLabelSetTextAlign(xP->xText, LABEL_ALIGN_CENTER);
 		vLabelSetVerticalAlign(xP->xText, LABEL_ALIGN_MIDDLE);

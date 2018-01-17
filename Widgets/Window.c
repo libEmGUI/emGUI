@@ -81,7 +81,7 @@ xWindow * pxWindowCreate(int eWnd) {
 		pxW->eType = WidgetWindow;
 		pxW->pxOnDispose = prvDispose;
 
-		vWidgetSetBgColor(pxW, EMGUI_WIDGET_COLOR_WHITE, false);
+		vWidgetSetBgColor(pxW, EMGUI_COLOR_WHITE, false);
 		vWidgetSetVisible(pxW, false);
 
 		xP = malloc(sizeof(xWindowProps));

@@ -258,7 +258,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 		pxW->eType = WidgetLabel;
 		pxW->pxOnDispose = prvDispose;
 
-		vWidgetSetBgColor(pxW, EMGUI_WIDGET_COLOR_WHITE, false);
+		vWidgetSetBgColor(pxW, EMGUI_COLOR_WHITE, false);
 
 		xP = malloc(sizeof(xLabelProps));
 		
@@ -291,7 +291,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 		xP->eTextAlign = LABEL_ALIGN_LEFT;
 		xP->eVerticalAlign = LABEL_ALIGN_TOP;
 
-		xP->usColor = EMGUI_WIDGET_COLOR_BLACK;
+		xP->usColor = EMGUI_COLOR_BLACK;
 		xP->xFnt = xFnt;
 
 		if (usMaxLength) {
