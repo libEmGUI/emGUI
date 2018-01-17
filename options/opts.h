@@ -74,6 +74,7 @@ typedef EMGUI_XFONT_TYPE			xFont; //TODO: Add GFXFont segmented struct to allow 
 #define EMGUI_COLOR_BROWN_1 0xFDAD
 
 #define EMGUI_COLOR_WHITE	0xFFFF
+#define EMGUI_COLOR_GRAY	0xC618
 #define EMGUI_COLOR_BLACK	0
 
 #define EMGUI_COLOR_RED     0xF800

@@ -53,9 +53,9 @@ static bool prvButtonDraw(xButton *pxW) {
 		pxDrawHDL()->bPicture(pxW->usX0, pxW->usY0, pxW->pusBgPicture);
 	else {
 		bWidgetDrawHandler(pxW);
-		if (!pxW->bPressed && xP->bEmulateRelease) {
-			pxDrawHDL()->vVLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usY1 - uiRB, EMGUI_COLOR_WHITE);
-			pxDrawHDL()->vHLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usX1 - uiRB, EMGUI_COLOR_WHITE);
+		if (xP->bEmulateRelease) {
+			pxDrawHDL()->vVLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usY1 - uiRB, EMGUI_COLOR_GRAY);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiRB, pxW->usY0 + uiRB, pxW->usX1 - uiRB, EMGUI_COLOR_GRAY);
 
 			pxDrawHDL()->vVLine(pxW->usX1 - uiRB, pxW->usY0 + uiRB, pxW->usY1 - uiRB, EMGUI_COLOR_BLACK);
 			pxDrawHDL()->vHLine(pxW->usX0 + uiRB, pxW->usY1 - uiRB, pxW->usX1 - uiRB, EMGUI_COLOR_BLACK);
@@ -66,8 +66,8 @@ static bool prvButtonDraw(xButton *pxW) {
 			pxDrawHDL()->vVLine(pxW->usX0 + uiPB, pxW->usY0 + uiPB, pxW->usY1 - uiPB, EMGUI_COLOR_BLACK);
 			pxDrawHDL()->vHLine(pxW->usX0 + uiPB, pxW->usY0 + uiPB, pxW->usX1 - uiPB, EMGUI_COLOR_BLACK);
 
-			pxDrawHDL()->vVLine(pxW->usX1 - uiPB, pxW->usY0 + uiPB, pxW->usY1 - uiPB, EMGUI_COLOR_WHITE);
-			pxDrawHDL()->vHLine(pxW->usX0 + uiPB, pxW->usY1 - uiPB, pxW->usX1 - uiPB, EMGUI_COLOR_WHITE);
+			pxDrawHDL()->vVLine(pxW->usX1 - uiPB, pxW->usY0 + uiPB, pxW->usY1 - uiPB, EMGUI_COLOR_GRAY);
+			pxDrawHDL()->vHLine(pxW->usX0 + uiPB, pxW->usY1 - uiPB, pxW->usX1 - uiPB, EMGUI_COLOR_GRAY);
 
 		}
 	}
@@ -75,7 +75,7 @@ static bool prvButtonDraw(xButton *pxW) {
 	return true;
 }
 
-static bool bButtonCheckTSRoutine(xButton *pxW, xTouchEvent *pxTouchScreenEv) {
+static bool prvButtonCheckTSRoutine(xButton *pxW, xTouchEvent *pxTouchScreenEv) {
 	xButtonProps *xP = pxWidgetGetProps(pxW, WidgetButton);
 
 	if (!xP)
@@ -85,6 +85,27 @@ static bool bButtonCheckTSRoutine(xButton *pxW, xTouchEvent *pxTouchScreenEv) {
 		vWidgetInvalidate(pxW);
 
 	return (pxTouchScreenEv->eventTouchScreen == popTs) ? false : true;
+}
+
+static bool prvLabelCheckTSRoutine(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
+	if (!pxW)
+		return false;
+
+	bool pressed = (pxTouchScreenEv->eventTouchScreen == popTs) ? false : true;
+
+	xButton *pxParent = pxW->pxParent;
+	pxParent->bPressed = pressed;
+	vWidgetInvalidate(pxParent);
+
+	return pressed;
+}
+
+static bool prvLabelOnClick(xWidget * pxW) {
+	if (!pxW)
+		return false;
+
+	pxW->pxParent->pxOnClick(pxW->pxParent);
+	return true;
 }
 
 static bool prvDispose(xWidget *pxW) {
@@ -135,7 +156,7 @@ static bool prvInit(xWidget * pxW) {
 		return false;
 
 	pxW->pxDrawHandler = prvButtonDraw;
-	pxW->pxCheckTSRoutine = bButtonCheckTSRoutine;
+	pxW->pxCheckTSRoutine = prvButtonCheckTSRoutine;
 
 	pxW->bClickable = true;
 
@@ -151,7 +172,7 @@ void vButtonSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	vWidgetSetOnClickHandler(pxW, pxCallback);
 
 	if(xP->xText)
-		vWidgetSetOnClickHandler(xP->xText, pxCallback);
+		vWidgetSetOnClickHandler(xP->xText, prvLabelOnClick);
 }
 
 xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, const char *text, xWidget *pxWidParent) {
@@ -168,6 +189,7 @@ xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint1
 		xP->uiPressureBorder = 2;
 
 		xP->xText = pxLabelCreate(0, 1, usW, usH, text, pxDrawHDL()->xGetDefaultFont(), strlen(text), pxW);
+		xP->xText->pxCheckTSRoutine = prvLabelCheckTSRoutine;
 		bWidgetSetCoords(pxW, usX, usY, usW, usWidgetGetH(xP->xText), true);
 		vWidgetSetTransparency(xP->xText, true);
 		vWidgetSetTransparency(pxW, false);
