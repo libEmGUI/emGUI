@@ -221,6 +221,33 @@ void vWidgetRemove(xWidget * pxW) {
 	}
 }
 
+bool bWidgetCheckKeypressEvent(xWidget *pxW, uint16_t uEv) {
+	if (!pxW)
+		return false;
+	//By default catching an event doesn't invalidate the widget.
+	//Enherited widgets should invalidate itself from bWidgetCheckKeypressEvent
+
+	if (!pxW->bVisible)
+		return false;
+
+	if (!pxW->bEnabled)
+		return false;
+
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
+		while (pxWidChild) {
+			if (bWidgetCheckKeypressEvent(pxWidChild, uEv))
+				return true;
+			pxWidChild = pxWidChild->pxNextSibling;
+		}
+	}
+
+	if (pxW->pxOnKeypress)
+		return pxW->pxOnKeypress(pxW, uEv);
+
+	return false;
+}
+
 bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
 	if (!pxW)
 		return false;
@@ -432,6 +459,12 @@ void vWidgetSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	vWidgetSetClickable(pxW, true);
 	pxW->pxOnClick = pxCallback;
 }
+
+void vWidgetSetOnKeypressHandler(xWidget * pxW, WidgetKeyPressEventHdl pxCallback) {
+	if(pxW)
+		pxW->pxOnKeypress = pxCallback;
+}
+
 void vWidgetSetOnHideHandler(xWidget *pxW, WidgetEvent pxCallback) {
 	if (!pxW)
 		return;

@@ -66,6 +66,7 @@ extern "C" {
 	typedef struct xWidget_struct xWidget;
 
 	typedef bool(*WidgetEvent)        (xWidget *);
+	typedef bool(*WidgetKeyPressEventHdl)      (xWidget *, uint16_t uEv);
 
 	//The size of each widget is 60 bytes.
 	struct xWidget_struct {
@@ -107,6 +108,8 @@ extern "C" {
 
 		WidgetEvent pxOnDispose;
 
+		WidgetKeyPressEventHdl pxOnKeypress;
+
 	};
 
 	xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, xWidget *pxWidParent, bool bUseWH);
@@ -121,14 +124,18 @@ extern "C" {
 	void vWidgetRemove(xWidget * pxW); //TODO: check, experimental
 	
 	bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv);
+	bool bWidgetCheckKeypressEvent(xWidget *pxW, uint16_t uEv);
 
 	bool bWidgetMoveTo(xWidget *pxW, uint16_t usX0, uint16_t usY0);
 	
 	// Setters
 	void vWidgetSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback);
+	void vWidgetSetOnKeypressHandler(xWidget * pxW, WidgetKeyPressEventHdl pxCallback);
+
 	void vWidgetSetOnHideHandler(xWidget *pxW, WidgetEvent pxCallback);
 	void vWidgetSetOnShowHandler(xWidget *pxW, WidgetEvent pxCallback);
 	void vWidgetSetDrawHandler(xWidget *pxW, WidgetEvent pxCallback);
+
 	void vWidgetSetClickable(xWidget *pxW, bool bClickable);
 	void vWidgetSetBgColor(xWidget *pxW, uint16_t usBgColor, bool bTransparent);
 	void vWidgetSetTransparency(xWidget *pxW, bool bTransparent);

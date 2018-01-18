@@ -44,6 +44,7 @@ extern "C" {
 	void vModalDialogSetHandler(int iDlgID, void *pvCtx, ModalDialogHandler pxHandler);
 	void vModalDialogSetProgress(int iDlgID, int iProgress);
 	void vModalDialogSetCloseable(int iDlgID, bool bCanClose);
+	void vModalDialogSetKeypressHandler(WidgetKeyPressEventHdl pxEvenHandler);
 
 
 #ifdef __cplusplus

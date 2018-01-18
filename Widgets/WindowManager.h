@@ -58,6 +58,7 @@ extern "C" {
 	}
 	void vWindowManagerInvalidate();
 	bool bWindowManagerCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv);
+	bool bWindowManagerKeypressEvent(uint16_t uEv);
 
 	xStatusBar *pxWindowManagerGetStatusBar();
 

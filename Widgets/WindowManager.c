@@ -113,10 +113,20 @@ void vWindowManagerInvalidate() {
 }
 
 bool bWindowManagerCheckTouchScreenEvent(xTouchEvent *pxTouchScreenEv) {
+	if (!xWindowManagerInstance)
+		return false;
 	return bWidgetCheckTouchScreenEvent(xWindowManagerInstance, pxTouchScreenEv);
 }
 
+bool bWindowManagerKeypressEvent(uint16_t uEv) {
+	if (!xWindowManagerInstance)
+		return false;
+	return bWidgetCheckKeypressEvent(xWindowManagerInstance, uEv);
+}
+
 xWindow * pxWindowManagerGetWindow(int eWnd) {
+	if (!xWindowManagerInstance)
+		return NULL;
 
 	xWidget *pxN = xWindowManagerInstance->pxFirstChild;
 	while (pxN) {

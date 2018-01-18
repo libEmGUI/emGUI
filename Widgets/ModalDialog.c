@@ -454,3 +454,8 @@
 		free(xDlg);
 		prvDlgShowActive(true);
 	}
+
+	void vModalDialogSetKeypressHandler(WidgetKeyPressEventHdl pxEvenHandler) {
+		pxModalDialogWindowCreate();
+		vWidgetSetOnKeypressHandler(xThisWnd, pxEvenHandler);
+	}
