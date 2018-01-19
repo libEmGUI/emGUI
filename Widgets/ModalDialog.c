@@ -112,7 +112,7 @@
 	static bool prvOnCloseRequestHandler(xWidget *pxW) {
 		(void)pxW;
 		if (xMDActive)
-			vModalDialogClose(xMDActive->usDlgID, true);
+			vModalDialogClose(xMDActive->usDlgID, 0, true);
 
 		if (xMDActive)
 			return false;
@@ -140,7 +140,7 @@
 
 		if (xMDActive->pxDefaultHandler)
 			if (xMDActive->pxDefaultHandler(cButton, xMDActive->pvCtx))
-				vModalDialogClose(usDlgId, false);
+				vModalDialogClose(usDlgId, 0, false);
 
 		return true;
 	}
@@ -253,10 +253,10 @@
 	}
 
 	static xModalDialog *prvDlgIsActive(int iDlgId) {
-		if (!xMDActive)
-			return NULL;
+		if (iDlgId == EMGUI_MD_CUR)
+			return xMDActive;
 
-		if (xMDActive->usDlgID == iDlgId)
+		if (xMDActive && xMDActive->usDlgID == iDlgId)
 			return xMDActive;
 
 		return NULL;
@@ -266,6 +266,9 @@
 		xModalDialog * xDlg = xMDActive;
 
 		*pxNext = NULL;
+
+		if (iDlgId == EMGUI_MD_CUR)
+			return xMDActive;
 
 		while (xDlg) {
 			if (xDlg->usDlgID == iDlgId)
@@ -350,12 +353,12 @@
 			
 			prvDlgRefresh(xDlg, sBtns, sHdr, sMsg);
 			// set dialog ID to make it possible set handlers, etc...
-			if (iDlgId)
-				xDlg->usDlgID = iDlgId;
-			else {
+			if (iDlgId == EMGUI_MD_NEW) {
 				xDlg->usDlgID = usDlgID;
 				prvIncDlgId();
 			}
+			else
+				xDlg->usDlgID = iDlgId;
 		}
 
 		// make dialog active
@@ -421,7 +424,7 @@
 		}
 	}
 
-	void vModalDialogClose(int iDlgID, bool bFireDefault) {
+	void vModalDialogClose(int iDlgID, char cBtn, bool bFireHandler) {
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
@@ -444,18 +447,23 @@
 		else
 			prvDelDlgFromStack(xDlg, xDlgNext);
 
+		uint16_t cBtnCnt = (uint16_t)strlen(xDlg->sDialogButtons);
+		
+		char fireArg = 0;
+		for (int i = 0; i < cBtnCnt; i++) {
+			if (xDlg->sDialogButtons[i] == cBtn) {
+				fireArg = cBtn;
+				break;
+			}
+		}
+
 		// fire default event
-		if (bFireDefault) {
+		if (bFireHandler) {
 			if (xDlg->pxDefaultHandler)
-				xDlg->pxDefaultHandler(0, xDlg->pvCtx);
+				xDlg->pxDefaultHandler(fireArg, xDlg->pvCtx);
 		}
 		free(xDlg->sHdr);
 		free(xDlg->sMsg);
 		free(xDlg);
 		prvDlgShowActive(true);
-	}
-
-	void vModalDialogSetKeypressHandler(WidgetKeyPressEventHdl pxEvenHandler) {
-		pxModalDialogWindowCreate();
-		vWidgetSetOnKeypressHandler(xThisWnd, pxEvenHandler);
 	}

@@ -39,13 +39,14 @@ extern "C" {
 
 	typedef bool(*ModalDialogHandler)(char cButton, void* pxContext);
 
+#define EMGUI_MD_NEW -1 // use this ID if you wan to create new dialog
+#define EMGUI_MD_CUR -2 // use this ID if you want to target current active dialog
+
 	int iModalDialogOpen(int iDlgId, char const * sBtns, char const * sHdr, char const* sMsg);
-	void vModalDialogClose(int iDlgID, bool bFireDefault);
+	void vModalDialogClose(int iDlgID, char cBtn, bool bFireHandler);
 	void vModalDialogSetHandler(int iDlgID, void *pvCtx, ModalDialogHandler pxHandler);
 	void vModalDialogSetProgress(int iDlgID, int iProgress);
 	void vModalDialogSetCloseable(int iDlgID, bool bCanClose);
-	void vModalDialogSetKeypressHandler(WidgetKeyPressEventHdl pxEvenHandler);
-
 
 #ifdef __cplusplus
 }
