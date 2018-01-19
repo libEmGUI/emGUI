@@ -13,8 +13,8 @@ extern "C" {
 	typedef struct {
 		void     (*vRectangle)(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usY1, uint16_t usColor, bool bFill);
 		
-		void     (*vHLine)(uint16_t usX0, uint16_t usY0, uint16_t usY1, uint16_t usColor);
-		void     (*vVLine)(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usColor);
+		void     (*vHLine)(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t usColor);
+		void     (*vVLine)(uint16_t usX0, uint16_t usY0, uint16_t usY1, uint16_t usColor);
 
 		void     (*bPicture)(int16_t sX0, int16_t sY0, xPicture pusPicture);
 		uint16_t (*usGetPictureH)(xPicture pusPic);
