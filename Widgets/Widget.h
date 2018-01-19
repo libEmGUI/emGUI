@@ -145,6 +145,7 @@ extern "C" {
 
 	// Commands
 	bool bWidgetDrawHandler(xWidget *pxW);
+	bool bWidgetCheckTSHandler(xWidget *pxW, xTouchEvent *pxTouchScreenEv);
 
 	// Getters
 	uint16_t usWidgetGetW(xWidget *pxW);

@@ -69,6 +69,7 @@ bool bWidgetInit(xWidget *pxW, uint16_t usX0, uint16_t usY0, uint16_t usX1, uint
 
 	pxW->bTransparent = true;
 	pxW->pxDrawHandler = bWidgetDrawHandler;
+	pxW->pxCheckTSRoutine = bWidgetCheckTSHandler;
 
 	//TODO: check LCD sizes
 	if (!bWidgetSetCoords(pxW, usX0, usY0, usX1, usY1, bUseWH))
@@ -248,6 +249,44 @@ bool bWidgetCheckKeypressEvent(xWidget *pxW, uint16_t uEv) {
 	return false;
 }
 
+bool bWidgetCheckTSHandler(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
+	if (!pxW)
+		return false;
+
+	if (!pxW->bClickable)
+		return false;
+
+	//handle popTs events when they occur out of the Widget area
+	if (pxTouchScreenEv->eventTouchScreen == popTs
+		&& pxW->bPushEventCaught) {
+			pxW->bPressed = false;
+		
+		pxW->bPushEventCaught = false;
+		//Fire OnClick event
+		if (pxW->pxOnClick && !pxW->bPressed)
+			pxW->pxOnClick(pxW);
+
+		//TODO: add timeout for releasing buttons if we lost popTs message
+
+		return true;
+	}
+
+	//TODO: check by radius?
+	if (pxW->usX0 <= pxTouchScreenEv->xTouchScreen
+		&& pxW->usX1 >= pxTouchScreenEv->xTouchScreen
+		&& pxW->usY0 <= pxTouchScreenEv->yTouchScreen
+		&& pxW->usY1 >= pxTouchScreenEv->yTouchScreen
+		&& pxTouchScreenEv->eventTouchScreen == pushTs) {
+		
+		pxW->bPressed = true;
+
+		pxW->bPushEventCaught = true;
+		return true;
+	}
+
+	return false;
+}
+
 bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
 	if (!pxW)
 		return false;
@@ -261,24 +300,6 @@ bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
 	if (!pxW->bEnabled)
 		return false;
 
-	//handle popTs events when they occur out of the Widget area
-	if (pxTouchScreenEv->eventTouchScreen == popTs
-		&& pxW->bPushEventCaught) {
-		if (pxW->pxCheckTSRoutine)
-			pxW->bPressed = pxW->pxCheckTSRoutine(pxW, pxTouchScreenEv);
-		else
-			pxW->bPressed = false;
-		pxW->bPushEventCaught = false;
-		//Fire OnClick event
-		if (pxW->pxOnClick && !pxW->bPressed)
-			pxW->pxOnClick(pxW);
-
-		//TODO: add timeout for releasing buttons if we lost popTs message
-
-		/*if(bInterfaceGetDebug() && !pxW->bPressed)
-		  MDEBUG("Widget release @ %x\n", pxW);*/
-	}
-
 	if (pxW->pxFirstChild) {
 		xWidget *pxWidChild = pxW->pxFirstChild;
 		while (pxWidChild) {
@@ -288,23 +309,8 @@ bool bWidgetCheckTouchScreenEvent(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
 		}
 	}
 
-	if (!pxW->bClickable)
-		return false;
-
-	//TODO: check by radius?
-	if (pxW->usX0 <= pxTouchScreenEv->xTouchScreen
-		&& pxW->usX1 >= pxTouchScreenEv->xTouchScreen
-		&& pxW->usY0 <= pxTouchScreenEv->yTouchScreen
-		&& pxW->usY1 >= pxTouchScreenEv->yTouchScreen
-		&& pxTouchScreenEv->eventTouchScreen == pushTs) {
-		if (pxW->pxCheckTSRoutine)
-			pxW->bPressed = pxW->pxCheckTSRoutine(pxW, pxTouchScreenEv);
-		else
-			pxW->bPressed = true;
-
-		pxW->bPushEventCaught = true;
-		return true;
-	}
+	if (pxW->pxCheckTSRoutine)
+		return pxW->pxCheckTSRoutine(pxW, pxTouchScreenEv);	
 
 	return false;
 }

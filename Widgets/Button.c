@@ -80,24 +80,13 @@ static bool prvButtonCheckTSRoutine(xButton *pxW, xTouchEvent *pxTouchScreenEv) 
 
 	if (!xP)
 		return false;
+
+	bool touch = bWidgetCheckTSHandler(pxW, pxTouchScreenEv);
 	
-	if (xP->bEmulatePressure || xP->bEmulateRelease)
+	if (touch && (xP->bEmulatePressure || xP->bEmulateRelease))
 		vWidgetInvalidate(pxW);
 
-	return (pxTouchScreenEv->eventTouchScreen == popTs) ? false : true;
-}
-
-static bool prvLabelCheckTSRoutine(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
-	if (!pxW)
-		return false;
-
-	bool pressed = (pxTouchScreenEv->eventTouchScreen == popTs) ? false : true;
-
-	xButton *pxParent = pxW->pxParent;
-	pxParent->bPressed = pressed;
-	vWidgetInvalidate(pxParent);
-
-	return pressed;
+	return touch;
 }
 
 static bool prvLabelOnClick(xWidget * pxW) {
@@ -189,7 +178,6 @@ xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint1
 		xP->uiPressureBorder = 2;
 
 		xP->xText = pxLabelCreate(0, 1, usW, usH, text, pxDrawHDL()->xGetDefaultFont(), strlen(text), pxW);
-		xP->xText->pxCheckTSRoutine = prvLabelCheckTSRoutine;
 		bWidgetSetCoords(pxW, usX, usY, usW, usWidgetGetH(xP->xText), true);
 		vWidgetSetTransparency(xP->xText, true);
 		vWidgetSetTransparency(pxW, false);
