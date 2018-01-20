@@ -41,6 +41,8 @@ extern "C" {
 
 	void vButtonSetText(xWidget * pxW, char const* strL);
 
+	void vButtonSetPicture(xWidget *pxW, xPicture pusBgPicture);
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus

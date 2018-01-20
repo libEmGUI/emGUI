@@ -48,23 +48,37 @@ extern "C" {
 		LABEL_ALIGN_BOTTOM,
 	} eLabelVerticalAlign;
 
+	typedef enum {
+		LABEL_MAXLEN_SET,    /// Relocates internal storage according to specified size
+		LABEL_MAXLEN_EXTEND, /// Extends internal storage to fit new, greater than current MaxLength 
+		LABEL_MAXLEN_SHRINK, /// Shrinks internal storage to fit new, smaller than current MaxLength
+	}eLabelMaxLenModificator;
+
 
 	xLabel *    pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, char const * cStr, xFont xFnt, uint16_t usMaxLength, xWidget *pxWidParent);
+
 	char *      pcLabelSetText(xWidget *pxW, const char * pcStr);
 	void        pcLabelSetTextAdaptWidth(xLabel *pxL, const char * pcStr); // set text and adapt widget width. TODO: should test that!
 	void        vLabelSetTextColor(xWidget *pxW, uint16_t usColor);
 	void        vLabelSetTextAlign(xWidget *pxW, eLabelTextAlign eAlign);
 	void        vLabelSetVerticalAlign(xWidget *pxW, eLabelVerticalAlign eAlign);
-	//void        vLabelSetTextExt(xWidget *pxW, char * pStr, int usMaxLength);
-	char *      pcLabelGetText(xWidget *pxW);
 	bool        bLabelSetMultiline(xWidget *pxW, bool bMultiLine);
-	bool        bLabelDrawNextPage(xLabel *pxL);
-	bool        bLabelDrawPrevPage(xLabel *pxL);
-	int         iLabelGetMaxLength(xLabel *pxL);
-	bool        bLabelAppendChar(xWidget *pxW, char cChar, bool bSetInvalidate);
-	bool        bLabelBackSpace(xWidget *pxW, bool bSetInvalidate);
+	bool        bLabelSetMaxLength(xLabel *pxL, size_t uiMaxLength, eLabelMaxLenModificator eType);
+
 	void        vLabelSetOnEditHandler(xWidget *pxW, void(*callback)(void));
 	void        vLabelSetHaveCursor(xWidget *pxW, bool bLabelHaveCursor);
+
+	//void        vLabelSetTextExt(xWidget *pxW, char * pStr, int usMaxLength);
+	const char* pcLabelGetText(xWidget *pxW);
+	
+	bool        bLabelDrawNextPage(xLabel *pxL);
+	bool        bLabelDrawPrevPage(xLabel *pxL);
+
+	int         iLabelGetMaxLength(xLabel *pxL);
+
+	bool        bLabelAppendChar(xWidget *pxW, char cChar, bool bSetInvalidate);
+	bool        bLabelBackSpace(xWidget *pxW, bool bSetInvalidate);
+
 	void        vLabelClear(xWidget *pxW, bool bSetInvalidate);
 	int         iLabelPrintf(xWidget *pxW, char const *pcFmt, ...);
 #ifdef __cplusplus

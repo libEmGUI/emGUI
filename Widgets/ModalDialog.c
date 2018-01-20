@@ -160,7 +160,7 @@
 		vWindowSetOnCloseHandler(xThisWnd, prvOnCloseHandler);
 		vWindowSetOnCloseRequestHandler(xThisWnd, prvOnCloseRequestHandler);
 
-		usY = (usWindowManagerGetWindowH() * 4) / 10;
+		usY = (usWidgetGetH(xThisWnd) * 6) / 10;
 
 		xFont xFnt = pxDrawHDL()->xGetDefaultFont();
 
@@ -175,11 +175,11 @@
 		//vProgressBarSetProcExec(xPBar, 55);
 
 		//TODO: get rid of picture dimensions check on create and position buttons on show!
-		usY = (usWindowManagerGetWindowH() / 2 + pxDrawHDL()->usGetPictureH(pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain) / 3);
+		//usY = (usWindowManagerGetWindowH() / 2 + pxDrawHDL()->usGetPictureH(pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain) / 3);
 		usX = 0;
 
 		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++) {
-			xButtons[c] = pxButtonCreateFromImageWithText(usX, usY, pxDrawHDL()->xGetDialogPictureSet(' ').xPicMain, "", xThisWnd);
+			xButtons[c] = pxButtonCreateFromImageWithText(usX, usY, NULL, "", xThisWnd);
 			vButtonSetOnClickHandler(xButtons[c], prvButtonHandler);
 			usX += EMGUI_MODAL_DLG_BTN_SPACING;
 			vWidgetHide(xButtons[c]);
@@ -221,7 +221,7 @@
 
 		prvResetDlgWnd();
 
-		betweenBtnsX = (usWindowManagerGetW() - cBtnCnt * usWidgetGetW(xButtons[0])) / (cBtnCnt + 1);
+		betweenBtnsX = (usWidgetGetW(xThisWnd) - cBtnCnt * usWidgetGetW(xButtons[0])) / (cBtnCnt + 1);
 		usY = usWidgetGetY0(xButtons[0], false);
 		usX = betweenBtnsX;
 
@@ -237,7 +237,7 @@
 			bWidgetMoveTo(xBtn, usX, usY);
 			vWidgetShow(xBtn);
 
-			bWidgetSetBgPicture(xBtn, xPicSet.xPicMain);
+			vButtonSetPicture(xBtn, xPicSet.xPicMain);
 			vButtonSetText(xBtn, xPicSet.strLabel);
 
 			usX += betweenBtnsX + usWidgetGetW(xBtn);

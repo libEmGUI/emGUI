@@ -277,7 +277,7 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 		}
 		else { // allocating memory for internal storage
 			//+ 1 //for '\0' char in the end
-			xP->pcStr = malloc(usMaxLength + 1);
+			xP->pcStr = malloc(usMaxLength);
 		}
 
 		//memory is not allocated! Aborting!
@@ -295,9 +295,9 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 		xP->xFnt = xFnt;
 
 		if (usMaxLength) {
-			memcpy(xP->pcStr, cStr, min(strlen(cStr), usMaxLength) + 1);
+			memcpy(xP->pcStr, cStr, min(strlen(cStr) + 1, usMaxLength));
 			//Terminating string
-			xP->pcStr[usMaxLength] = '\0';
+			xP->pcStr[usMaxLength - 1] = '\0';
 		}
 
 		xP->pcCrntPage = xP->pcStr;
@@ -322,39 +322,45 @@ char * pcLabelSetText(xWidget *pxW, const char * pcStr) {
 	pcLine = xP->pcStr;
 	usMaxLength = xP->usMaxLength;
 
-
 	// if we can copy to usMaxLength
 	if (usMaxLength) {
 		if (!strcmp(pcStr, pcLine))
 			return NULL;
 
-		if (pcStr != NULL) {
-			memcpy(pcLine, pcStr, min(strlen(pcStr), usMaxLength) + 1);
-			pcLine[usMaxLength] = '\0';
-		}
-
+		memcpy(pcLine, pcStr, min(strlen(pcStr) + 1 , usMaxLength));
+		pcLine[usMaxLength - 1] = '\0';
 	}
-	else {
+	else
+		xP->pcStr = (char*)pcStr;
 
-		if (pcStr != NULL) {
-			xP->pcStr = (char*)pcStr;
-			xP->pcCrntPage = xP->pcStr;
-		}
-	}
-
-	if (xP->bIsMultiLine) {
-		xP->pcCrntPage = xP->pcStr;
-		xP->pcNxtPage = xP->pcPrvPage = NULL;
-	}
+	xP->pcCrntPage = xP->pcStr;
+	xP->pcNxtPage = xP->pcPrvPage = NULL;
 
 	vWidgetInvalidate(pxW);
 	return NULL;
 }
 
-void pcLabelSetTextAdaptWidth(xLabel *pxL, const char * pcStr) {
-	pcLabelSetText(pxL, pcStr);
-	pxL->usX1 = pxL->usX0 + 8 * (uint16_t)strlen(pcStr);
-	vWidgetInvalidate(pxL);
+void pcLabelSetTextAdaptWidth(xLabel *pxW, const char * pcStr) {
+	xLabelProps *xP;
+
+	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)))
+		return;
+
+	pcLabelSetText(pxW, pcStr);
+	uint16_t X0 = usWidgetGetX0(pxW, false);
+	uint16_t X1 = X0 + pxDrawHDL()->usFontGetStrW(pcStr, xP->xFnt);
+	
+	if (X1 > EMGUI_LCD_WIDTH)
+		X1 = EMGUI_LCD_WIDTH;
+	
+	bWidgetSetCoords(pxW, 
+		X0,
+		usWidgetGetY0(pxW, false),
+		X1,
+		usWidgetGetY1(pxW, false),
+		false
+	);
+	vWidgetInvalidate(pxW);
 }
 
 void vLabelSetTextColor(xWidget *pxW, uint16_t usColor) {
@@ -415,7 +421,7 @@ void vLabelSetVerticalAlign(xWidget *pxW, eLabelVerticalAlign eAlign) {
 	vWidgetInvalidate(pxW);
 }*/
 
-char * pcLabelGetText(xWidget *pxW) {
+const char * pcLabelGetText(xWidget *pxW) {
 	xLabelProps *xP;
 
 	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)))
@@ -435,6 +441,53 @@ bool bLabelSetMultiline(xWidget *pxW, bool bMultiLine) {
 	return true;
 }
 
+bool bLabelSetMaxLength(xLabel *pxW, size_t uiMaxLength, eLabelMaxLenModificator eType) {
+	xLabelProps *xP;
+
+	if (!(xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel)))
+		return 0;
+
+	size_t currentML = iLabelGetMaxLength(pxW);
+
+	switch (eType)
+	{
+	case LABEL_MAXLEN_EXTEND:
+		if (currentML >= uiMaxLength)
+			return true;
+		break;
+	case LABEL_MAXLEN_SHRINK:
+		if (currentML <= uiMaxLength)
+			return true;
+		break;
+	default:
+		break;
+	}
+
+	if (uiMaxLength > 0 && currentML == uiMaxLength || uiMaxLength > EMGUI_LABEL_MAX_LENGTH)
+		return false;
+
+	if (currentML && xP->pcStr) {
+		free(xP->pcStr);
+		xP->pcStr = NULL;
+	}
+
+	xP->pcStr = malloc(uiMaxLength);
+
+	xP->pcCrntPage = xP->pcStr;
+	xP->pcNxtPage = xP->pcPrvPage = NULL;
+
+	if (!xP->pcStr) {
+		xP->usMaxLength = 0;
+		return false;
+	}
+
+	xP->pcStr[uiMaxLength - 1] = 0;
+	xP->pcStr[0] = 0;
+
+	xP->usMaxLength = uiMaxLength;
+
+	return true;
+}
 
 int iLabelGetMaxLength(xLabel *pxL) {
 	xLabelProps *xP;
@@ -449,7 +502,7 @@ bool bLabelAppendChar(xWidget *pxW, char cChar, bool bSetInvalidate) {
 	xLabelProps *xP;
 	if ((xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel))) {
 		uint16_t usLen = (uint16_t)strlen(xP->pcStr);
-		if (usLen + 1 <= xP->usMaxLength) {
+		if (usLen + 1 < xP->usMaxLength) {
 			xP->pcStr[usLen] = cChar;
 			xP->pcStr[usLen + 1] = '\0';
 			if (bSetInvalidate)
@@ -464,7 +517,7 @@ bool bLabelBackSpace(xWidget *pxW, bool bSetInvalidate) {
 	xLabelProps *xP;
 	if ((xP = (xLabelProps *)pxWidgetGetProps(pxW, WidgetLabel))) {
 		uint16_t usLen = (uint16_t)strlen(xP->pcStr);
-		if (usLen) {
+		if (usLen > 0) {
 			xP->pcStr[usLen - 1] = '\0';
 			if (bSetInvalidate)
 				vWidgetInvalidate(pxW);

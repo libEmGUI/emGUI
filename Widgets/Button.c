@@ -159,9 +159,6 @@ void vButtonSetOnClickHandler(xWidget *pxW, WidgetEvent pxCallback) {
 		return;
 
 	vWidgetSetOnClickHandler(pxW, pxCallback);
-
-	if(xP->xText)
-		vWidgetSetOnClickHandler(xP->xText, prvLabelOnClick);
 }
 
 xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, const char *text, xWidget *pxWidParent) {
@@ -177,7 +174,7 @@ xButton * pxButtonCreateFromText(uint16_t usX, uint16_t usY, uint16_t usW, uint1
 
 		xP->uiPressureBorder = 2;
 
-		xP->xText = pxLabelCreate(0, 1, usW, usH, text, pxDrawHDL()->xGetDefaultFont(), strlen(text), pxW);
+		xP->xText = pxLabelCreate(0, 1, usW, usH, text, pxDrawHDL()->xGetDefaultFont(), strlen(text) + 1, pxW);
 		bWidgetSetCoords(pxW, usX, usY, usW, usWidgetGetH(xP->xText), true);
 		vWidgetSetTransparency(xP->xText, true);
 		vWidgetSetTransparency(pxW, false);
@@ -252,7 +249,36 @@ void vButtonSetText(xWidget * pxW, char const* strL) {
 	if (!(xP = (xButtonProps*)pxWidgetGetProps(pxW, WidgetButton)))
 		return;
 
+	bLabelSetMaxLength(xP->xText, strlen(strL) + 1, LABEL_MAXLEN_EXTEND);
+
 	pcLabelSetText(xP->xText, strL);
 
 	return;
+}
+
+void vButtonSetPicture(xWidget *pxW, xPicture pusPic) {
+	xButtonProps *xP;
+
+	if (!(xP = (xButtonProps*)pxWidgetGetProps(pxW, WidgetButton)))
+		return;
+
+	if (xP->xText) {
+		bWidgetSetBgPicture(pxW, pusPic); // this updates button W and H from given picture
+
+		bWidgetSetCoords(xP->xText,
+			0,
+			pxDrawHDL()->usGetPictureH(pusPic),
+			pxDrawHDL()->usGetPictureW(pusPic),
+			pxDrawHDL()->usFontGetH(pxDrawHDL()->xGetDefaultFont()) + 3,
+			true);
+
+		bWidgetSetCoords(pxW,
+			usWidgetGetX0(pxW, false),
+			usWidgetGetY0(pxW, false),
+			usWidgetGetX1(pxW, false),
+			usWidgetGetY1(pxW, false) + usWidgetGetH(xP->xText),
+			false);
+	}
+	else
+		bWidgetSetBgPicture(pxW, pusPic);
 }
