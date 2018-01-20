@@ -346,11 +346,13 @@ bool bWidgetSetBgPicture(xWidget *pxW, xPicture pusBgPicture) {
 		return false;
 	bool bInvalidateParent = false;
 
-	if (pxDrawHDL()->usGetPictureW(pusBgPicture) < usWidgetGetW(pxW) || pxDrawHDL()->usGetPictureH(pusBgPicture) < usWidgetGetH(pxW))
-		bInvalidateParent = true;
+	if (pusBgPicture) {
+		if (pxDrawHDL()->usGetPictureW(pusBgPicture) < usWidgetGetW(pxW) || pxDrawHDL()->usGetPictureH(pusBgPicture) < usWidgetGetH(pxW))
+			bInvalidateParent = true;
 
-	if (!bWidgetResize(pxW, pxDrawHDL()->usGetPictureW(pusBgPicture), pxDrawHDL()->usGetPictureH(pusBgPicture)))
-		return false;
+		if (!bWidgetResize(pxW, pxDrawHDL()->usGetPictureW(pusBgPicture), pxDrawHDL()->usGetPictureH(pusBgPicture)))
+			return false;
+	}
 	//do not invalidate if picture is not changed
 	if (pxW->pusBgPicture != pusBgPicture) {
 		pxW->pusBgPicture = pusBgPicture;
