@@ -247,8 +247,11 @@ xLabel * pxLabelCreate(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, c
 	pxW = malloc(sizeof(xWidget));
 	memset(pxW, 0, sizeof(xWidget)); //TODO: add check logic!
 
-	if (!xFnt || !cStr || !pxW)
+	if (!cStr || !pxW)
 		return NULL;
+
+	if (!xFnt)
+		xFnt = pxDrawHDL()->xGetDefaultFont();
 
 	if (usH < pxDrawHDL()->usFontGetH(xFnt))
 		usH = pxDrawHDL()->usFontGetH(xFnt);
