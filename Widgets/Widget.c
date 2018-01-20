@@ -170,6 +170,8 @@ void vWidgetDraw(xWidget *pxW) {
 	// validate widget
 	pxW->bValid = true;
 
+	(void)bRedrawed;
+
 #if EMGUI_DEBUG > 0
 	if (bRedrawed) {
 		pxDrawHDL()->vRectangle(pxW->usX0, pxW->usY0, pxW->usX1, pxW->usY1, rand(), false);
