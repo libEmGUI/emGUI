@@ -138,9 +138,11 @@
 			}
 		}
 
-		if (xMDActive->pxDefaultHandler)
+		if (xMDActive->pxDefaultHandler) {
 			if (xMDActive->pxDefaultHandler(cButton, xMDActive->pvCtx))
 				vModalDialogClose(usDlgId, 0, false);
+		}else
+			vModalDialogClose(usDlgId, 0, false);
 
 		return true;
 	}
