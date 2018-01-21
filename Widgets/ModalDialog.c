@@ -105,16 +105,22 @@
 	}
 
 	static bool prvOnCloseHandler(xWidget *pxW) {
-		(void)pxW;
+		
+		xThisWnd = NULL;
+		xMessage = NULL;
+		for (int c = 0; c < MODAL_DIALOG_MAX_BUTTONS; c++) {
+			xButtons[c] = NULL;
+		}
 		return true;
 	}
 
 	static bool prvOnCloseRequestHandler(xWidget *pxW) {
 		(void)pxW;
-		if (xMDActive)
-			vModalDialogClose(xMDActive->usDlgID, 0, true);
+		xModalDialog * xMDCurrent = xMDActive;
+		if (xMDCurrent)
+			vModalDialogClose(xMDActive->usDlgID, 0, true); //xMDActive can change during this call, so store it in xMDCurrent
 
-		if (xMDActive)
+		if (xMDCurrent)
 			return false;
 		else
 			return true;
@@ -156,6 +162,7 @@
 			return xThisWnd;
 
 		xThisWnd = pxWindowCreate(EMGUI_MODAL_WINDOW_ID);
+		vWindowSetDisposable(xThisWnd, true);
 		vWidgetSetBgColor(xThisWnd, EMGUI_COLOR_PLOT_BACKGROUND, false);
 		vWindowSetOnOpenHandler(xThisWnd, prvOnOpenHandler);
 		vWindowSetOnOpenRequestHandler(xThisWnd, prvOnOpenRequestHandler);
@@ -379,7 +386,8 @@
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
-		pxModalDialogWindowCreate();
+		if (!xThisWnd)
+			return;
 
 		if (!(xDlg = prvDlgIsOpened(iDlgID, &xDlgNext)))
 			return;
@@ -392,7 +400,8 @@
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
-		pxModalDialogWindowCreate();
+		if (!xThisWnd)
+			return;
 
 		if (!(xDlg = prvDlgIsOpened(iDlgID, &xDlgNext)))
 			return;
@@ -405,7 +414,8 @@
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
-		pxModalDialogWindowCreate();
+		if (!xThisWnd)
+			return;
 
 		if (!(xDlg = prvDlgIsOpened(iDlgID, &xDlgNext)))
 			return;
@@ -430,7 +440,8 @@
 		xModalDialog * xDlg;
 		xModalDialog * xDlgNext;
 
-		pxModalDialogWindowCreate();
+		if (!xThisWnd)
+			return;
 
 		xDlg = prvDlgIsOpened(iDlgID, &xDlgNext);
 
