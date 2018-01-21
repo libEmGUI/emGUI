@@ -38,18 +38,6 @@ static bool prvCloseClickHandler(xWidget* pxW) {
 	return true;
 }
 
-static bool prvDispose(xWidget* pxW) {
-	xStatusBarProps *xP;
-	if (!(xP = (xStatusBarProps *)pxWidgetGetProps(pxW, WidgetStatusBar)))
-		return true;
-
-	vWidgetDispose(xP->xCloseButton);
-	vWidgetDispose(xP->xWndHeader);
-
-	return true;
-}
-
-
 xStatusBar* xStatusBarCreate(uint16_t usColor) {
 
 	xStatusBar * pxW;
@@ -64,9 +52,6 @@ xStatusBar* xStatusBarCreate(uint16_t usColor) {
 		vWidgetDispose(pxW);
 		return NULL;
 	}
-
-
-	pxW->pxOnDispose = prvDispose;
 
 	xP = malloc(sizeof(xStatusBarProps));
 

@@ -44,12 +44,26 @@ xWidget * pxWidgetCreate(uint16_t usX0, uint16_t usY0, uint16_t usX1, uint16_t u
 }
 
 void vWidgetDispose(xWidget *pxW) {
-	if (!pxW || !pxW->pxOnDispose)
+	if (!pxW)
 		return;
+
+	if (pxW->pxFirstChild) {
+		xWidget *pxWidChild = pxW->pxFirstChild;
+		while (pxWidChild) {
+			xWidget *pxNext = pxWidChild->pxNextSibling;
+			vWidgetDispose(pxWidChild);
+			pxWidChild = pxNext;
+		}
+	}
+
+	if(pxW->pxParent)
+		vWidgetInvalidate(pxW->pxParent);
 
 	vWidgetRemove(pxW);
 
-	pxW->pxOnDispose(pxW);
+	if(pxW->pxOnDispose)
+		pxW->pxOnDispose(pxW);
+
 	if (pxW->pvProp)
 		free(pxW->pvProp);
 	free(pxW);
@@ -202,25 +216,26 @@ bool bWidgetAdd(xWidget *pxWidParent, xWidget *pxWidChild) {
 }
 
 void vWidgetRemove(xWidget * pxW) {
-	if (!pxW)
+	if (!pxW || !pxW->pxParent)
 		return;
 
-	xWidget * pxChild = pxW->pxParent->pxFirstChild;
+	xWidget * pxIterator = pxW->pxParent->pxFirstChild;
+	xWidget *pxPrev = NULL;
 
-	while (pxChild) {
+	while (pxIterator) {
 
-		xWidget *pxNext = pxWidgetGetNextChild(pxChild);
-		xWidget *pxPrev = NULL;
+		xWidget *pxNext = pxWidgetGetNextChild(pxIterator);
 
-		if (pxChild == pxW) { //first element
+		if (pxIterator == pxW) { //first element
 			if (!pxPrev)
-				pxW->pxFirstChild = pxNext;
+				pxW->pxParent->pxFirstChild = pxNext;
 			else
 				pxPrev->pxNextSibling = pxNext;
+			break;
 		}
 
-		pxPrev = pxChild;
-		pxChild = pxNext;
+		pxPrev = pxIterator;
+		pxIterator = pxNext;
 	}
 }
 

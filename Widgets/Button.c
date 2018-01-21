@@ -97,16 +97,6 @@ static bool prvLabelOnClick(xWidget * pxW) {
 	return true;
 }
 
-static bool prvDispose(xWidget *pxW) {
-	xButtonProps *xP = pxWidgetGetProps(pxW, WidgetButton);
-
-	if (!xP)
-		return false;
-
-	vWidgetDispose(xP->xText);
-	return true; //means nothing
-}
-
 static xButton * prvAlloc() {
 	xButton *pxW;
 	xButtonProps *xP;
@@ -127,8 +117,6 @@ static xButton * prvAlloc() {
 
 	memset(xP, 0, sizeof(xButtonProps));
 	pxW->pvProp = xP;
-
-	pxW->pxOnDispose = prvDispose;
 
 	return pxW;
 };
@@ -220,7 +208,7 @@ xButton * pxButtonCreateFromImageWithText(uint16_t usX, uint16_t usY, xPicture p
 	xP->bEmulatePressure = false;
 
 	if (!xP) {
-		prvDispose(pxW);
+		vWidgetDispose(pxW);
 		return false;
 	}
 
