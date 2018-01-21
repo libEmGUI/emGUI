@@ -233,8 +233,11 @@ void vWindowManagerCloseWindow(int eWnd) {
 		return;
 
 	if(bIsActive && pxPrev == xActiveWindow) // if no windows was opened during onClose handlers
-		if(xActiveWindow && xActiveWindow->xPrev && xActiveWindow->xPrev->xWnd)
-			vWindowManagerOpenWindow(iWindowGetID(xActiveWindow->xPrev->xWnd)); // open previous
+		if (xActiveWindow && xActiveWindow->xPrev && xActiveWindow->xPrev->xWnd) {
+			xWindow *xPrev = xActiveWindow->xPrev->xWnd;
+			prvWindowListDelete(pxWnd);
+			vWindowManagerOpenWindow(iWindowGetID(xPrev)); // open previous
+		}
 
 	prvWindowListDelete(pxWnd);
 

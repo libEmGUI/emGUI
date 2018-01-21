@@ -39,6 +39,7 @@ extern "C" {
 	void vWindowSetOnCloseRequestHandler(xWindow * pxW, WidgetEvent pxCallback);
 	void vWindowSetHeader(xWindow * pxW, char const* strH);
 	void vWindowSetFullScreen(xWindow *pxW, bool bFS);
+	void vWindowSetDisposable(xWindow *pxW, bool bState);
 
 	bool bWindowGetFullScreen(xWindow *pxW);
 	const char* pcWindowGetHeader(xWindow *pxW);
@@ -48,7 +49,7 @@ extern "C" {
 	bool bWindowClose(xWindow *pxW);
 	bool bWindowOpen(xWindow *pxW);
 
-	
+	bool bWindowisDisposable(xWindow *pxW);
 
 #ifdef __cplusplus
 }

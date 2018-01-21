@@ -31,7 +31,7 @@ typedef struct xWindowProps_t {
 	int eId;
 	char* strHeader;
 	bool bFullScreen;
-	//bool bModal;
+	bool bDisposable;
 	WidgetEvent pxOnCloseRequest;
 	WidgetEvent pxOnClose;
 	WidgetEvent pxOnOpenRequest;
@@ -172,6 +172,9 @@ bool bWindowClose(xWindow *pxW) {
 	if (xP->pxOnClose)
 		xP->pxOnClose(pxW);
 
+	if(xP->bDisposable)
+		vWidgetDispose(pxW);
+
 	return true;
 }
 
@@ -207,3 +210,20 @@ const char* pcWindowGetHeader(xWindow *pxW) {
 
 	return xP->strHeader;
 }
+
+void vWindowSetDisposable(xWindow *pxW, bool bState) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return;
+
+	xP->bDisposable = bState;
+}
+
+bool bWindowisDisposable(xWindow *pxW) {
+	xWindowProps *xP;
+	if (!(xP = (xWindowProps*)pxWidgetGetProps(pxW, WidgetWindow)))
+		return false;
+
+	return xP->bDisposable;
+}
+
