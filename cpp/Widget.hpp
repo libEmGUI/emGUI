@@ -30,13 +30,13 @@ namespace emGUI {
 		xWidget* xThis;
 	};
 
-	template <class Widget_t = WidgetBase>
+	template <class WidgetCaster_t = Widget>
 	class WidgetCaster {
 	protected:
-		static Widget_t * getObject(xWindow *pxW) {
+		static WidgetCaster_t * getObject(xWindow *pxW) {
 			if (!pxW)
 				return NULL;
-			auto w = (Widget_t *)pxW->pvUserData;
+			auto w = (WidgetCaster_t *)pxW->pvUserData;
 
 			return w;
 		}

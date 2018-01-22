@@ -11,7 +11,7 @@ namespace emGUI {
 		static Widget_t* getInstance(bool create = true) {
 
 			if (!create) { //only check if instance exists
-				return getObject(pxWindowManagerGetWindow(ID));
+				return WidgetCaster<Widget_t>::getObject(pxWindowManagerGetWindow(ID));
 			}
 
 			auto winWidget = pxWindowCreate(ID);
@@ -30,7 +30,7 @@ namespace emGUI {
 			w->create();
 
 			vWindowSetOnCloseHandler(winWidget, [](xWindow *pxW) -> bool {
-				if (auto w = getObject(pxW)) {
+				if (auto w = WidgetCaster<Widget_t>::getObject(pxW)) {
 					auto close = w->onClose();
 					if (close && bWindowisDisposable(pxW))
 						delete w;
@@ -41,35 +41,35 @@ namespace emGUI {
 			});
 
 			vWindowSetOnCloseRequestHandler(winWidget, [](xWindow *pxW) -> bool {
-				if (auto w = getObject(pxW))
+				if (auto w = WidgetCaster<Widget_t>::getObject(pxW))
 					return w->onCloseRequest();
 
 				return true;
 			});
 
 			vWindowSetOnOpenHandler(winWidget, [](xWindow *pxW) -> bool {
-				if (auto w = getObject(pxW))
+				if (auto w = WidgetCaster<Widget_t>::getObject(pxW))
 					return w->onOpen();
 
 				return true;
 			});
 
 			vWindowSetOnOpenRequestHandler(winWidget, [](xWindow *pxW) -> bool {
-				if (auto w = getObject(pxW))
+				if (auto w = WidgetCaster<Widget_t>::getObject(pxW))
 					return w->onOpenRequest();
 
 				return true;
 			});
 
 			vWidgetSetOnKeypressHandler(winWidget, [](xWidget *pxW, uint16_t uEv) -> bool {
-				if (auto w = getObject(pxW))
+				if (auto w = WidgetCaster<Widget_t>::getObject(pxW))
 					return w->onKeypress(uEv);
 
 				return false;
 			});
 
 			winWidget->pxDrawHandler = [](xWindow *pxW) -> bool {
-				if (auto w = getObject(pxW))
+				if (auto w = WidgetCaster<Widget_t>::getObject(pxW))
 					w->onDrawUpdate();
 
 				return bWidgetDrawHandler(pxW);
