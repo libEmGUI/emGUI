@@ -2,6 +2,6 @@
 
 #include "emGUI/emGUI.h"
 
-namespace emGUI {
+#include "emGUI/cpp/Widget.hpp"
 #include "emGUI/cpp/DisposableWindow.hpp"
-}
+#include "emGUI/cpp/Button.hpp"
