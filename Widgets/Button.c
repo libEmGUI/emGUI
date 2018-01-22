@@ -212,6 +212,9 @@ xButton * pxButtonCreateFromImageWithText(uint16_t usX, uint16_t usY, xPicture p
 		return false;
 	}
 
+	if(!pusPic)
+		return pxW;
+
 	bWidgetSetBgPicture(pxW, pusPic); // this updates button W and H from given picture
 
 	bWidgetSetCoords(xP->xText, 
@@ -247,7 +250,7 @@ void vButtonSetText(xWidget * pxW, char const* strL) {
 void vButtonSetPicture(xWidget *pxW, xPicture pusPic) {
 	xButtonProps *xP;
 
-	if (!(xP = (xButtonProps*)pxWidgetGetProps(pxW, WidgetButton)))
+	if (!(xP = (xButtonProps*)pxWidgetGetProps(pxW, WidgetButton)) || !pusPic)
 		return;
 
 	if (xP->xText) {
