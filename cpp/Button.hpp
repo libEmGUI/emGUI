@@ -8,6 +8,15 @@ namespace emGUI {
 
 	class Button : public WidgetCaster<Button>, public Widget {
 	public:
+		Button() {};
+
+		~Button() {
+			if (xThis) {
+				vButtonSetOnClickHandler(xThis, NULL);
+				vWidgetDispose(xThis);
+			}
+		};
+
 		Button(uint16_t X, uint16_t Y, uint16_t W, uint16_t H, const char *text, Widget * parent) {
 			xThis = pxButtonCreateFromText(X, Y, W, H, text, parent->get());
 			xThis->pvUserData = this;
@@ -20,10 +29,6 @@ namespace emGUI {
 				return true;
 			});
 		}
-
-		/*Button(const Button& a) {
-			xThis->pvUserData = this;
-		}*/
 
 		std::function<void()> onClick;
 	};

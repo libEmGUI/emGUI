@@ -17,6 +17,15 @@ namespace emGUI {
 		uint16_t H() const {
 			return usWidgetGetH(xThis);
 		}
+
+		Widget& operator= (Widget& a) {
+			xThis = a.xThis;
+			a.xThis = NULL;
+			if(xThis)
+				xThis->pvUserData = this;
+
+			return *this;
+		}
 	protected:
 		xWidget* xThis;
 	};
