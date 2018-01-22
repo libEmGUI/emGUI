@@ -1,10 +1,13 @@
 #pragma once
 
-#include "emGUI/emGUI.h"
-
 template <int ID, class Window_t> class DisposableWindow {
 public:
-	static Window_t* open() {
+	static Window_t* getInstance(bool create = true) {
+
+		if (!create) { //only check if instance exists
+			return getObject(pxWindowManagerGetWindow(ID));
+		}
+
 		auto winWidget = pxWindowCreate(ID);
 
 		if (!winWidget) { // maybe already opened?
@@ -21,7 +24,7 @@ public:
 		w->create();
 
 		vWindowSetOnCloseHandler(winWidget, [](xWindow *pxW) -> bool {
-			if (auto w = getUserData(pxW)) {
+			if (auto w = getObject(pxW)) {
 				auto close = w->onClose();
 				if (close && bWindowisDisposable(pxW))
 					delete w;
@@ -32,43 +35,49 @@ public:
 		});
 
 		vWindowSetOnCloseRequestHandler(winWidget, [](xWindow *pxW) -> bool {
-			if (auto w = getUserData(pxW))
+			if (auto w = getObject(pxW))
 				return w->onCloseRequest();
 
 			return true;
 		});
 
 		vWindowSetOnOpenHandler(winWidget, [](xWindow *pxW) -> bool {
-			if (auto w = getUserData(pxW))
+			if (auto w = getObject(pxW))
 				return w->onOpen();
 
 			return true;
 		});
 
 		vWindowSetOnOpenRequestHandler(winWidget, [](xWindow *pxW) -> bool {
-			if (auto w = getUserData(pxW))
+			if (auto w = getObject(pxW))
 				return w->onOpenRequest();
 
 			return true;
 		});
 
 		vWidgetSetOnKeypressHandler(winWidget, [](xWidget *pxW, uint16_t uEv) -> bool {
-			if (auto w = getUserData(pxW))
+			if (auto w = getObject(pxW))
 				return w->onKeypress(uEv);
 
 			return false;
 		});
 
 		winWidget->pxDrawHandler = [](xWindow *pxW) -> bool {
-			if(auto w = getUserData(pxW))
+			if(auto w = getObject(pxW))
 				w->onDrawUpdate();
 
 			return bWidgetDrawHandler(pxW);
 		};
-		
-		vWindowManagerOpenWindow(ID);
 
 		return w;
+	}
+
+	void open() {
+		vWindowManagerOpenWindow(ID);
+	}
+
+	void close() {
+		vWindowManagerCloseWindow(ID);
 	}
 
 	virtual bool onClose() { return true; }
@@ -84,8 +93,10 @@ public:
 	}
 
 protected:
-	static DisposableWindow<ID, Window_t> * getUserData(xWindow *pxW) {
-		auto w = (DisposableWindow<ID, Window_t> *) pxW->pvUserData;
+	static Window_t * getObject(xWindow *pxW) {
+		if (!pxW)
+			return NULL;
+		auto w = (Window_t *) pxW->pvUserData;
 
 		return w;
 	}
