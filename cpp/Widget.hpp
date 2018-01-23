@@ -32,7 +32,7 @@ namespace emGUI {
 
 	template <class WidgetCaster_t = Widget>
 	class WidgetCaster {
-	protected:
+	public:
 		static WidgetCaster_t * getObject(xWindow *pxW) {
 			if (!pxW)
 				return NULL;
