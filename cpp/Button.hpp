@@ -6,23 +6,30 @@
 
 namespace emGUI {
 
-	class Button : public WidgetCaster<Button>, public Widget {
+	class ButtonBase : public Widget {
 	public:
-		Button() {};
-
-		~Button() {
+		~ButtonBase() {
 			if (xThis) {
 				vButtonSetOnClickHandler(xThis, NULL);
 				vWidgetDispose(xThis);
 			}
 		};
 
-		Button(uint16_t X, uint16_t Y, uint16_t W, uint16_t H, const char *text, Widget * parent) {
+		ButtonBase(uint16_t X, uint16_t Y, uint16_t W, uint16_t H, const char *text, Widget * parent) {
 			xThis = pxButtonCreateFromText(X, Y, W, H, text, parent->get());
+			xThis->pvUserData = this;
+		}
+	};
+
+	class Button : public ButtonBase, public WidgetCaster<Button> {
+	public:
+
+		Button(uint16_t X, uint16_t Y, uint16_t W, uint16_t H, const char *text, Widget * parent):
+		ButtonBase(X, Y, W, H, text, parent) {
 			xThis->pvUserData = this;
 
 			vButtonSetOnClickHandler(xThis, [](xWidget *pxW) -> bool {
-				if (auto o = getObject(pxW)) {
+				if (auto o = WidgetCaster<Button>::getObject(pxW)) {
 					if(o->onClick)
 						o->onClick(o);
 				}
@@ -33,15 +40,15 @@ namespace emGUI {
 		std::function<void(Button *b)> onClick;
 	};
 
-	class ButtonToggle : public Button {
+	class ButtonToggle : public ButtonBase, public WidgetCaster<ButtonToggle>{
 	public:
-		ButtonToggle():_state(false) {};
 
 		ButtonToggle(uint16_t X, uint16_t Y, uint16_t W, uint16_t H, const char *text, Widget * parent):
-			Button(X, Y, W, H, text, parent) {
+			ButtonBase(X, Y, W, H, text, parent), _state(false) {
+			xThis->pvUserData = this;
 			
 			vButtonSetOnClickHandler(xThis, [](xWidget *pxW) -> bool {
-				if (auto o = (ButtonToggle *) getObject(pxW)) {
+				if (auto o = WidgetCaster<ButtonToggle>::getObject(pxW)) {
 					o->click();
 				}
 				return true;
@@ -71,6 +78,7 @@ namespace emGUI {
 		}
 
 		std::function<void(ButtonToggle *b, bool)> onToggle;
+		std::function<void(ButtonToggle *b)> onClick;
 	protected:
 		bool _state;
 	};

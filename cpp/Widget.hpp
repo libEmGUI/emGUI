@@ -1,6 +1,7 @@
 #pragma once
 
 #include "emGUI/emGUI.h"
+#include <memory>
 
 namespace emGUI {
 
@@ -18,21 +19,21 @@ namespace emGUI {
 			return usWidgetGetH(xThis);
 		}
 
-		Widget& operator= (Widget& a) {
-			xThis = a.xThis;
-			a.xThis = NULL;
-			if(xThis)
-				xThis->pvUserData = this;
-
-			return *this;
-		}
 	protected:
 		xWidget* xThis;
+		Widget() {};
+
+	private:
+		Widget(const Widget &) = delete; // if needed, put as private
+		Widget & operator=(const Widget &) = delete; // if needed, put as private
+		Widget(Widget &&) = delete; // if needed, put as private
+		Widget & operator=(Widget &&) = delete; // if needed, put as private
 	};
 
 	template <class WidgetCaster_t = Widget>
 	class WidgetCaster {
 	public:
+		using uniquePtr = std::unique_ptr<WidgetCaster_t>;
 		static WidgetCaster_t * getObject(xWindow *pxW) {
 			if (!pxW)
 				return NULL;
