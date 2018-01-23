@@ -59,6 +59,8 @@ namespace emGUI {
 		void state(bool state) {
 			_state = state;
 			toggleDecorator();
+			if (onToggle)
+				onToggle(this, _state);
 		}
 
 		void click() {
