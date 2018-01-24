@@ -274,7 +274,7 @@ bool bWidgetCheckTSHandler(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
 		return false;
 
 	//handle popTs events when they occur out of the Widget area
-	if (pxTouchScreenEv->eventTouchScreen == popTs
+	if (pxTouchScreenEv->event == popTs
 		&& pxW->bPushEventCaught) {
 			pxW->bPressed = false;
 		
@@ -289,11 +289,11 @@ bool bWidgetCheckTSHandler(xWidget *pxW, xTouchEvent *pxTouchScreenEv) {
 	}
 
 	//TODO: check by radius?
-	if (pxW->usX0 <= pxTouchScreenEv->xTouchScreen
-		&& pxW->usX1 >= pxTouchScreenEv->xTouchScreen
-		&& pxW->usY0 <= pxTouchScreenEv->yTouchScreen
-		&& pxW->usY1 >= pxTouchScreenEv->yTouchScreen
-		&& pxTouchScreenEv->eventTouchScreen == pushTs) {
+	if (pxW->usX0 <= pxTouchScreenEv->x
+		&& pxW->usX1 >= pxTouchScreenEv->x
+		&& pxW->usY0 <= pxTouchScreenEv->y
+		&& pxW->usY1 >= pxTouchScreenEv->y
+		&& pxTouchScreenEv->event == pushTs) {
 		
 		pxW->bPressed = true;
 

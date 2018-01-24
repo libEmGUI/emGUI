@@ -38,12 +38,12 @@ bool bKeyRowCheckRoutine(xWidget *pxW, xTouchEvent *pxT){
   xKeyRowProp *xP;
   if (!(xP = pxWidgetGetProps(pxW, WidgetKeyRow)))
     return FALSE;
-  if (pxT->eventTouchScreen == pushTs) // Determ Num of Cliked Key pushTs turn pxW->bPressed TRUE
-    xP->usKeyClicked = (pxT->xTouchScreen - pxW->usX0)/xP->usKeyWidth;
-  if (pxT->eventTouchScreen == popTs && xP->prvOnKeyPress)
+  if (pxT->event == pushTs) // Determ Num of Cliked Key pushTs turn pxW->bPressed TRUE
+    xP->usKeyClicked = (pxT->x - pxW->usX0)/xP->usKeyWidth;
+  if (pxT->event == popTs && xP->prvOnKeyPress)
     xP->prvOnKeyPress(pxW, xP->pcKeys[xP->usKeyClicked]);
   vWidgetInvalidate(pxW);
-  return (pxT->eventTouchScreen == pushTs)?TRUE:FALSE;
+  return (pxT->event == pushTs)?TRUE:FALSE;
 }
 
 static void prvDrawCharKey(u16 usX, u16 usY, u16 usKeyW, u16 usKeyH, char character, u16 usColor, u16 usBcgColor){

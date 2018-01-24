@@ -56,10 +56,10 @@ extern "C" {
 	}xPoint;
 
 	typedef struct xTouchEvent_t {
-		xTouchEventType eventTouchScreen;
-		uint16_t xTouchScreen;
-		uint16_t yTouchScreen;
-		uint32_t touchScreenEventTime;
+		xTouchEventType event;
+		uint16_t x;
+		uint16_t y;
+		uint32_t eventTime;
 	} xTouchEvent;
 
 
